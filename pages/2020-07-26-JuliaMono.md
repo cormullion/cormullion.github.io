@@ -484,7 +484,7 @@ Here’s a list of the stylistic sets currently available in JuliaMono.
     <tr>
     <td>ss11</td>
     <td class="jm_code_ss_off">`</td>
-    <td class="jm_code_ss_on">`</td>
+    <td class="jm_code_ss_thinnergrave">`</td>
     <td><p>thinner grave</p></td>
     </tr>
 
@@ -649,7 +649,7 @@ You can browse through [this local copy](/assets/images/juliamono/juliamanual/in
 As an example of using JuliaMono with [Documenter.jl](https://github.com/JuliaDocs/Documenter.jl)-generated documents, see the documentation for [Luxor.jl](https://github.com/JuliaGraphics/Luxor.jl).
 
 @@jm_h2
-## ‘I don’t like it as much as ``$(my_favourite_font)``’
+## ‘I don’t like it as much as \$(my_favourite_font)’
 @@
 
 **That’s not a question!** But I know what you mean. Choice of work environment (editor, font, colour scheme, background music, preferred beverage, etc.) is very much a personal thing, and over the hours, days, and weeks that you work with your particular setup, you’ll grow accustomed to it, and unfamiliar work environments will look unappealing or even ugly. You’d probably need to try any alternatives for a while before you get more accustomed to them. Fortunately, you don’t have to use [Comic Code](https://www.myfonts.com/fonts/tabular-type-foundry/comic-code/), the [Kakoune editor](http://kakoune.org), the music of [Autechre](http://autechre.ws/), [Durian tea](https://www.tealeaves.com/products/durian), or anything else that’s new and unfamiliar; just stick to your current favourites!

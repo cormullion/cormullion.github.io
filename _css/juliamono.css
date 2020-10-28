@@ -54,7 +54,6 @@
 	line-height: 2rem;
 	font-family: JuliaMono-Regular;
 	text-align: left;
-	align-items:left;
 	margin-left: 0%;
 	margin-right: 0%;
 	hanging-punctuation: first;
@@ -137,6 +136,11 @@ jm_pre, jm_code {
 	width:100%;
 	font-feature-settings: "zero", "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "ss10", "ss11";
 	font-variant-ligatures: no-contextual;
+}
+
+.jm_code_ss_thinnergrave {
+	width:100%;
+	font-feature-settings: "ss11";
 }
 
 .jm_code_ss_off {
