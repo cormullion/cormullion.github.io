@@ -48,6 +48,12 @@ pre {
 	width: 110%;
 }
 
+p > code  {
+		font-family: JuliaMono-Regular;
+		color: inherit;
+		background-color: inherit;
+}
+
 code {
 		font-family: JuliaMono-Regular;
 		color: white;
