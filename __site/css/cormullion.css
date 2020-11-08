@@ -48,6 +48,10 @@ pre {
 	width: 110%;
 }
 
+h1 {
+	line-height: 1.7rem;
+}
+
 p > code  {
 		font-family: JuliaMono-Regular;
 		color: inherit;
@@ -225,15 +229,15 @@ code {
 }
 
 
-.hljs-quote
-{
-	color: #998;
-}
-
 .language-xml.hljs{
 	color: #9aa;
 }
 
+.hljs-comment,
+.hljs-quote {
+  color: #998;
+  font-style: normal;
+}
 
 header .blog-name {
     font-family: JuliaMono-Bold, "Lucida Console", Monaco, monospace;

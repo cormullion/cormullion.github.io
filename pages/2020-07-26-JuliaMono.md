@@ -6,7 +6,7 @@
 @def mintoclevel=1
 
 > This page first appeared as a website to acompany the
-> first release of JuliaMono, and it's now been incorporated
+> first release of JuliaMono, and it’s now been incorporated
 > here as a blog post.
 
 # JuliaMono - a monospaced font for scientific and technical computing
@@ -285,11 +285,6 @@ From a design perspective, forcing every character into the same size box is a p
 <img src="/assets/images/juliamono/imageinterminal.png" alt="ImageInTerminal">
 ~~~
 
-JuliaMono is quite greedy[^greedy], and contains a lot of Unicode glyphs.
-
-~~~<img src="/assets/images/juliamono/barchart.svg" width="100%" alt="silly barchart"> ~~~
-
-(Of course, size isn’t everything - quality can beat quantity, and other fonts will offer different experiences[^otherfonts]).
 
 It’s also a good idea to support box-drawing characters and DataFrames.jl output (terminal permitting):
 
@@ -313,7 +308,13 @@ df = 10×2 DataFrame
 
 (Can you spot the little used and sadly mathematically-unsupported "times" character?)
 
-If you want to know whether you can use a Unicode character as an identifier in your Julia code, use the undocumented function `Base.isidentifier()`. So, for example, if you have the urge to use a dingbat (one of the classic [Herman Zapf dingbat](https://en.wikipedia.org/wiki/Zapf_Dingbats) designs), you could look for something suitable in the output of this:
+JuliaMono is quite greedy[^greedy], and contains a lot of Unicode glyphs.
+
+~~~<img src="/assets/images/juliamono/barchart.svg" width="100%" alt="silly barchart"> ~~~
+
+(Of course, size isn’t everything - quality can beat quantity, and other fonts will offer different experiences[^otherfonts]).
+
+If you want to know whether you can use a Unicode character as an identifier in your Julia code, use the undocumented function `Base.isidentifier()`. So, for example, if you have the urge to use a dingbat (one of the classic [Herman Zapf dingbat](https://en.wikipedia.org/wiki/Zapf_Dingbats) designs) as a variable name, you could look for something suitable in the output of this:
 
 ```
 julia> for n in 0x2700:0x27bf
@@ -328,6 +329,17 @@ julia> ❤(s) = println("I ❤ $(s)")
 
 julia> ❤("Julia")
 I ❤ Julia
+```
+
+An easy way to include Unicode characters at the REPL is to use the clipboard:
+
+```
+julia> clipboard(Char(0x2764))
+
+# then paste
+
+julia> ❤("Unicode")
+I ❤ Unicode
 ```
 
 @@jm_h1
@@ -649,13 +661,13 @@ You can browse through [this local copy](/assets/images/juliamono/juliamanual/in
 As an example of using JuliaMono with [Documenter.jl](https://github.com/JuliaDocs/Documenter.jl)-generated documents, see the documentation for [Luxor.jl](https://github.com/JuliaGraphics/Luxor.jl).
 
 @@jm_h2
-## ‘I don’t like it as much as \$(my_favourite_font)’
+## ‘I don’t like it as much as \$(myfavouritefont)’
 @@
 
-**That’s not a question!** But I know what you mean. Choice of work environment (editor, font, colour scheme, background music, preferred beverage, etc.) is very much a personal thing, and over the hours, days, and weeks that you work with your particular setup, you’ll grow accustomed to it, and unfamiliar work environments will look unappealing or even ugly. You’d probably need to try any alternatives for a while before you get more accustomed to them. Fortunately, you don’t have to use [Comic Code](https://www.myfonts.com/fonts/tabular-type-foundry/comic-code/), the [Kakoune editor](http://kakoune.org), the music of [Autechre](http://autechre.ws/), [Durian tea](https://www.tealeaves.com/products/durian), or anything else that’s new and unfamiliar; just stick to your current favourites!
+**That’s not a question!** But I know what you mean. Choice of work environment (editor, font, colour scheme, background music, preferred beverage, etc.) is very much a personal thing, and over the hours, days, and weeks that you work with your particular setup, you’ll grow accustomed to it, and unfamiliar work environments will look unappealing or even ugly. You’d probably need to try any alternatives for a while before you get more accustomed to them. Fortunately, you don’t have to try [Comic Code](https://www.myfonts.com/fonts/tabular-type-foundry/comic-code/), the [Kakoune editor](http://kakoune.org), the music of [Autechre](http://autechre.ws/), [Durian tea](https://www.tealeaves.com/products/durian), or anything else that’s new and unfamiliar; just stick to your current favourites!
 
 @@jm_h2
-## ‘How can I use the web fonts?’
+## ‘How can I use the web fonts for my blog?’
 @@
 
 Find the relevant CSS file, and add a link to the WOFF2 stored on the server. For example:
@@ -668,6 +680,12 @@ Find the relevant CSS file, and add a link to the WOFF2 stored on the server. Fo
 ```
 
 This accesses the current version the Regular font using the jsDelivr CDN (Content Delivery Network).
+
+Then use CSS selectors:
+
+```css
+font-family: "JuliaMono";
+```
 
 You may prefer to serve the WOFF/2 fonts from your own server. One problem you might encounter is related to [Cross-origin resource sharing](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing), which on some browsers prevents one web page from downloading fonts from another.
 
@@ -700,7 +718,7 @@ Or if you just don’t like the contextual alternates, prefer the slashed zero, 
 "editor.fontLigatures": "'calt' off, 'zero', 'ss01', 'ss05'",
 ```
 
-#### Atom/Juno
+### Atom/Juno
 
 In the Atom/Juno stylesheet, you can specify the font with the required CSS selectors:
 
@@ -752,7 +770,9 @@ atom-text-editor {
 
 <!--  force a paragraph  -->
 
-### ‘Can I use this font in a notebook? And how do I do it?’
+@@jm_h2
+## ‘Can I use this font in a notebook? And how do I do it?’
+@@
 
 It’s a good question. Some browsers these days are reluctant to give even you access to things on your own local disk, “for security reasons”. But a local copy of the font may be available and accessible on your particular set-up.
 
@@ -846,7 +866,7 @@ display(p)
 
 ![frequency counts](/assets/images/juliamono/julia-frequencies.svg)
 
-The top 9 characters - “etanirsol” - are a good match for the typical English frequency count e.g. “etarionsh”. It's to be expected that parentheses make a very good showing, here.
+The top 9 characters - “etanirsol” - are a good match for the typical English frequency count e.g. “etarionsh”. it’s to be expected that parentheses make a very good showing, here.
 
 Although over 3600 unique characters occur in the Julia documentation, about 3000 of them appear just once. All of them, except the emojis which aren’t in JuliaMono, could be plotted, but the long tail isn’t very interesting visually.
 
@@ -886,6 +906,14 @@ Then you can use something like `minted` to format the code.
 ~~~
 
 (I used the lualatex engine.)
+
+@@jm_h2
+## ‘There are problems with rendering and alignment’
+@@
+
+it’s well-known that there are two different styles of font rendering - the Apple way, and the Microsoft way. Apple and Microsoft have always disagreed in how to display fonts on screens. The argument has been going on for over a decade, now. For example, see [this blog post](https://damieng.com/blog/2007/06/13/font-rendering-philosophies-of-windows-and-mac-os-x).
+
+In brief: Windows stretches and distorts the glyph shapes to better hit the pixel boundaries, but at the expense of distorting the forms. Apple renders the glyph shapes precisely, but uses antialiasing to smooth the outlines, making the type a bit fuzzy.
 
 @@jm_h2
 ## ‘Aren’t these font files too big?’
@@ -1012,9 +1040,7 @@ The font works well on a good quality display, but will struggle to maintain qua
 
 On Windows, the shapes of letters are distorted in order to place the important features of letters on pixels, rather than ‘between’ pixels (which could make features disappear). On high-resolution displays, as found on Apple devices, it isn't necesary to distort letter shapes in this way. The distortion is controlled by a process called ‘hinting’. On Windows displays, you may find that there is unevenness and variations in thickness and alignments, particularly at smaller sizes. This is due to the hinting generating distorted shapes to target pixels.
 
-JuliaMono is an OTF/TTF-flavoured font that contains hinting instructions, so it might look reasonably good on lower-resolution screens.
-
-Hinted fonts are larger as a consequence.
+JuliaMono is an OTF/TTF-flavoured font that contains hinting instructions. Hinted fonts are larger than OTF/CFF (PostScript-flavour) as a consequence.
 
 @@jm_h2
 ## ‘Any love for nerdfonts?’

@@ -11,7 +11,6 @@
 .jm_franklin-toc {
 	font-family: JuliaMono-Regular;
 	font-size: 0.9rem;
-	margin: 3rem;
 }
 
 .jm_franklin-toc ol {
@@ -65,7 +64,6 @@
 
 
 .franklin-content table.fndef  {
-	font-family: JuliaMono-Regular;
 	background-color: white;
     margin: 0;
     margin-bottom: 10px;
@@ -195,7 +193,7 @@ jm_pre, jm_code {
 
 .hljs-comment,.hljs-quote {
 	color:#998;
-	font-style:italic
+	font-style:normal;
 }
 
 .hljs-keyword,.hljs-selector-tag,.hljs-subst {
