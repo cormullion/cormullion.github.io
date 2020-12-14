@@ -592,7 +592,7 @@ On the latest version of Homebrew, you can install the fonts with:
 
 ```
 $ brew tap homebrew/cask-fonts
-$ brew cask install font-juliamono
+$ brew install --cask font-juliamono
 ```
 
 ### Windows
