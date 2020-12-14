@@ -6,148 +6,148 @@
   <link>https://cormullion.github.io/</link>
   <atom:link href="https://cormullion.github.io/feed.xml" rel="self" type="application/rss+xml" />
   <item>
-    <title>View</title>
-    <link>https://cormullion.github.io/pages/2020-09-05-view/index.html</link>
-    <description><![CDATA[MIT are running a &#91;new introductory course on Computational Thinking&#93;. We use the Julia programming language.
-<br><a href="https://cormullion.github.io/pages/2020-09-05-view/index.html">Read more</a>]]></description>
+    <title>Asterisk</title>
+    <link>https://cormullion.github.io/pages/2020-10-09-asterisk/</link>
+    <description><![CDATA[A look at the history of the asterisk...
+<br><a href="https://cormullion.github.io/pages/2020-10-09-asterisk/">Read more</a>]]></description>
     <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2020-09-05-view/index.html</guid>
-    <pubDate>Sat, 5 Sep 2020 00:00:00 UT</pubDate>
-  </item>
-  <item>
-    <title>π day</title>
-    <link>https://cormullion.github.io/pages/2019-03-13-piday/index.html</link>
-    <description><![CDATA[Exploring some ways to visualize the digits of π, for tomorrow&#39;s π day celebrations <img src="https://cormullion.github.io/assets/images/piday/t-800.png" alt="image label" />
-<br><a href="https://cormullion.github.io/pages/2019-03-13-piday/index.html">Read more</a>]]></description>
-    <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2019-03-13-piday/index.html</guid>
-    <pubDate>Wed, 13 Mar 2019 00:00:00 UT</pubDate>
-  </item>
-  <item>
-    <title>Slackmojif</title>
-    <link>https://cormullion.github.io/pages/2019-06-23-slackmojif/index.html</link>
-    <description><![CDATA[Slack/emoji/animated GIFs can be tricky to make. They have to be less than 128KB, and fit into a 128 by 128 pixel square. For the purposes of this post, I’m going to liberate a few slackmojifs from their current 128³ prison, and let them roam free over this page at a slighly higher resolution. These free-range versions can enjoy a brief moment in the foreground before scuttling back into the shadows and wasting CPU cycles in the background. <img src="https://cormullion.github.io/assets/images/slackmojif/slackanimation.gif" alt="slackmojif" />
-<br><a href="https://cormullion.github.io/pages/2019-06-23-slackmojif/index.html">Read more</a>]]></description>
-    <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2019-06-23-slackmojif/index.html</guid>
-    <pubDate>Sun, 23 Jun 2019 00:00:00 UT</pubDate>
-  </item>
-  <item>
-    <title>Pentachoron</title>
-    <link>https://cormullion.github.io/pages/2019-04-03-pentachoron/index.html</link>
-    <description><![CDATA[I encountered the word &quot;pentachoron&quot; recently for the first time, and I thought it had to be something cool. Turns out it is, so I thought I&#39;d have a go at drawing one... Unfortunately, it&#39;s a 4-dimensional object, which is going to tax my limited 2D skills. <img src="https://cormullion.github.io/assets/images/pentachoron/header-image.png" alt="pentachoron" />
-<br><a href="https://cormullion.github.io/pages/2019-04-03-pentachoron/index.html">Read more</a>]]></description>
-    <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2019-04-03-pentachoron/index.html</guid>
-    <pubDate>Wed, 3 Apr 2019 00:00:00 UT</pubDate>
-  </item>
-  <item>
-    <title>Random noise</title>
-    <link>https://cormullion.github.io/pages/2018-10-11-noise/index.html</link>
-    <description><![CDATA[making a noise with Julia. Exploring the OpenSimplex noise in Luxor.jl <img src="https://cormullion.github.io/assets/images/noise/ice.png" alt="noise" />
-<br><a href="https://cormullion.github.io/pages/2018-10-11-noise/index.html">Read more</a>]]></description>
-    <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2018-10-11-noise/index.html</guid>
-    <pubDate>Tue, 16 Oct 2018 00:00:00 UT</pubDate>
+    <guid>https://cormullion.github.io/pages/2020-10-09-asterisk/</guid>
+    <pubDate>Fri, 9 Oct 2020 00:00:00 UT</pubDate>
   </item>
   <item>
     <title>Depth</title>
-    <link>https://cormullion.github.io/pages/2020-09-22-depth/index.html</link>
+    <link>https://cormullion.github.io/pages/2020-09-22-depth/</link>
     <description><![CDATA[A shallow dive into 3D vector graphics with Thebes.jl and Luxor.jl.
-<br><a href="https://cormullion.github.io/pages/2020-09-22-depth/index.html">Read more</a>]]></description>
+<br><a href="https://cormullion.github.io/pages/2020-09-22-depth/">Read more</a>]]></description>
     <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2020-09-22-depth/index.html</guid>
+    <guid>https://cormullion.github.io/pages/2020-09-22-depth/</guid>
     <pubDate>Tue, 22 Sep 2020 00:00:00 UT</pubDate>
   </item>
   <item>
-    <title>Bezier Moi</title>
-    <link>https://cormullion.github.io/pages/2018-06-20-bezier/index.html</link>
-    <description><![CDATA[Luxor provides some support for Bézier curves, but there&#39;s no room for any more documentation—it&#39;s already too big. So the intention of this post is to provide some of the missing information about what&#39;s up with Bézier curves and how you might use them. <img src="https://cormullion.github.io/assets/images/bezier/drawcurvaturecomb.svg" alt="" />
-<br><a href="https://cormullion.github.io/pages/2018-06-20-bezier/index.html">Read more</a>]]></description>
+    <title>View</title>
+    <link>https://cormullion.github.io/pages/2020-09-05-view/</link>
+    <description><![CDATA[MIT are running a &#91;new introductory course on Computational Thinking&#93;. We use the Julia programming language.
+<br><a href="https://cormullion.github.io/pages/2020-09-05-view/">Read more</a>]]></description>
     <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2018-06-20-bezier/index.html</guid>
-    <pubDate>Thu, 21 Jun 2018 00:00:00 UT</pubDate>
-  </item>
-  <item>
-    <title>Pluto</title>
-    <link>https://cormullion.github.io/pages/2015-06-02-pluto/index.html</link>
-    <description><![CDATA[The Pluto symbols <img src="https://cormullion.github.io/assets/images/pluto/pluto-astro-astro-cosmorama.png" alt="Pluto from Cosmorama" />
-<br><a href="https://cormullion.github.io/pages/2015-06-02-pluto/index.html">Read more</a>]]></description>
-    <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2015-06-02-pluto/index.html</guid>
-    <pubDate>Tue, 2 Jun 2015 00:00:00 UT</pubDate>
-  </item>
-  <item>
-    <title>String logo</title>
-    <link>https://cormullion.github.io/pages/2018-05-05-string/index.html</link>
-    <description><![CDATA[Designing a logo for the Strings folks - some lengthy waffle <img src="https://cormullion.github.io/assets/images/string/rope-effect-four-loops.png" alt="string logos" />
-<br><a href="https://cormullion.github.io/pages/2018-05-05-string/index.html">Read more</a>]]></description>
-    <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2018-05-05-string/index.html</guid>
-    <pubDate>Sat, 5 May 2018 00:00:00 UT</pubDate>
-  </item>
-  <item>
-    <title>Guilloches</title>
-    <link>https://cormullion.github.io/pages/2018-08-10-guilloches/index.html</link>
-    <description><![CDATA[Making guilloches patterns using the geometric lathe...  <img src="https://cormullion.github.io/assets/images/guilloches/julia-hypotrochoid.png" alt="hypotrochoid" />
-<br><a href="https://cormullion.github.io/pages/2018-08-10-guilloches/index.html">Read more</a>]]></description>
-    <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2018-08-10-guilloches/index.html</guid>
-    <pubDate>Fri, 10 Aug 2018 00:00:00 UT</pubDate>
-  </item>
-  <item>
-    <title>Automata</title>
-    <link>https://cormullion.github.io/pages/2018-11-29-automata/index.html</link>
-    <description><![CDATA[Drawing cellular automata with Julia <img src="https://cormullion.github.io/assets/images/automata/simple-ca.png" alt="curvature comb" />
-<br><a href="https://cormullion.github.io/pages/2018-11-29-automata/index.html">Read more</a>]]></description>
-    <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2018-11-29-automata/index.html</guid>
-    <pubDate>Thu, 29 Nov 2018 00:00:00 UT</pubDate>
+    <guid>https://cormullion.github.io/pages/2020-09-05-view/</guid>
+    <pubDate>Sat, 5 Sep 2020 00:00:00 UT</pubDate>
   </item>
   <item>
     <title>World</title>
-    <link>https://cormullion.github.io/pages/2020-08-13-world/index.html</link>
+    <link>https://cormullion.github.io/pages/2020-08-13-world/</link>
     <description><![CDATA[The videos from JuliaCon 2020 are on YouTube, over 150 of them, and I’ve been watching quite a few. Have you been tempted to start skipping the first 17 seconds of some of them? Well, here are a few paragraphs that might make sitting through the JuliaCon2020 station ident a litle bit more interesting — for a while, at least.
-<br><a href="https://cormullion.github.io/pages/2020-08-13-world/index.html">Read more</a>]]></description>
+<br><a href="https://cormullion.github.io/pages/2020-08-13-world/">Read more</a>]]></description>
     <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2020-08-13-world/index.html</guid>
+    <guid>https://cormullion.github.io/pages/2020-08-13-world/</guid>
     <pubDate>Thu, 13 Aug 2020 00:00:00 UT</pubDate>
   </item>
   <item>
     <title>Mauve</title>
-    <link>https://cormullion.github.io/pages/2020-02-13-mauve/index.html</link>
+    <link>https://cormullion.github.io/pages/2020-02-13-mauve/</link>
     <description><![CDATA[In search of the color mauve <img src="https://cormullion.github.io/assets/images/mauve/images/brushstroke.svg" alt="image" />
-<br><a href="https://cormullion.github.io/pages/2020-02-13-mauve/index.html">Read more</a>]]></description>
+<br><a href="https://cormullion.github.io/pages/2020-02-13-mauve/">Read more</a>]]></description>
     <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2020-02-13-mauve/index.html</guid>
+    <guid>https://cormullion.github.io/pages/2020-02-13-mauve/</guid>
     <pubDate>Thu, 13 Feb 2020 00:00:00 UT</pubDate>
   </item>
   <item>
-    <title>Infographic</title>
-    <link>https://cormullion.github.io/pages/2018-08-02-infographic/index.html</link>
-    <description><![CDATA[Making an infographic showing the development of Julia from 2009 to 2018 <img src="https://cormullion.github.io/assets/images/infographic/splash.png" alt="infographic" />
-<br><a href="https://cormullion.github.io/pages/2018-08-02-infographic/index.html">Read more</a>]]></description>
+    <title>Slackmojif</title>
+    <link>https://cormullion.github.io/pages/2019-06-23-slackmojif/</link>
+    <description><![CDATA[Slack/emoji/animated GIFs can be tricky to make. They have to be less than 128KB, and fit into a 128 by 128 pixel square. For the purposes of this post, I’m going to liberate a few slackmojifs from their current 128³ prison, and let them roam free over this page at a slighly higher resolution. These free-range versions can enjoy a brief moment in the foreground before scuttling back into the shadows and wasting CPU cycles in the background. <img src="https://cormullion.github.io/assets/images/slackmojif/slackanimation.gif" alt="slackmojif" />
+<br><a href="https://cormullion.github.io/pages/2019-06-23-slackmojif/">Read more</a>]]></description>
     <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2018-08-02-infographic/index.html</guid>
+    <guid>https://cormullion.github.io/pages/2019-06-23-slackmojif/</guid>
+    <pubDate>Sun, 23 Jun 2019 00:00:00 UT</pubDate>
+  </item>
+  <item>
+    <title>Pentachoron</title>
+    <link>https://cormullion.github.io/pages/2019-04-03-pentachoron/</link>
+    <description><![CDATA[I encountered the word &quot;pentachoron&quot; recently for the first time, and I thought it had to be something cool. Turns out it is, so I thought I&#39;d have a go at drawing one... Unfortunately, it&#39;s a 4-dimensional object, which is going to tax my limited 2D skills. <img src="https://cormullion.github.io/assets/images/pentachoron/header-image.png" alt="pentachoron" />
+<br><a href="https://cormullion.github.io/pages/2019-04-03-pentachoron/">Read more</a>]]></description>
+    <author>cormullion</author>
+    <guid>https://cormullion.github.io/pages/2019-04-03-pentachoron/</guid>
+    <pubDate>Wed, 3 Apr 2019 00:00:00 UT</pubDate>
+  </item>
+  <item>
+    <title>π day</title>
+    <link>https://cormullion.github.io/pages/2019-03-13-piday/</link>
+    <description><![CDATA[Exploring some ways to visualize the digits of π, for tomorrow&#39;s π day celebrations <img src="https://cormullion.github.io/assets/images/piday/t-800.png" alt="image label" />
+<br><a href="https://cormullion.github.io/pages/2019-03-13-piday/">Read more</a>]]></description>
+    <author>cormullion</author>
+    <guid>https://cormullion.github.io/pages/2019-03-13-piday/</guid>
+    <pubDate>Wed, 13 Mar 2019 00:00:00 UT</pubDate>
+  </item>
+  <item>
+    <title>Automata</title>
+    <link>https://cormullion.github.io/pages/2018-11-29-automata/</link>
+    <description><![CDATA[Drawing cellular automata with Julia <img src="https://cormullion.github.io/assets/images/automata/simple-ca.png" alt="curvature comb" />
+<br><a href="https://cormullion.github.io/pages/2018-11-29-automata/">Read more</a>]]></description>
+    <author>cormullion</author>
+    <guid>https://cormullion.github.io/pages/2018-11-29-automata/</guid>
+    <pubDate>Thu, 29 Nov 2018 00:00:00 UT</pubDate>
+  </item>
+  <item>
+    <title>Random noise</title>
+    <link>https://cormullion.github.io/pages/2018-10-11-noise/</link>
+    <description><![CDATA[making a noise with Julia. Exploring the OpenSimplex noise in Luxor.jl <img src="https://cormullion.github.io/assets/images/noise/ice.png" alt="noise" />
+<br><a href="https://cormullion.github.io/pages/2018-10-11-noise/">Read more</a>]]></description>
+    <author>cormullion</author>
+    <guid>https://cormullion.github.io/pages/2018-10-11-noise/</guid>
+    <pubDate>Tue, 16 Oct 2018 00:00:00 UT</pubDate>
+  </item>
+  <item>
+    <title>Guilloches</title>
+    <link>https://cormullion.github.io/pages/2018-08-10-guilloches/</link>
+    <description><![CDATA[Making guilloches patterns using the geometric lathe...  <img src="https://cormullion.github.io/assets/images/guilloches/julia-hypotrochoid.png" alt="hypotrochoid" />
+<br><a href="https://cormullion.github.io/pages/2018-08-10-guilloches/">Read more</a>]]></description>
+    <author>cormullion</author>
+    <guid>https://cormullion.github.io/pages/2018-08-10-guilloches/</guid>
+    <pubDate>Fri, 10 Aug 2018 00:00:00 UT</pubDate>
+  </item>
+  <item>
+    <title>Infographic</title>
+    <link>https://cormullion.github.io/pages/2018-08-02-infographic/</link>
+    <description><![CDATA[Making an infographic showing the development of Julia from 2009 to 2018 <img src="https://cormullion.github.io/assets/images/infographic/splash.png" alt="infographic" />
+<br><a href="https://cormullion.github.io/pages/2018-08-02-infographic/">Read more</a>]]></description>
+    <author>cormullion</author>
+    <guid>https://cormullion.github.io/pages/2018-08-02-infographic/</guid>
     <pubDate>Thu, 2 Aug 2018 00:00:00 UT</pubDate>
   </item>
   <item>
-    <title>Asterisk</title>
-    <link>https://cormullion.github.io/pages/2020-10-09-asterisk/index.html</link>
-    <description><![CDATA[A look at the history of the asterisk...
-<br><a href="https://cormullion.github.io/pages/2020-10-09-asterisk/index.html">Read more</a>]]></description>
+    <title>Bezier Moi</title>
+    <link>https://cormullion.github.io/pages/2018-06-20-bezier/</link>
+    <description><![CDATA[Luxor provides some support for Bézier curves, but there&#39;s no room for any more documentation—it&#39;s already too big. So the intention of this post is to provide some of the missing information about what&#39;s up with Bézier curves and how you might use them. <img src="https://cormullion.github.io/assets/images/bezier/drawcurvaturecomb.svg" alt="" />
+<br><a href="https://cormullion.github.io/pages/2018-06-20-bezier/">Read more</a>]]></description>
     <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2020-10-09-asterisk/index.html</guid>
-    <pubDate>Fri, 9 Oct 2020 00:00:00 UT</pubDate>
+    <guid>https://cormullion.github.io/pages/2018-06-20-bezier/</guid>
+    <pubDate>Thu, 21 Jun 2018 00:00:00 UT</pubDate>
+  </item>
+  <item>
+    <title>String logo</title>
+    <link>https://cormullion.github.io/pages/2018-05-05-string/</link>
+    <description><![CDATA[Designing a logo for the Strings folks - some lengthy waffle <img src="https://cormullion.github.io/assets/images/string/rope-effect-four-loops.png" alt="string logos" />
+<br><a href="https://cormullion.github.io/pages/2018-05-05-string/">Read more</a>]]></description>
+    <author>cormullion</author>
+    <guid>https://cormullion.github.io/pages/2018-05-05-string/</guid>
+    <pubDate>Sat, 5 May 2018 00:00:00 UT</pubDate>
   </item>
   <item>
     <title>Some π-ography</title>
-    <link>https://cormullion.github.io/pages/2018-03-14-some-piography/index.html</link>
+    <link>https://cormullion.github.io/pages/2018-03-14-some-piography/</link>
     <description><![CDATA[Looking at the π symbol for 2018&#39;s π day <img src="assets/images/pi/piversity.png" alt="pi" />
-<br><a href="https://cormullion.github.io/pages/2018-03-14-some-piography/index.html">Read more</a>]]></description>
+<br><a href="https://cormullion.github.io/pages/2018-03-14-some-piography/">Read more</a>]]></description>
     <author>cormullion</author>
-    <guid>https://cormullion.github.io/pages/2018-03-14-some-piography/index.html</guid>
+    <guid>https://cormullion.github.io/pages/2018-03-14-some-piography/</guid>
     <pubDate>Wed, 14 Mar 2018 00:00:00 UT</pubDate>
+  </item>
+  <item>
+    <title>Pluto</title>
+    <link>https://cormullion.github.io/pages/2015-06-02-pluto/</link>
+    <description><![CDATA[The Pluto symbols <img src="https://cormullion.github.io/assets/images/pluto/pluto-astro-astro-cosmorama.png" alt="Pluto from Cosmorama" />
+<br><a href="https://cormullion.github.io/pages/2015-06-02-pluto/">Read more</a>]]></description>
+    <author>cormullion</author>
+    <guid>https://cormullion.github.io/pages/2015-06-02-pluto/</guid>
+    <pubDate>Tue, 2 Jun 2015 00:00:00 UT</pubDate>
   </item>
 </channel>
 </rss>
