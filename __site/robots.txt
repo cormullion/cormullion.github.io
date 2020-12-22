@@ -1,4 +1,4 @@
-Sitemap: https://cormullion.github.io/sitemap.xml
+Sitemap: sitemap.xml
 
 User-agent: *
 Disallow:

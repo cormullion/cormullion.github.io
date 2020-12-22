@@ -11,7 +11,12 @@
 
 # JuliaMono - a monospaced font for scientific and technical computing
 
-JuliaMono is a monospaced typeface designed for programming in the [Julia](https://julialang.org) Programming Language and in other text editing environments that require a wide range of specialist and technical Unicode characters. It was intended as a fun experiment to be presented at the 2020 JuliaCon conference in Lisbon, Portugal (which of course didn’t physically happen in Lisbon, but online).
+JuliaMono is a monospaced typeface designed for use in text
+editing environments that require a wide range of specialist
+and technical Unicode characters. It was intended as a fun
+experiment to be presented at the 2020 JuliaCon conference
+in Lisbon, Portugal (which of course didn’t physically
+happen in Lisbon, but online).
 
 JuliaMono is:
 
@@ -331,7 +336,7 @@ julia> ❤("Julia")
 I ❤ Julia
 ```
 
-An easy way to include Unicode characters at the REPL is to use the clipboard:
+An easy way to include Unicode characters at the Julia REPL is to use the clipboard:
 
 ```
 julia> clipboard(Char(0x2764))
@@ -533,6 +538,56 @@ df2 = df |>
 
 (I originally liked the idea of a more circular ``@`` sign, but in practice it doesn’t work at small point sizes, as the details disappear. But I’ve kept it anyway.)
 
+@@jm_h2
+## If you really don't like any ligatures
+@@
+
+It's possible that you don't like even the few ligatures and
+alternate characters provided in JuliaMono. If switching
+them off isn't possible, or not drastic enough, you can
+strip them out of the font with the following terminal magic (courtesy
+of @fredrikekre):
+
+```
+$ cat Dockerfile
+FROM python
+RUN pip install fonttools
+COPY run.sh /scripts/
+ENTRYPOINT ["/scripts/run.sh"]
+
+$ cat run.sh
+#!/bin/bash
+set -euo pipefail
+
+VERSION="${1-}"
+
+mkdir -p /juliamono-source
+mkdir -p /juliamono-output
+mkdir -p /juliamono
+
+# Download release version
+curl -L "https://github.com/cormullion/juliamono/releases/download/v${VERSION}/JuliaMono.tar.gz" | tar -xzvC /juliamono-source
+
+# Strip glyphs
+for f in /juliamono-source/*.ttf
+do
+    pyftsubset "$f" '*' --output-file=/juliamono-output/$(basename "$f")  --layout-features-=calt,liga
+done
+
+# Pack it up
+tar -C /juliamono-output -czvf /juliamono/JuliaMono-${VERSION}.tar.gz $(ls /juliamono-output)
+
+$ cat Makefile
+.PHONY: image strip
+VERSION := 0.021
+image:
+        docker build -t juliamono-strip:latest .
+
+strip:
+        docker run --rm -v ${PWD}:/juliamono juliamono-strip:latest "${VERSION}"
+```
+
+
 @@jm_h1
 # Private Use Areas (PUAs)
 @@
@@ -549,6 +604,10 @@ julia> foreach(println, '\ue800':'\ue802')
 ```
 
 The obvious drawback to using characters in a Private Use Area is that you have to have installed the font wherever you want to see them rendered correctly, unless they’ve been converted to outlines or bitmaps. If the font isn’t installed (eg on github), you have no idea what glyph - if any - will be displayed.
+
+@@jm_h2
+# Accessing PUA characters in the Julia REPL
+@@
 
 You can define these to be available at the Julia REPL. For example, say you want the Julia circles to be available in the terminal when you type `\julialogo`~~~<span style="font-size: 1.5em;"></span>~~~ in a Julia session with the JuliaMono font active. Run this:
 
@@ -597,7 +656,18 @@ $ brew install --cask font-juliamono
 
 ### Windows
 
-To install and activate a font on Windows, go to Computer |> Local Disk (C:) |> Windows |> Fonts. Locate the expanded .zip file folder, and drag the font files from there into the Fonts folder.
+You can install a font for a single user or for all users.
+(Some applications (such as Java) don't see fonts unless
+they have been installed for all users.)
+
+To install and activate a font on Windows, go to Computer |>
+Local Disk (C:) |> Windows |> Fonts. Locate the expanded
+.zip file folder, and drag the font files from there into
+the Fonts folder.
+
+To install for all users, just right-click the font file(s)
+and choose Install for All Users. Administrator privileges
+are required.
 
 ### Linux - using Font Manager
 
@@ -643,12 +713,14 @@ $ fc-list | grep "JuliaMono"
 The typeface was introduced at the 2020 Julia Programming Language conference, JuliaCon, in Lisbon, Portugal, and it was (going to be) my contribution to the festivities. It was an experiment to see whether a font could be designed with a specific programming language in mind.
 
 @@jm_h2
-## ‘What’s Julia-specific about it? How does it “work well with” Julia?’
+## ‘Is it just for Julia coding? How does it “work well with” Julia?’
 @@
 
 * it has all the glyphs used in the Unicode Input chapter of the Julia documentation (except for the emojis)
-* the glyphs were designed with the Julia programming language in mind
-* the font contains special features such as contextual alternates, stylistic sets, and “ligatures” to complement Julia syntax
+* a few of the glyphs and ligatures were designed with the Julia programming language in mind
+* the font contains special features such as contextual alternates, stylistic sets, and “ligatures” that complement Julia syntax
+
+But in general it can be used for any purpose.
 
 @@jm_h2
 ## ‘Where can I see it in action?’
@@ -659,6 +731,8 @@ You can visit [this mirror of the Julia blog](https://julialangblogmirror.netlif
 You can browse through [this local copy](/assets/images/juliamono/juliamanual/index.html) of an old Julia manual. The default Roboto-Mono font has been replaced with JuliaMono-Regular.
 
 As an example of using JuliaMono with [Documenter.jl](https://github.com/JuliaDocs/Documenter.jl)-generated documents, see the documentation for [Luxor.jl](https://github.com/JuliaGraphics/Luxor.jl).
+
+Feel free to compare it with other fonts at [dev fonts](https://devfonts.gafi.dev/) [www.programmingfonts.org](https://www.programmingfonts.org/#julia-mono) or
 
 @@jm_h2
 ## ‘I don’t like it as much as \$(myfavouritefont)’
@@ -911,9 +985,9 @@ Then you can use something like `minted` to format the code.
 ## ‘There are problems with rendering and alignment’
 @@
 
-it’s well-known that there are two different styles of font rendering - the Apple way, and the Microsoft way. Apple and Microsoft have always disagreed in how to display fonts on screens. The argument has been going on for over a decade, now. For example, see [this blog post](https://damieng.com/blog/2007/06/13/font-rendering-philosophies-of-windows-and-mac-os-x).
+It’s well-known that there are basically two different styles of font rendering - the Apple way, and the Microsoft way. Apple and Microsoft have always disagreed in how to display fonts on screens. The argument has been going on for over a decade, now. For example, see [this blog post](https://damieng.com/blog/2007/06/13/font-rendering-philosophies-of-windows-and-mac-os-x).
 
-In brief: Windows stretches and distorts the glyph shapes to better hit the pixel boundaries, but at the expense of distorting the forms. Apple renders the glyph shapes precisely, but uses antialiasing to smooth the outlines, making the type a bit fuzzy.
+In brief: Windows stretches and distorts the glyph shapes to better hit the pixel boundaries, but at the expense of distorting the forms. Apple renders the glyph shapes precisely, but uses antialiasing to smooth the outlines, making the type a bit fuzzy on lower-resolution displays.
 
 @@jm_h2
 ## ‘Aren’t these font files too big?’
@@ -953,15 +1027,13 @@ And how will JuliaMono contribute? It’s often in the nature of an experiment t
 ## ‘Is it finished?’
 @@
 
-The first β release, version 0.001, was released on July 27, 2020.
-
-The most recent β release, version 0.023, was released in October 2020. Always download the latest version if you want the typeface to perform as well as it can.
+The first β release, version 0.001, was released on July 27, 2020. The most recent β release, version 0.028, was released in November 2020. Always download the latest version if you want the typeface to perform as well as it can.
 
 @@jm_h2
 ## ‘Why don’t these accents/marks work properly?’
 @@
 
-Unicode (and Julia) allows you to combine characters. In the REPL, you can type a character and then modify it by adding a mark or diacritic. For example:
+Unicode (and Julia) allows you to combine characters. In the Julia REPL, you can type a character and then modify it by adding a mark or diacritic. For example:
 
 ```
 e\vec

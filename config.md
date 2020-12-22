@@ -5,9 +5,9 @@ website.
 @def author = "cormullion"
 
 <!-- RSS: these three are mandatory, otherwise no RSS generation  -->
-@def website_title = "Cormullion's blog"
-@def website_descr = "playing around in the Julia language"
-@def website_url   = "https://cormullion.github.io"
+<!-- @def website_title = "Cormullion's blog" -->
+<!-- @def website_descr = "playing around in the Julia language" -->
+<!-- @def website_url   = "https://cormullion.github.io" -->
 
 <!-- ---------------------------------------------------
 Add here global latex commands to use throughout your
