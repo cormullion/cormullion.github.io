@@ -4,6 +4,7 @@ images/.DS_Store
 .jekyll-metadata
 .DS_Store
 old*/*
-franklin*
+franklin.pub
+franklin
 package-lock.json
 Manifest.toml

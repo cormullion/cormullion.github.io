@@ -28,15 +28,15 @@
 	font-family: JuliaMono-Black;
 	max-width: 50ch;
 	hanging-punctuation: first;
-	margin-bottom: 0.5rem;
 }
 
 .jm_h2, .jm_h3 {
 	font-size: 2.0rem;
 	font-family: JuliaMono-ExtraBold;
 	max-width: 50ch;
-	margin-bottom: 0.5rem;
+	margin-bottom: 1.5rem;
 	hanging-punctuation: first;
+	padding-bottom: 0.3em;
 }
 
 .jm_h4, .jm_h5 {
@@ -87,6 +87,7 @@
     padding-left: 10px;
 }
 
+
 jm_p > jm_code {
 	font-family: JuliaMono-Regular;
 	margin-top: 0.25rem;
@@ -116,7 +117,7 @@ jm_pre, jm_code {
 }
 
 .jm_codealt * {
-	font-feature-settings: "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "ss10", "ss11";
+	font-feature-settings: "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "ss10", "ss11", "ss12";
 	font-variant-ligatures: no-contextual;
 }
 
@@ -132,7 +133,7 @@ jm_pre, jm_code {
 
 .jm_code_ss_on {
 	width:100%;
-	font-feature-settings: "zero", "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "ss10", "ss11";
+	font-feature-settings: "zero", "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "ss10", "ss11", "ss12";
 	font-variant-ligatures: no-contextual;
 }
 

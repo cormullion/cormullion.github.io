@@ -86,9 +86,9 @@ end
 end
 ```
 
-There are different weights of JuliaMono, so you can control the amount of contrast you have in your highlighted code: ~~~<span style="font-family: JuliaMono-Light;">JuliaMono-Light</span>~~~, JuliaMono-Regular, ~~~<span style="font-family: JuliaMono-Medium;">JuliaMono-Medium</span>~~~, ~~~<span style="font-family: JuliaMono-Bold;">JuliaMono-Bold</span>~~~, ~~~<span style="font-family: JuliaMono-ExtraBold;">JuliaMono-ExtraBold</span>~~~, and ~~~<span style="font-family: JuliaMono-Black;">JuliaMono-Black</span>~~~. [^masters]
+There are different weights of JuliaMono, so you can control the amount of contrast you have in your highlighted code, including: ~~~<span style="font-family: JuliaMono-Light;">JuliaMono-Light</span>~~~, JuliaMono-Regular, ~~~<span style="font-family: JuliaMono-Medium;">JuliaMono-Medium</span>~~~, ~~~<span style="font-family: JuliaMono-Bold;">JuliaMono-Bold</span>~~~, ~~~<span style="font-family: JuliaMono-ExtraBold;">JuliaMono-ExtraBold</span>~~~, and ~~~<span style="font-family: JuliaMono-Black;">JuliaMono-Black</span>~~~. [^masters]
 
-(There are also versions of two of the fonts with “Latin” in the name: these are stripped down versions supporting just the basic MacRoman/Windows1252 “Latin” character sets, intended for use as place-holders, of interest mainly if you want to have more control over font loading times in web browser-based applications.)
+(There are also versions of two of the fonts with “Latin” in the name: these are stripped down versions supporting just the basic MacRoman/Windows1252 “Latin” character sets, intended for use as place-holders, which are of interest only if you want to have more control over font loading times in web browser-based applications.)
 
 In the hands of a virtuoso (such as Dr Zygmunt Szpak, the author of the following Julia code fragment[^zscode]), the range of available Unicode characters can be quite expressive:
 
@@ -179,6 +179,10 @@ Here are some samples of various languages[^languages] :
 		<td>Voix ambiguë d’un cœur qui au zéphyr préfère les jattes de kiwi.</td>
 	</tr>
 	<tr>
+		<td>Georgian</td>
+		<td>სწრაფი ყავისფერი მელა ახტება ზარმაც ძაღლს.</td>
+	</tr>
+	<tr>
 		<td>German</td>
 		<td>Victor jagt zwölf Boxkämpfer quer über den großen Sylter Deich.</td>
 	</tr>
@@ -263,14 +267,13 @@ Here are some samples of various languages[^languages] :
 		<td>Чуєш їх, доцю, га? Кумедна ж ти, прощайся без ґольфів!</td>
 	</tr>
 </table>
-
 ~~~
 
 @@jm_h1
 # Unicode coverage
 @@
 
-One of the goals of JuliaMono is to include most of the characters that a typical programmer would reasonably expect to find. (Except for all those emojis - they are best handled by the operating system.) Here’s a thousand or so chosen at random:
+One of the goals of JuliaMono is to include most of the characters that a typical programmer or monospaced-font user would reasonably expect to find. (Except for all those emojis - they are best handled by the operating system.) Here’s a thousand or so chosen at random:
 
 ~~~<img src="/assets/images/juliamono/unicode-sample.svg" width="100%" alt="Unicode sampler"> ~~~
 
@@ -289,7 +292,6 @@ From a design perspective, forcing every character into the same size box is a p
 ~~~
 <img src="/assets/images/juliamono/imageinterminal.png" alt="ImageInTerminal">
 ~~~
-
 
 It’s also a good idea to support box-drawing characters and DataFrames.jl output (terminal permitting):
 
@@ -311,9 +313,11 @@ df = 10×2 DataFrame
 │ 10  │ sample 10      │ ▁▇▄▂▅▃▇▁▇▇▆▄▇▅▄▂▄▅▄ │
 ```
 
-(Can you spot the little used and sadly mathematically-unsupported "times" character?)
+(Can you spot the little used and sadly mathematically-unsupported “times” (×) character?)
 
-JuliaMono is quite greedy[^greedy], and contains a lot of Unicode glyphs.
+For a comparison of JuliaMono with other math-capable monospaced fonts, visit [mono-math.netlify.app](https://mono-math.netlify.app), which shows how Unicode math symbols look.
+
+JuliaMono is quite greedy[^greedy], and contains quite a few Unicode glyphs.
 
 ~~~<img src="/assets/images/juliamono/barchart.svg" width="100%" alt="silly barchart"> ~~~
 
@@ -384,7 +388,6 @@ In JuliaMono, the following substitutions are applied when the **contextual alte
     <td class="jm_code_ss_off">::</td>
     <td class="jm_code_calt_on">::</td>
     </tr>
-
 </table>
 ~~~
 
@@ -503,6 +506,12 @@ Here’s a list of the stylistic sets currently available in JuliaMono.
     <td class="jm_code_ss_off">`</td>
     <td class="jm_code_ss_thinnergrave">`</td>
     <td><p>thinner grave</p></td>
+	</tr>
+	<tr>
+	<td>ss12</td>
+    <td class="jm_code_ss_off">====</td>
+    <td class="jm_code_ss_equal">====</td>
+    <td><p>joining equals</p></td>
     </tr>
 
 </table>
@@ -512,7 +521,7 @@ All this fancy technology is under the control of the application and the operat
 
 Browser-based editors such as Juno and VS Code support many OpenType features in their editor windows, but not in the terminal/console windows. They provide a settings area where you can type CSS or JSON selectors to control the appearance of features, and you’ll have to know the feature codes. Some features are opt in, others are opt out; this too can vary from application to application.
 
-Terminal/console applications also vary a lot; on MacOS the **Terminal** and **iTerm** applications try to offer controls for OpenType features, with varying degrees of success. On Linux, some terminal applications such as [Kitty](https://sw.kovidgoyal.net/kitty/#font-control) offer quite good support, but others such as [Alacritty](https://github.com/alacritty/alacritty) offer little or none, as yet. [^terminal]
+Terminal/console applications also vary a lot; on MacOS the **Terminal** and **iTerm** applications try to offer controls for OpenType features, with varying degrees of success. On Linux, some terminal applications such as [Konsole](https://konsole.kde.org) and [Kitty](https://sw.kovidgoyal.net/kitty/#font-control) offer quite good support, but others such as [Alacritty](https://github.com/alacritty/alacritty) offer little or none, as yet. [^terminal]
 
 If the application allows, you should be able to switch the ``calt`` contextual ligatures off, particularly since quite a few people won’t like any of them in their code. For the following listing, I switch the **calt** set off using CSS (see [here](#how_do_i_control_features_in_css_in_atomjuno_or_vs_code)), and then enable some of the alternative stylistic sets: compare characters such as the **0**, **g**, **a**, **j**, and **@** with the previous listing:
 
@@ -635,7 +644,6 @@ It’s usually possible to type Unicode values directly into text. This is a use
 
 You can find the font files at [https://github.com/cormullion/juliamono](https://github.com/cormullion/juliamono).
 
-For Arch Linux, there is also a [package in the AUR](https://aur.archlinux.org/packages/ttf-juliamono/).
 
 @@jm_h2
 ## Installation
@@ -680,6 +688,8 @@ sudo apt install font-manager
 Then double-click on the font files and click Install on each one.
 
 ### Linux - on the command line
+
+For Arch Linux, there is a [package in the AUR](https://aur.archlinux.org/packages/ttf-juliamono/).
 
 Locate your font folder. Might be one of:
 
@@ -779,14 +789,14 @@ To control the display of contextual and stylistic alternates, click on the Edit
 
 This uses the feature codes ([listed here](/#contextual_and_stylistic_alternates)). These should all be switched on or off in a single line.
 
-For example, if you want all the alternate stylistic sets, use:
+For example, if you want all the currently available stylistic sets, use:
 
 ```css
 "editor.fontLigatures": "'zero', 'ss01', 'ss02', 'ss03', 'ss04',
-    'ss05', 'ss06',  'ss07', 'ss08', 'ss09', 'ss10'",
+    'ss05', 'ss06',  'ss07', 'ss08', 'ss09', 'ss10', 'ss11', 'ss12'",
 ```
 
-Or if you just don’t like the contextual alternates, prefer the slashed zero, a simpler g, and a lighter asterisk, use this:
+Or if you just don’t like the contextual alternates, but quite like the slashed zero, simpler g, and lighter asterisk, use this:
 
 ```css
 "editor.fontLigatures": "'calt' off, 'zero', 'ss01', 'ss05'",
@@ -956,7 +966,7 @@ In a $ \LaTeX $ document, you should be able to define and use local fonts.
 
 Robert Moss put together an excellent package to help negotiate the various font issues that you might encounter when using Unicode and $ \LaTeX $:
 
-[A custom Julia language style for the LaTeX listings package, and Unicode support for the JuliaMono font in a lstlisting environment.](https://github.com/mossr/julia-mono-listings).
+[A custom Julia language style for the LaTeX listings package, and Unicode support for the JuliaMono font in a `lstlisting` environment.](https://github.com/mossr/julia-mono-listings).
 
 An earlier approach that worked for me is as follows:
 
@@ -1027,7 +1037,7 @@ And how will JuliaMono contribute? It’s often in the nature of an experiment t
 ## ‘Is it finished?’
 @@
 
-The first β release, version 0.001, was released on July 27, 2020. The most recent β release, version 0.028, was released in November 2020. Always download the latest version if you want the typeface to perform as well as it can.
+The first β release, version 0.001, was released on July 27, 2020. The most recent β release, version 0.033, was released in February 2021. Always download the latest version if you want the typeface to perform at its best.
 
 @@jm_h2
 ## ‘Why don’t these accents/marks work properly?’
@@ -1057,13 +1067,13 @@ which JuliaMono renders like this:
 e⃗̇
 ```
 
-But this doesn’t work in all text environments, such as the terminals in Atom/Juno, VS Code, or Jupyter:
+However, this doesn’t work in all text environments, such as the terminals in Atom/Juno, VS Code, or Jupyter:
 
 ~~~
 <img src="/assets/images/juliamono/font-terminal-comparison.png" alt="screenshots terminal emulators">
 ~~~
 
-For Atom/Juno and VSCode, it’s due to limitations in the JavaScript terminal emulator they use (xterm.js) - there may be improvements in the future. Other terminal applications choose not to implement all OpenType features - they’re worried about the loss of performance, for example.
+For Atom/Juno and VSCode, it’s because they're using a JavaScript terminal emulator (xterm.js) rather than a full terminal. But there may be improvements in the future. Other terminal applications choose not to implement all OpenType features, for performance reasons, perhaps.
 
 If it does work for you, this is fun:
 
@@ -1083,7 +1093,7 @@ julϊ̇a
 
 Yes. JuliaMono works well, with most modern MacOS text editors, such as Atom/Juno, Visual Studio Code, Sublime Text, the excellent free CotEditor, Panic's new Nova editor, and TextEdit, among others. If these editors support OpenType features such as stylistic alternatives and ligatures (not all do), these features of JuliaMono should work well.
 
-With older applications, such as the old-school BBEdit text editor, you may experience a few glitches when using fonts such as FiraCode, IBMPlex Mono, JetBrains Mono, JuliaMono, Operator Mono, and Source Code Pro (to name the ones I checked). BBEdit doesn't support OpenType ligatures either.
+With older applications, such as the old-school BBEdit text editor, you may experience a few glitches when using fonts such as FiraCode, IBMPlex Mono, JetBrains Mono, JuliaMono, Operator Mono, and Source Code Pro (to name just the ones I checked). BBEdit doesn't support OpenType ligatures either. But apart from that, you can still use it.
 
 @@jm_h2
 ## ‘Does it work on Linux?’
@@ -1102,7 +1112,7 @@ Font management in Linux may require you to become familiar with the `fontconfig
 </alias>
 ```
 
-With some older terminal software the ligatures may cause problems (not that all terminals display ligatures properly, some are just confused by fonts that have them).
+With some older terminal software, the ligatures and alternate characters may cause problems, or not work at all. Not all terminals choose to display ligatures, others are just confused by fonts that have them.
 
 @@jm_h2
 ## ‘Does it work on Windows?’
@@ -1149,7 +1159,7 @@ One day perhaps.
 
 [^ohdear]: &nbsp; “downloading font problems” The problem might be something to do with the web security feature called [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors/CORSMissingAllowOrigin) which prevents a web page accessing the resources it needs.
 
-[^masters]:  &nbsp; “masters” In fact there are only three masters (Light, Regular, and Black), and three instances (Medium, Bold, and ExtraBold), which are interpolated between them.
+[^masters]:  &nbsp; “masters” In fact there are four masters (Light, Regular, Bold, and Black), and the other instances are interpolated between them.
 
 [^zscode]: &nbsp; “maths in code” spotted [here](https://github.com/JuliaArrays/StaticArrays.jl/issues/537#issuecomment-439863841)
 
