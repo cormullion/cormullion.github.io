@@ -30,7 +30,7 @@
 <div class="franklin-content"><blockquote>
 <p>This post was originally intended to be a light-hearted addendum to the serious math stuff that usually gets posted on the <a href="https://julialang.org/blog/">official Julia blog</a> on Pi day, but in the end there were no other contributions, so Simon asked if I wanted to go ahead anyway. So this had more prominence than I expected. This is the final draft; there were some improvements made by the community after I&#39;d submitted it.</p>
 </blockquote>
-<h1 id="some_π-ography"><a href="#some_π-ography">Some π-ography</a></h1>
+<h1 id="some_π-ography"><a href="#some_π-ography" class="header-anchor">Some π-ography</a></h1>
 <p>Although we&#39;ve known about &quot;Archimedes&#39; constant&quot; for a few millennia, we&#39;ve been referring to it as the Greek letter π only since the 1700s. Patricia Rothman <a href="https://www.historytoday.com/patricia-rothman/william-jones-and-his-circle-man-who-invented-pi">suggested</a> that the following page <em>could</em> contain one of the earliest uses of the Greek character to indicate the concept. It&#39;s from a mathematics text book written by William Jones and published in 1706:</p>
 <p><img src="/assets/images/pi/jones.png" alt="William Jones 1706" /></p>
 <p>Jones used the Greek letter in various places both to indicate the number and, like some of his predecessors, to refer to the periphery or perimeter &#40;Greek περιφέρεια&#41; of a circle, and to label points in diagrams, as we would use <code>P</code> and <code>Q</code> today. Jones also refers to it as <em>Van Ceulen&#39;s Number</em>, after the Dutch mathematician Ludolph van Ceulen, who spent a major part of his life calculating the value. &#40;He managed 35 decimal places, and asked for it to be engraved on his tombstone.&#41;</p>
@@ -47,7 +47,7 @@
 <p>As always in Julia, you can usually see how the magic is performed:</p>
 <pre><code class="language-julia">julia&gt; Base.REPLCompletions.latex_symbols&#91;&quot;\\pi&quot;&#93;
 &quot;π&quot;</code></pre>
-<h3 id="more_π"><a href="#more_π">More π</a></h3>
+<h3 id="more_π"><a href="#more_π" class="header-anchor">More π</a></h3>
 <p>We usually use the <code>U&#43;03C0</code> π from the Unicode block for Greek and Coptic text glyphs &#40;Coptic was the Greek-based language adopted by the Egyptians to replace hieroglyphs&#41;, but there are other π symbols intended mainly for mathematical use. The following snippet of Julia code tries to show all the lower-case Unicode π symbols:</p>
 <pre><code class="language-julia">morepi &#61; &#91;
 &#40;0x3c0,    &quot;\\pi&quot;,           &quot;GREEK SMALL LETTER PI&quot;&#41;
@@ -75,12 +75,12 @@ foreach&#40;p -&gt;
 <pre><code class="language-julia">julia&gt; 𝜋 &#61; 3
 julia&gt; 2𝜋
 6</code></pre>
-<h3 id="the_publisher_symbol"><a href="#the_publisher_symbol">The publisher symbol Ⓟ</a></h3>
+<h3 id="the_publisher_symbol"><a href="#the_publisher_symbol" class="header-anchor">The publisher symbol Ⓟ</a></h3>
 <p>Not all fonts contain a suitable Greek π at <code>U&#43;03C0</code>. A few expensive fonts such as <a href="https://www.typography.com/fonts/gotham/overview/">Gotham</a> offer the circled P symbol at <code>U&#43;03c0</code> instead of π. This is the &quot;publisher&quot; symbol, which usually lives at <code>U&#43;2117</code> &#40;the one at <code>U&#43;24C5</code> is also used&#41;, and it&#39;s like the copyright symbol © but for sound recordings. The story behind this is that, particularly before the days of Unicode standardization, font companies sometimes favoured pragmatism over correctness. According to <a href="http://www.typophile.com/node/45116">David Berlow</a>:</p>
 <blockquote>
 <p>we at Font Bureau understand how users work, and so we put the p in a circle, a &quot;must-have&quot; glyph that is very difficult for a user to make on the fly, in the slot of a glyph &#40;math pi&#41; that most people really don&#39;t need &#40;because even if they do, it&#39;s in the Symbol font on every single computer on earth&#41;.</p>
 </blockquote>
-<h3 id="designs_on_π"><a href="#designs_on_π">Designs on π</a></h3>
+<h3 id="designs_on_π"><a href="#designs_on_π" class="header-anchor">Designs on π</a></h3>
 <p>Can we use Julia to find all the different designs of π? My first attempt at this challenge uses <a href="https://github.com/JuliaGraphics/Fontconfig.jl">Fontconfig.jl</a> to produce a list of installed fonts, and <a href="https://github.com/JuliaGraphics/Luxor.jl">Luxor.jl</a> to draw them in a table. It at least gives a glimpse of the variety of designs available, and illustrates some of the issues. Fonts that provide a zero-width glyph are skipped, meaning the table winds up being smaller than originally planned.</p>
 <pre><code class="language-julia">using Fontconfig, Luxor
 
@@ -129,7 +129,7 @@ tabulatepi&#40;&#41;</code></pre>
 <p>Here are a few of the more interesting designs: the portly Cooper Black and Tiffany Heavy, the minimalist Verdana and Tahoma &#40;looking almost like &quot;n&quot;s?&#41;, the eccentric Gill &quot;Kayo&quot; Sans, and the silly Chalkduster.</p>
 <p><img src="/assets/images/pi/piversity.png" alt="piversity" /></p>
 <p>I like the small version from Dalliance; it&#39;s nicely old-school, where &quot;old-school&quot; here means based on an original from 1799, not long after Euler&#39;s death.</p>
-<h3 id="the_average_π"><a href="#the_average_π">The average π</a></h3>
+<h3 id="the_average_π"><a href="#the_average_π" class="header-anchor">The average π</a></h3>
 <p>It occurred to me to ask &quot;what is the average of π?&quot;, or &quot;what would it look like if all the πs were displayed at the same time?&quot;. Using the same font list generation as before, I ran this:</p>
 <pre><code class="language-julia">function textstroke&#40;s, pos, action&#41;
     @layer begin

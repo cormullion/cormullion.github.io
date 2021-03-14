@@ -30,11 +30,11 @@
 <div class="franklin-content"><blockquote>
 <p>This page contains quite a few animated GIFs. I apologise in advance if your browser or network connection doesn’t like them. It’s much easier to add a GIF than it is to embed a video into a GitHub pages blog, unfortunately.</p>
 </blockquote>
-<h1 id="pentachoron"><a href="#pentachoron">Pentachoron</a></h1>
+<h1 id="pentachoron"><a href="#pentachoron" class="header-anchor">Pentachoron</a></h1>
 <p><img src="/assets/images/pentachoron/header-image.svg" alt="image label" /></p>
 <p>I encountered the word “pentachoron’ recently for the first time, and I thought it had to be something cool. Turns out it is, so I thought I’d have a go at drawing one...</p>
 <p>Unfortunately, it’s a 4-dimensional object, which is going to tax my limited 2D skills. But I like being out of my depth.</p>
-<h2 id="first_steps"><a href="#first_steps">First steps</a></h2>
+<h2 id="first_steps"><a href="#first_steps" class="header-anchor">First steps</a></h2>
 <p>The first job is to define a couple of types to help organize all the various points.</p>
 <p>Here’s an immutable structure to hold the coordinates of a point in four dimensions. In four dimensions, the axes are usually called <code>x</code>, <code>y</code>, <code>z</code>, and <code>w</code>.</p>
 <pre><code class="language-julia">struct Point4D&#123;T&#125; &lt;: AbstractArray&#123;T, 1&#125;
@@ -58,7 +58,7 @@ Base.getindex&#40;pt::Point4D, i&#41; &#61; &#91;pt.x, pt.y, pt.z, pt.w&#93;&#91
 end
 
 Base.size&#40;pt::Point3D&#41; &#61; &#40;3, &#41;</code></pre>
-<h2 id="conversion"><a href="#conversion">Conversion</a></h2>
+<h2 id="conversion"><a href="#conversion" class="header-anchor">Conversion</a></h2>
 <p>The primary task we have to address is how to convert a 4D point into a 2D point. Let’s start with the easier task: how to convert a 3D point into a 2D point, ie how can we draw a 3D shape on a flat surface?</p>
 <p>Consider a simple cube. The front face and the back face could have the same X and Y coordinates, and vary only by their Z values.</p>
 <p>&#40;This is just a diagram, it’s not really 3D...&#41;</p>
@@ -132,7 +132,7 @@ end</code></pre>
 <pre><code class="language-julia">function flatten&#40;shape4&#41;
     return map&#40;pt3 -&gt; convert&#40;Point, pt3&#41;, map&#40;pt4 -&gt; convert&#40;Point3D, pt4&#41;, shape4&#41;&#41;
 end</code></pre>
-<h2 id="going_up_a_level"><a href="#going_up_a_level">Going up a level</a></h2>
+<h2 id="going_up_a_level"><a href="#going_up_a_level" class="header-anchor">Going up a level</a></h2>
 <p>To test this, we’ll define the vertices of a unit pentachoron:</p>
 <pre><code class="language-julia">const n &#61; -1/√5
 
@@ -183,7 +183,7 @@ const pentachoron &#61; &#91;Point4D&#40;vertex...&#41; for vertex in &#91;
 end 600 250 &quot;../images/pentachoron/firstdraw.svg&quot;</code></pre>
 <p><img src="/assets/images/pentachoron/firstdraw.svg" alt="image label" /></p>
 <p>This isn’t very interesting, although I <em>think</em> it’s correct. To see a more appealing display, let’s make it dance...</p>
-<h2 id="swings_and_roundabouts"><a href="#swings_and_roundabouts">Swings and roundabouts</a></h2>
+<h2 id="swings_and_roundabouts"><a href="#swings_and_roundabouts" class="header-anchor">Swings and roundabouts</a></h2>
 <p>You usually rotate 2D points about a 1D point. You usually rotate 3D points about a 2D line &#40;often one of the XYZ axes&#41;. So logically you’d rotate 4D points with reference to a 3D plane. We’ll define some matrices that do 4D rotations relative to a plane defined by two of the X, Y, Z, and W axes.</p>
 <p>As I’m thinking about it, the XY plane is typically the plane of the drawing surface. If you think of the XY plane as a computer screen straight in front of you, the XZ plane is parallel to your desk or floor, and the YZ plane is like a wall beside your desk on your right or left side.</p>
 <p>But what about the XW plane? And the YW and ZW planes, for that matter? This is the mystery of 4D shapes: we can’t see these planes, we can only imagine their existence by watching shapes moving through and around them.</p>
@@ -238,7 +238,7 @@ end</code></pre>
 end</code></pre>
 <p>So we can write <code>rotate4&#40;A, XW&#40;π/2&#41;&#41;</code> to rotate the array of points in <code>A</code> in the XW plane by π/2. We can also write <code>rotate4&#40;A, XW&#40;π/2&#41; * XY&#40;π/2&#41;&#41;</code> to rotate the points first in the XW plane and then in the XY plane.</p>
 <p>Notice that the <code>rotate4&#40;&#41;</code> function returns a new array, rather than modifying the original one. This probably has some disadvantages, but for now it means that we don’t have to keep track of mutating objects so carefully.</p>
-<h2 id="it_moves"><a href="#it_moves">It moves</a></h2>
+<h2 id="it_moves"><a href="#it_moves" class="header-anchor">It moves</a></h2>
 <p>We’re now able to make an animation that rotates our pentachoron in one or more planes.</p>
 <p>The <code>frame&#40;&#41;</code> function generates a single frame, using the framenumber &#40;<code>eased_n</code> provides a normalized version of the framenumber modulated by the easing function&#41; to control the rotation between 0 and 2π. The scalefactor makes the unit shape big enough to fill the frame.</p>
 <p>It’s helpful to color the faces very slightly, using <code>poly&#40;..., :fill&#41;</code>-er.</p>
@@ -309,7 +309,7 @@ makemovie&#40;800, 800, &quot;pentachoron-xz-yw.gif&quot;, scalefactor&#61;2000&
 <p>You can draw a few different models at once, placing each one in a separate cell:</p>
 <p><img src="/assets/images/pentachoron/showall-pentachoronmovie.gif" alt="image label" /></p>
 <p>This is showing 2D shadows of 3D shadows of 4D objects. Do these objects exist? I don’t know...</p>
-<h3 id="other_shapes"><a href="#other_shapes">Other shapes</a></h3>
+<h3 id="other_shapes"><a href="#other_shapes" class="header-anchor">Other shapes</a></h3>
 <p>While the word “pentachoron” was unfamiliar to me until recently, the word “tesseract” is much more familiar. After all, didn’t the tesseract contain the Space Stone, one of the six Infinity Stones that apparently predate the universe and possess unlimited energy? &#40;According to the scientists at Marvel Comics, at least...&#41; It’s also the name of a 4-dimensional hypercube, one step up from the pentachoron.</p>
 <p>Here are the vital numbers for the tesseract:</p>
 <pre><code class="language-julia">const tesseract &#61; &#91;Point4D&#40;vertex...&#41; for vertex in &#91;
@@ -382,7 +382,7 @@ makemovie&#40;800, 800, &quot;tesseract-xz-yw.gif&quot;, scalefactor&#61;2000&#4
 <p>&#40;Just for fun I temporarily switched the color scheme over to the Julia logo colors. You can see the 3D rendering problems more clearly, as well&#33;&#41;</p>
 <p>Here’s a composite of four pairs of rotations:</p>
 <p><img src="/assets/images/pentachoron/showall-tesseractmovie.gif" alt="image label" /></p>
-<h2 id="enough_is_enough"><a href="#enough_is_enough">Enough is enough</a></h2>
+<h2 id="enough_is_enough"><a href="#enough_is_enough" class="header-anchor">Enough is enough</a></h2>
 <p>It’s tempting to go further, but these web pages do get very big with all these GIFs. But just one more... I quite like this one, the <em>hexadecachoron</em>:</p>
 <pre><code class="language-julia">const hexadecachoron &#61; &#91;Point4D&#40;vertex...&#41; for vertex in &#91;
     &#91; 1,  0,  0,  0&#93;,

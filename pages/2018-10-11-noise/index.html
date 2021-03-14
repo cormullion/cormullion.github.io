@@ -28,7 +28,7 @@
 
 <!-- Content appended here -->
 <div class="franklin-content"><p><img src="/assets/images/noise/ice-800.png" alt="noise" /></p>
-<h1 id="noise"><a href="#noise">Noise</a></h1>
+<h1 id="noise"><a href="#noise" class="header-anchor">Noise</a></h1>
 <blockquote>
 <p>This is another post in the ongoing series in which I try to learn 2D vector graphics using Julia. It doesn&#39;t contain any revelations or new material, and you should visit the following sites if you&#39;re looking for a good introduction to the subject of noise in graphics:</p>
 </blockquote>
@@ -41,7 +41,7 @@
 </li>
 </ul>
 <p>I&#39;m using Julia version 1.0 if you want to play along; you can find the source files and notebooks on the github. If you do, you&#39;ll need the packages <a href="https://github.com/JuliaGraphics/Luxor.jl">Luxor</a>, <a href="https://github.com/JuliaGraphics/Colors.jl">Colors</a>, and <a href="https://github.com/JuliaGraphics/ColorSchemes.jl">ColorSchemes</a>. I used  <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a> to produce the Markdown and Jupyter notebook versions.</p>
-<h3 id="random_versus_noise"><a href="#random_versus_noise">Random versus Noise</a></h3>
+<h3 id="random_versus_noise"><a href="#random_versus_noise" class="header-anchor">Random versus Noise</a></h3>
 <p>Luxor provides a function called <code>noise&#40;&#41;</code>. This can accept a single floating-point number as input, and it returns a value between 0.0 and 1.0.</p>
 <pre><code class="language-julia">using Luxor
 
@@ -162,7 +162,7 @@ end
     end
 end 800 400 &quot;images/noise/pebbles.png&quot;</code></pre>
 <p><img src="/assets/images/noise/pebbles.png" alt="image label" /></p>
-<h3 id="detail_and_persistence"><a href="#detail_and_persistence">Detail and persistence</a></h3>
+<h3 id="detail_and_persistence"><a href="#detail_and_persistence" class="header-anchor">Detail and persistence</a></h3>
 <p>The <code>noise&#40;&#41;</code> function has two optional keyword arguments that let you tweak the knobs of the noise generator.</p>
 <p>The first is <code>detail</code>, an integer. Increasing it from the default value of 1 upwards will add finer detail to the basic noise. The second is <code>persistence</code>, a floating-point value between 0 and 1 &#40;or more&#41;.</p>
 <p><code>detail</code> is graphed here with values from 1 to 12. As the level increases, you can see that the same overall noise contours are gradually modulated with finer variations.</p>
@@ -258,14 +258,14 @@ end 800 120 &quot;images/noise/text-setting.png&quot;</code></pre>
 <p><img src="/assets/images/noise/text-setting.png" alt="image label" /></p>
 <p>I then used the <code>readpng&#40;&#41;</code> and <code>placeimage&#40;&#41;</code> functions to add a background image &#40;the original Tenniel illustration&#41;, with the following result:</p>
 <p><img src="/assets/images/noise/jabberwocky.png" alt="image label" /></p>
-<h3 id="why_noise"><a href="#why_noise">Why noise?</a></h3>
+<h3 id="why_noise"><a href="#why_noise" class="header-anchor">Why noise?</a></h3>
 <p>The first use of computer graphics in movies is generally considered to be Tron &#40;1981&#41;.</p>
 <p>Tron lies at the very beginning of the history of CGI in the movies, and the technology available to the artists, mathematicians, and programmers making Tron was amazingly underpowered compared with the computing power that we have today on our wrists, let alone on our phones.</p>
 <p>Ken Perlin was a mathematician and programmer who worked on Tron, and &#40;I think after the film was released&#41; he realised that there was room for using mathematical techniques for realistic-looking surfaces and textures, such as terrain.</p>
 <p><img src="/assets/images/noise/tron-800.png" alt="image label" /></p>
 <p>Ken&#39;s noise, or Perlin Noise as it became known, was quickly adodpted as the best way to generate naturalistic surfaces.</p>
 <p>I think the reason why natural scenes appear to us as variable but not completely random is due to the &#40;possibly hidden&#41; larger scale processes that make smaller and more visible details clump together, and appear to work together and change gradually. For example, clouds, mountains, and pebble beaches have large scale structure controlled by unseen forces like heat, pressure, and gravity. We mostly see the objects that are subject to these forces, rather than the forces themselves.</p>
-<h3 id="moving_into_2d"><a href="#moving_into_2d">Moving into 2D</a></h3>
+<h3 id="moving_into_2d"><a href="#moving_into_2d" class="header-anchor">Moving into 2D</a></h3>
 <p>So far the noise we&#39;ve been producing has been one-dimensional, although we&#39;ve been using 2D graphics to draw it.</p>
 <p>The <code>noise&#40;&#41;</code> function can accept two floating-point numbers as input. These effectively define a rectangular grid of varying noise values: the x and y inputs produce a third value which requires representation.</p>
 <p>A simple way of doing this is to draw a table and vary the color of each square, giving a type of heat map.</p>
@@ -384,7 +384,7 @@ end
 
 isograph&#40;generatenoisearray&#40;100, 100, rate&#61;0.08&#41;&#41;</code></pre>
 <p><img src="/assets/images/noise/isosurface-2.png" alt="image label" /></p>
-<h3 id="what_more_dimensions"><a href="#what_more_dimensions">What, more dimensions?</a></h3>
+<h3 id="what_more_dimensions"><a href="#what_more_dimensions" class="header-anchor">What, more dimensions?</a></h3>
 <p>So far we&#39;ve been generating 2D noise. The <code>noise&#40;&#41;</code> function can also accept three floating-point numbers as input. This produces noise values in 3D space, where each 3D point can have a noise value between 0 and 1. Rendering these point clouds is definitely a job for something other than a simple 2D graphics system. But, while we&#39;re here, let&#39;s have a go:</p>
 <pre><code class="language-julia">function buildarray&#40;a::AbstractArray; rate&#61;20&#41;
     sx, sy, sz &#61; size&#40;a&#41;
@@ -424,7 +424,7 @@ const A &#61; Array&#123;Float64, 3&#125;&#40;undef, 50, 50, 50&#41;
 end 800 800 &quot;images/noise/isosolid.png&quot;</code></pre>
 <p><img src="/assets/images/noise/isosolid.png" alt="image label" /></p>
 <p>The noise values nearer 1 look like hot plasma, whereas values nearer 0 are almost translucent. It suggests what you might expect to see from a real volume visualization tool.</p>
-<h2 id="journey_to_algorithmia"><a href="#journey_to_algorithmia">Journey to Algorithmia</a></h2>
+<h2 id="journey_to_algorithmia"><a href="#journey_to_algorithmia" class="header-anchor">Journey to Algorithmia</a></h2>
 <p>The final images in this post combine 2D noise and 1D noise; 2D noise for the sky, and 1D noise to create the contours.</p>
 <p>There&#39;s an <code>initnoise&#40;&#41;</code> function. This is broadly the equivalent of the <code>Random.seed&#33;&#40;&#41;</code> function in Julia. This is useful when you want the noise to vary from image to image.</p>
 <pre><code class="language-julia">function layer&#40;leftminheight, rightminheight, noiserate;

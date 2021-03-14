@@ -26,7 +26,7 @@
 
 
 <!-- Content appended here -->
-<div class="franklin-content"><h1 id="depth"><a href="#depth">Depth</a></h1>
+<div class="franklin-content"><h1 id="depth"><a href="#depth" class="header-anchor">Depth</a></h1>
 <p>The other day I found myself idly staring at a Pluto notebook, wondering about the logo and how it would move when animated.</p>
 <pre><code class="language-julia">using Luxor
 function plutodots&#40;radius&#61;50; outercircleratio&#61;0.75, innercircleratio&#61;0.65&#41;
@@ -94,7 +94,7 @@ end 600 300 &quot;_assets/images/depth/morepluto1.svg&quot;</code></pre>
 <p><img src="/assets/images/depth/morepluto1.svg" alt="pluto logo 2" /></p>
 <p>nah - this also looks a bit odd. Anyway, I&#39;m happy to leave this task to the developers, who know what they want.</p>
 <p>Instead, I go back to wondering how it would move. It feels like it wants to jump into the third dimension and move, somehow. So I thought it would be worth digging out an old package I&#39;d made a few years ago that makes 3D vector graphics: <a href="https://github.com/cormullion/Thebes.jl">Thebes.jl</a>. It was covered in digital dust, but it&#39;s now been updated to Julia 1.0. It&#39;s a little toy package that has occasionally justified its existence.</p>
-<h2 id="thebesjl"><a href="#thebesjl">Thebes.jl</a></h2>
+<h2 id="thebesjl"><a href="#thebesjl" class="header-anchor">Thebes.jl</a></h2>
 <p>Thebes.jl is a very simple package that feeds Luxor.jl with 2D projections of 3D wireframe coordinates. The 3D world of Thebes and the 2D world of Luxor coexist happily:</p>
 <pre><code class="language-julia">using Thebes, Luxor
 @svg begin
@@ -257,7 +257,7 @@ makemovie&#40;&#41;</code></pre>
 <p><img src="/assets/images/depth/three-trefoil.svg" alt="another trefoil" /></p>
 <p>This one looks a bit familiar:</p>
 <p><img src="/assets/images/depth/knot.svg" alt="knot" /></p>
-<h2 id="back_to_the_beginning"><a href="#back_to_the_beginning">Back to the beginning</a></h2>
+<h2 id="back_to_the_beginning"><a href="#back_to_the_beginning" class="header-anchor">Back to the beginning</a></h2>
 <p>Going back to where I started: I think I&#39;m imagining the animation to be like three cars in a damaged ferris wheel &#40;think of the London Eye after it was vandalized during the famous Brexit riots of 2021...&#41;.</p>
 <p>Here&#39;s an animation to show what I mean. It&#39;s possible to make two 3D views, one for each pane, with different viewing parameters for each one. The <a href="https://cormullion.github.io/Thebes.jl/dev/">manual for Thebes.jl</a> has a little more information about 3D views.</p>
 <pre><code class="language-julia">function frame&#40;scene, framenumber&#41;
@@ -321,7 +321,7 @@ animate&#40;ferriswheel,
     creategif&#61;true,
     pathname&#61;&quot;_assets/images/depth/ferriswheel.gif&quot;&#41;</code></pre>
 <p><img src="/assets/images/depth/ferriswheel.gif" alt="ferris wheel" /></p>
-<h2 id="plutonian"><a href="#plutonian">Plutonian</a></h2>
+<h2 id="plutonian"><a href="#plutonian" class="header-anchor">Plutonian</a></h2>
 <p>Talking of Pluto, Pluto &#40;the planet&#41; has five times as many moons as the Earth. I thought I&#39;d create a simulation of the Plutonian system of moons. I haven&#39;t got the time or astronomical skill to do it for real, but it&#39;s relatively easy to fake a quick animation using the orbital details listed on wikipedia.</p>
 <p>I&#39;ve cut a few corners here - I just made up some starting positions, for example, and rounded some values, and this little animation is the result.</p>
 <p>You can just make out the barycentric orbit of Pluto and Charon - they&#39;re both orbiting around a point that lies above the surface of Pluto.</p>
