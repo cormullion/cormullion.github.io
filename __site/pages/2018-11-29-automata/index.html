@@ -33,7 +33,7 @@
 <blockquote>
 <p>I don&#39;t need to give you any references—you&#39;ll be spoilt for choice if you start googling.</p>
 </blockquote>
-<h1 id="automata"><a href="#automata">Automata</a></h1>
+<h1 id="automata"><a href="#automata" class="header-anchor">Automata</a></h1>
 <p>Here in the UK we&#39;re usually better at closing railway stations than opening new ones. Dr Beeching famously closed thousands of them &#40;more than 50&#37; of the total&#41; in the 1960s. Occasionally, though, new stations are built, and one recent addition to the rail network is the station at <a href="https://www.networkrail.co.uk/running-the-railway/our-routes/anglia/cambridge-north-station/">Cambridge North</a>, built mainly to serve the Cambridge Science Park. &#40;I used to walk along the railway tracks there at weekends before the old disused line was re-opened, but that&#39;s another story...&#41;</p>
 <p>When the station was opened, in 2017, there was a bit of chatter about the decorative panels used for the building.</p>
 <p><img src="/assets/images/automata/Cmglee_Cambridge_North_front_night.jpg" alt="image label" /></p>
@@ -44,13 +44,13 @@
 </blockquote>
 <p>This quote is from the original article &#40;<a href="https://web.archive.org/web/20170219171551/https://www.atkinsglobal.com/en-GB/projects/cambridge-north-station">archived here</a>&#41;, but it&#39;s since been corrected, most probably in response to the anguished cries of thousands of Cambridge nerds who swiftly pointed out that, in fact, these patterns weren&#39;t <em>Life</em> as we know it, but were actually one-dimensional cellular automata, and so linked, not so much with Cambridge&#39;s John Horton Conway, as with noted Oxford/CalTech alumnus Stephen &quot;Mr Mathematica&quot; Wolfram.</p>
 <p>I think the designers did a great job using these simple graphics to &quot;create a harmonic relationship with the scientific research and industry of the Cambridge Colleges and nearby Science Park&quot;.</p>
-<h3 id="so_what_is_a_one-dimensional_cellular_automaton"><a href="#so_what_is_a_one-dimensional_cellular_automaton">So what is a one-dimensional cellular automaton?</a></h3>
+<h3 id="so_what_is_a_one-dimensional_cellular_automaton"><a href="#so_what_is_a_one-dimensional_cellular_automaton" class="header-anchor">So what is a one-dimensional cellular automaton?</a></h3>
 <p>A cellular automaton is a mathematical model that creates patterns automatically according to simple rules. In its simplest, one-dimensional form, it&#39;s a row of empty squares, each of which can be occupied or empty. The rules for the model determine how sensitive the occupants of each square are to their immediate left and right neighbours, and whether, after some unspecified time, they survive or die. Sometimes empty squares can miraculously become occupied. Because a square has just two immediate neighbours, there are 8 different cases to consider, ranging from all empty &#40;&quot;□□□&quot; or <code>000</code> in binary&#41; to all full &#40;&quot;■■■&quot; or <code>111</code>&#41;.</p>
 <p>The rule determines how one generation changes to the next by specifying the outcome for each of the 8 cases. So, for example, an empty square surrounded by empty neighbours can continue to be empty &#40;false, or 0&#41;, or it can produce a new occupant in the next generation, &#40;true, or 1&#41;. There are 256 different combinations, since each of the 8 cases can be either 0 or 1.</p>
 <p>The wikipedia has <a href="https://commons.wikimedia.org/wiki/File:One-d-cellular-automate-rule-30.gif">this nice animation</a> showing how the rule produces the next generation of squares.</p>
 <p><img src="/assets/images/automata/one-d-cellular-automaton-rule-110.gif" alt="image label" /></p>
 <p>&#40;Well, it has this nice animation now...&#41;</p>
-<h3 id="first_steps"><a href="#first_steps">First steps</a></h3>
+<h3 id="first_steps"><a href="#first_steps" class="header-anchor">First steps</a></h3>
 <p>To explore these simple automata, I started<sup id="fnref:1"><a href="#fndef:1" class="fnref">[1]</a></sup> by making a Julia structure:</p>
 <pre><code class="language-julia">mutable struct CA
     rule::Int64
@@ -108,7 +108,7 @@ end</code></pre>
     display&#40;nextgeneration&#40;ca&#41;&#41;
 end</code></pre>
 <p><img src="/assets/images/automata/terminal-output.png" alt="image label" /></p>
-<h3 id="some_graphics"><a href="#some_graphics">Some graphics</a></h3>
+<h3 id="some_graphics"><a href="#some_graphics" class="header-anchor">Some graphics</a></h3>
 <p>The REPL display is more or less functional, but I want to play with the graphic output, so &#40;you guessed&#41;:</p>
 <pre><code class="language-julia">using Luxor, Colors
 
@@ -163,7 +163,7 @@ end 800 800 &quot;../images/automata/simple-ca-future.png&quot;</code></pre>
     end
 end 1000 400 &quot;../images/automata/simple-landscape-ca.png&quot;</code></pre>
 <p><img src="/assets/images/automata/simple-landscape-ca.png" alt="image label" /></p>
-<h3 id="and_now_in_color"><a href="#and_now_in_color">And now in color</a></h3>
+<h3 id="and_now_in_color"><a href="#and_now_in_color" class="header-anchor">And now in color</a></h3>
 <p>So far I haven&#39;t used the color information that&#39;s stored.</p>
 <p>The <code>nextgeneration&#40;&#41;</code> function can be updated with instructions about how to modify the color of the next generation, based on the current set of three cells.</p>
 <pre><code class="language-julia">function nextgeneration&#40;ca::CA&#41;
@@ -250,7 +250,7 @@ end
 end 1000 400 &quot;../images/automata/simple-color-ca-squircle.svg&quot;</code></pre>
 <p><img src="/assets/images/automata/simple-color-ca-squircle.svg" alt="image label" /></p>
 <p>&#40;This SVG is quite big, and won&#39;t display in Juno. But it should load in a browser.&#41;</p>
-<h3 id="getting_around_to_it"><a href="#getting_around_to_it">Getting around to it</a></h3>
+<h3 id="getting_around_to_it"><a href="#getting_around_to_it" class="header-anchor">Getting around to it</a></h3>
 <p>It occurred to me that you could take a rectangular array and wrap it into a circle.</p>
 <pre><code class="language-julia">function drawsector&#40;ca::CA, cellwidth&#61;10;
         scheme&#61;ColorSchemes.leonardo,
@@ -307,7 +307,7 @@ end</code></pre>
 <p>After playing with this idea, I thought it would make some nice jewellery:</p>
 <p><img src="/assets/images/automata/ca-jewellery-like.png" alt="image label" /></p>
 <p>This is rule 150. I mapped the array to a semicircle and drew it twice.</p>
-<h3 id="and_it_moves"><a href="#and_it_moves">And it moves</a></h3>
+<h3 id="and_it_moves"><a href="#and_it_moves" class="header-anchor">And it moves</a></h3>
 <p>Many of the rules have limited career paths. Some fizzle out very quickly, others settle down into a stable if repetitive life style. There are a few that continue to make patterns as the number of generations heads off into the thousands.</p>
 <p>The unpredictable high achiever of the 1D cellular automata world is Rule 110. The rule itself is so simple, it could have been described in a Shakespeare play:</p>
 
@@ -379,7 +379,7 @@ end</code></pre>
 <p>If each frame moved the history &#39;window&#39; by one generation, you&#39;d get a jerky animation. The smooth-scrolling used here shifts the contents by a few pixels in each frame but changes the contents less often. This requires more frames than generations, so 300 frames with a <code>smoothscrolling</code> value of 10 shows only 30 new generations after the initial bunch.</p>
 <p>This GIF does have a few problems; the conflicting demands of file size, image size, image quality, and scroll speed work against each other. There&#39;s a slight flickering, due I think to the rounding or aliasing in the GIF. You could make the GIF as long as you want, subject of course to the maximum size of animated GIF that you&#39;re prepared to handle. &#40;And yes, this page does take a long time to load. Sorry.&#41;</p>
 <p>Videos also have their problems with this kind of content, because the downsampling commonly applied can affect the detail. To see what I mean, try watching <a href="https://www.youtube.com/watch?v&#61;iKpIuCmATYE&amp;feature&#61;youtu.be">Rule 110: The Movie</a> &#40;on YouTube&#41;. &#40;This is my submission for YouTube&#39;s <em>Most Boring Video 2018</em> competition.&#41;</p>
-<h3 id="solid_work"><a href="#solid_work">Solid work</a></h3>
+<h3 id="solid_work"><a href="#solid_work" class="header-anchor">Solid work</a></h3>
 <p>If you want to do more than just look at pictures on the screen—perhaps you&#39;re building your own railway station?—here are some tips for exporting the graphics to your favourite 3D modeller.</p>
 <p>First, place a box or shape around the outside of the design, and use the <code>:path</code> action rather than <code>:fill</code> or <code>:stroke</code>. Then, to draw what are now the &#39;holes&#39;, use <code>newsubpath&#40;&#41;</code> before drawing each hole, and make sure to draw the holes with reversed paths &#40;using the <code>reversepath</code> keyword, for example&#41;.</p>
 <pre><code class="language-julia">function drawaspath&#40;ca::CA;

@@ -388,6 +388,22 @@ In JuliaMono, the following substitutions are applied when the **contextual alte
     <td class="jm_code_ss_off">::</td>
     <td class="jm_code_calt_on">::</td>
     </tr>
+
+    <tr>
+    <td class="jm_code_ss_off"><--</td>
+    <td class="jm_code_calt_on"><--</td>
+    </tr>
+
+    <tr>
+    <td class="jm_code_ss_off">--></td>
+    <td class="jm_code_calt_on">--></td>
+    </tr>
+
+	<tr>
+    <td class="jm_code_ss_off"><--></td>
+    <td class="jm_code_calt_on"><--></td>
+    </tr>
+
 </table>
 ~~~
 
@@ -510,7 +526,7 @@ Here’s a list of the stylistic sets currently available in JuliaMono.
 	<tr>
 	<td>ss12</td>
     <td class="jm_code_ss_off">====</td>
-    <td class="jm_code_ss_equal">====</td>
+    <td class="jm_code_ss_on">====</td>
     <td><p>joining equals</p></td>
     </tr>
 
@@ -1037,7 +1053,7 @@ And how will JuliaMono contribute? It’s often in the nature of an experiment t
 ## ‘Is it finished?’
 @@
 
-The first β release, version 0.001, was released on July 27, 2020. The most recent β release, version 0.033, was released in February 2021. Always download the latest version if you want the typeface to perform at its best.
+The first β release, version 0.001, was released on July 27, 2020. The most recent β release, version 0.036, was released in March 2021. Always download the latest version if you want the typeface to perform at its best.
 
 @@jm_h2
 ## ‘Why don’t these accents/marks work properly?’

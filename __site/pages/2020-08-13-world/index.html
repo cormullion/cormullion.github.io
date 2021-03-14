@@ -26,13 +26,13 @@
 
 
 <!-- Content appended here -->
-<div class="franklin-content"><h1 id="world"><a href="#world">World</a></h1>
+<div class="franklin-content"><h1 id="world"><a href="#world" class="header-anchor">World</a></h1>
 <p>The videos from JuliaCon 2020 are <a href="https://www.youtube.com/playlist?list&#61;PLP8iPy9hna6Tl2UHTrm4jnIYrLkIcAROR">on YouTube</a>, over 150 of them, and I’ve been watching quite a few. Have you been tempted to start skipping the first 17 seconds of some of them? Well, here are a few paragraphs that might make sitting through the JuliaCon2020 “<a href="https://en.wikipedia.org/wiki/Station_identification">station ident</a>” a litle bit more interesting — for a while, at least.</p>
 <p><img src="/assets/images/world/ident-still-800.png" alt="station ident ff" /></p>
 <p>At first, I wanted to use the beautiful skyline illustration showing lots of world-famous buildings. This is another in the series of city skyline stock images that Avik &#40;one of the JuliaCon organizing team&#41; manages to find each year, whatever the location.</p>
 <p><img src="/assets/images/world/world-silhoutte-800.png" alt="world stock image " /></p>
 <p>I was tempted to animate it somehow, but I couldn’t think of a good way to do it without it looking like a terrible cartoon. Besides, the SVG file was an unstructured collection of 6000 polygons. And it was already getting a lot of usage.</p>
-<h2 id="first_attempt"><a href="#first_attempt">First attempt</a></h2>
+<h2 id="first_attempt"><a href="#first_attempt" class="header-anchor">First attempt</a></h2>
 <p>It’s always a good idea to avoid graphical clichés, but it was difficult to resist using a world map or globe of some sort for a world-wide global event. I remembered I had some old shapefile-reading code, long since abandoned &#40;because it was more complicated than I thought&#41;, so I loaded up Shapefile.jl and trusty old Luxor.jl, and threw some shapes onto the canvas.</p>
 <pre><code class="language-julia">using Shapefile, Luxor
 
@@ -69,14 +69,14 @@ drawjuliaconlogo&#40;O, 0.5&#41;
 ...</code></pre>
 <p>&#41;</p>
 <p>But it didn&#39;t click.</p>
-<h2 id="another_try"><a href="#another_try">Another try</a></h2>
+<h2 id="another_try"><a href="#another_try" class="header-anchor">Another try</a></h2>
 <p>However, a bigger problem for me is that the Mercator world map is a geographic, geocentric, ‘landmass-oriented’ view, with some political boundaries added. But a worldwide virtual online conference such as JuliaCon 2020 is about people; people reaching out and communicating with each other, forming communities and partnerships, and this doesn’t come across in a simple map view.</p>
 <p>I thought about plotting Julia contributors on a map, inspired by this nice post <a href="https://juliohm.github.io/dataviz/where-are-the-julians/">“Where are the Julians?”</a> by Dr Júlio Hoffimann. But the distribution is still, to be honest, a little sparse, and I wasn’t sure about targetting individuals so precisely.</p>
 <p>Browsing through some folders led me to a CSV file of about 3000 world airports, with latitude/longitude coordinates, and I tried plotting those instead of the countries’ outlines.</p>
 <p><img src="/assets/images/world/world-airport-map.png" alt="world airport map " /></p>
 <p>I thought this worked better &#40;if not perfectly&#41;. The graphic was now a bit more about human beings, and where they lived, or at least where some of them and their supplies got on and off aircraft. The squares indicate the population centres better. The use of unscaled symbols emphasized the communication links of smaller islands and communities, which would be lost if I’d drawn shapes proportional to population numbers, say. For example, the small islands in the Pacific ocean are at least as visible as the densely packed squares in Europe and the coasts of the Americas.</p>
 <p>There are still areas of emptiness — you can see the sparsely populated areas of Northern Africa, Russia, Namibia, the rain forests of South America, and the empty wilderness in the heart of Australia.</p>
-<h2 id="sparse"><a href="#sparse">Sparse</a></h2>
+<h2 id="sparse"><a href="#sparse" class="header-anchor">Sparse</a></h2>
 <p>I’d converted the latitude and longitude values into rows and columns of 1s in a sparse matrix. I was intending to explore the idea of initially rendering the world as a coarse grid of large squares and then gradually refining it by taking smaller and smaller views. I didn&#39;t get round to it. &#40;Perhaps I&#39;ll use the upcoming <a href="https://github.com/Wikunia/Javis.jl">Javis.jl</a> to try this out one day.&#41;</p>
 <p>One nice feature about the forthcoming Julia 1.6 release is the improved display of sparse matrices in the REPL. Instead of this:</p>
 <p><img src="/assets/images/world/non-sparse.png" alt="sparse matrix  " /></p>
@@ -95,14 +95,14 @@ for &#40;pos, n&#41; in tiles
 end
 ...</code></pre>
 <p><img src="/assets/images/world/world-map-airport-color.png" alt="world map airport colored " /></p>
-<h2 id="off_the_map"><a href="#off_the_map">Off the map</a></h2>
+<h2 id="off_the_map"><a href="#off_the_map" class="header-anchor">Off the map</a></h2>
 <p>I got sidetracked researching some of these dots. For example, I wondered what this particular dot was — the airport that gets quickly covered by the incoming JuliaCon2020 logo, halfway between South America and Africa. It’s called <a href="https://en.wikipedia.org/wiki/RAF_Ascension_Island">Wideawake Airfield</a>, named after a noisy colony of sooty terns nearby. This is Ascension Island, for historical reasons a strategically-placed military base for the UK and USA.</p>
 <p><img src="/assets/images/world/wideawake.png" alt="ascension island" /></p>
 <p>That cluster of dots in the Atlantic are the Azores, part of Portugal, due west of Lisbon... Perhaps we’ll all meet there next year.</p>
 <p>Two of the most northerly lights are Alert, Canada &#40;the northernmost permanently inhabited place in the world&#41;, and Svalbard &#40;Norway&#41;. Svalbard is the location of the <a href="https://archiveprogram.github.com/">GitHub Arctic Code Vault</a>, stored in a decommissioned coal mine. Lots of Julia code is stored there, frozen for posterity.</p>
 <p>It was also a useful reminder that data sources are often imperfect. Even if all the locations have valid latitude and longitude values, it would be quite a task to check every entry. For some countries, such as China and Namibia &#40;that empty area on the west coast of Southern Africa&#41;, I was puzzled and checked them out — there were fewer squares than I&#39;d expected to see. This is the worst sort of missing data, data that you didn’t realise was missing. There are also some entries that specify airports that I can’t find any references to.</p>
 <p>Which leads me to Mountweazels.</p>
-<h2 id="oops"><a href="#oops">Oops</a></h2>
+<h2 id="oops"><a href="#oops" class="header-anchor">Oops</a></h2>
 <p>It was only when I saw the first video on the first day of JuliaCon that I realised I’d made a mistake. Technically, this was a deliberate mistake that I’d made a few years ago, but which had now become an accidental mistake, because I’d forgotten to remove it.</p>
 <p>I’d been reading about Mountweazels. A Mountweazel is a fictitious or spurious entry in an otherwise trusty reference. A non-existent word in a dictionary, a fictitious place on a map. They’re not really “Easter eggs”, because I don’t think they’re supposed to be found. They might be inserted by someone with a sense of mischief, but, more usually, they’re put in deliberately by the creators as a way of preventing or proving unauthorized copying.</p>
 <p>I had added a fictitious airport to the CSV file, “just for testing purposes”, and I’d forgotten to remove it.</p>

@@ -26,7 +26,7 @@
 
 
 <!-- Content appended here -->
-<div class="franklin-content"><h1 id="in_search_of_a_color"><a href="#in_search_of_a_color">In search of a color</a></h1>
+<div class="franklin-content"><h1 id="in_search_of_a_color"><a href="#in_search_of_a_color" class="header-anchor">In search of a color</a></h1>
 <p><img src="/assets/images/mauve/brushstroke.svg" alt="brush splash" /> <sup id="fnref:splash"><a href="#fndef:splash" class="fnref">[1]</a></sup></p>
 <p>Last week I found an intriguing book in the local charity shop &#40;these are called ‘thrift shops’ in the US I think&#41; for £1.00: <em>Mauve</em>, by Simon Garfield <sup id="fnref:garfield"><a href="#fndef:garfield" class="fnref">[2]</a></sup>. It’s a book all about the colour mauve, its discovery by William Perkin in the mid 19th century, and the story of the later scientific developments in industrial chemistry.</p>
 <p>&#40;By the way, the pronunciation of “mauve” may vary depending on where and when you live. Here in England we’d start by saying “mo” to rhyme with “go” and then finish by saying “-ve” as if we’d finished saying “love”. The Victorians pronounced it as if it was spelt “morv”.&#41;</p>
@@ -51,7 +51,7 @@ Stacktrace:
  &#91;7&#93; top-level scope at /Users/me/.julia/dev/Luxor/src/drawings.jl:555
 in expression starting at untitled-ba17b354ac0d06ec10bd7374a7ef9522:3</code></pre>
 <p>Oh, that didn’t go well. No sign of mauve? Mauve, one of the most famous colors of the 19th Century, has been put in the shade by colors with names like Burleywood and Papaya Whip.</p>
-<h1 id="standards_what_standards"><a href="#standards_what_standards">Standards, what standards?</a></h1>
+<h1 id="standards_what_standards"><a href="#standards_what_standards" class="header-anchor">Standards, what standards?</a></h1>
 <p>In Colors.jl, the list of named colors is essentially the X11/CSS standard list. Typing color names is definitely not the best way of specifying colors - obviously, values in the RGB, Luv, and HSV color spaces are more precise, as are those three or six figure hexadecimal codes. But it’s sometimes easier to quickly grab a color name - “gold”, say - than to start filling your head with hex or computer-y numbers. There’s a slight speed penalty for using the names, too &#40;unless you use the macros&#41;, because they have to be parsed, but that won’t be a problem for many applications.</p>
 <p>So what exactly qualifies a color for inclusion in the ‘official’ X11/CSS list? I was expecting to read about rigorous committee-driven meetings where each color was carefully scrutinized before being accepted as a standard, but in fact the X11 color list is famously imperfect and inconsistent, assembled in a haphazard way by assorted MIT hackers over the last few decades, with all kinds of quirks, oddities, and even errors. You can read an entertaining story of these color names <a href="https://arstechnica.com/information-technology/2015/10/tomato-versus-ff6347-the-tragicomic-history-of-css-color-names/">here</a>. Quoted there is one Steven Pemberton: <sup id="fnref:stevepemberton"><a href="#fndef:stevepemberton" class="fnref">[3]</a></sup></p>
 <blockquote>
@@ -62,7 +62,7 @@ in expression starting at untitled-ba17b354ac0d06ec10bd7374a7ef9522:3</code></pr
 <p>Another point of contention was cultural exclusion. Some programmers took umbrage at the region-centric nature of names like “dodger blue” and the potential racial undertones of “navajo white” &#40;from Sinclair Paints&#41; and “indian red” &#40;from Crayola, though the crayon has since been renamed in response to the same concerns&#41;. Others considered the English-only names alienating.</p>
 </blockquote>
 <p>So it was just bad luck that mauve wasn’t part of a set of crayons and so didn&#39;t make it on to the list of standard colors.</p>
-<h1 id="where_is_mauve"><a href="#where_is_mauve">Where is mauve?</a></h1>
+<h1 id="where_is_mauve"><a href="#where_is_mauve" class="header-anchor">Where is mauve?</a></h1>
 <p>I wanted to plot the X11 named colors all at once, to see where mauve might fit in. Using HSB color values, I tried making a polar plot: the hue angle places a marker somewhere on a disk, and the saturation can be the distance from the centre &#40;0&#41; to the circumference &#40;1&#41;. The third value, brightness, can be drawn on an axis pointing straight out of the screen by using circles with decreasing radius as it approaches 1.</p>
 <pre><code class="language-julia">using Luxor, Colors
 function circularlegend&#40;pos, radius&#41;
@@ -104,7 +104,7 @@ end 800 800  &quot;_assets/images/mauve/colornames.svg&quot;</code></pre>
 <p><img src="/assets/images/mauve/colornames.svg" alt="named colors" /></p>
 <p>All the grey shades are stacked up at the center. The ‘spheres’ are created because a number of colors are basically the same hue and saturation but just differ in brightness, the out-of-the-screen dimension.</p>
 <p>I think there’s a definite bias towards reds and oranges.</p>
-<h1 id="rainbow_warrior"><a href="#rainbow_warrior">Rainbow warrior</a></h1>
+<h1 id="rainbow_warrior"><a href="#rainbow_warrior" class="header-anchor">Rainbow warrior</a></h1>
 <p>We don&#39;t have to restrict ourselves merely to the X11/CSS list though. The Julia wizard known as <code>oxinabox</code> has compiled a much bigger collection of named colors, over at <a href="https://github.com/JuliaGraphics/NamedColors.jl">NamedColors.jl</a>.</p>
 <pre><code class="language-julia">using NamedColors
 
@@ -141,7 +141,7 @@ end 800 800  &quot;_assets/images/mauve/namedcolornames.svg&quot;</code></pre>
 end</code></pre>
 <p><img src="/assets/images/mauve/namedcolorhuesonlymauve.svg" alt="just the mauves" /></p>
 <p>If you ask me, I don’t think many of these are really mauve. There’s a sparse-looking area in the purples where I think a real mauve might belong. So, what color is mauve? To find out, I think we’ll have to go back in time.</p>
-<h1 id="the_royal_purple"><a href="#the_royal_purple">The royal purple</a></h1>
+<h1 id="the_royal_purple"><a href="#the_royal_purple" class="header-anchor">The royal purple</a></h1>
 <p>When Perkin first thought of naming his new discovery, he settled for <em>Tyrian Purple</em>. This is the famous rich purple color much prized by the Romans, which could only be worn by nobles and emperors. It was fabulously expensive to make &#40;only tiny amounts could be extracted from the glands of hundreds of thousands of a particular species of mollusc&#41;, was sometimes more expensive than gold, and was occasionally compared to the color of dried blood. Presumably Perkin’s new colour was similar enough to a rich purple to justify his choice of name? Or was he just trying to boost the commercial prospects of his pale pseudo-royal purple dye?</p>
 <p>Let’s get some visual help, and see about getting some values. I’m unable to do any real scientific analysis with expensive machines and things <sup id="fnref:analysis"><a href="#fndef:analysis" class="fnref">[4]</a></sup>, so I just found a few relevant images featuring mauve, and played around with the pixel values, looking for clues. The pictures at top left, center, and middle right show original samples of fabric dyed with mauveine, the mauve dye. At bottom left is a scarf or shawl. For good measure I found pictures of a couple of dresses, one real and one in a painting, and a book. At the bottom is the Mallow flower; the word <em>mauve</em> is the French name of this flower.</p>
 <p><img src="/assets/images/mauve/images-collected.png" alt="source images for mauve" /> <sup id="fnref:images"><a href="#fndef:images" class="fnref">[5]</a></sup></p>
@@ -279,7 +279,7 @@ end 1200 900 &quot;_assets/images/mauve/fabricsample.png&quot;</code></pre>
 end 800 800 &quot;_assets/images/mauve/mauvepoints&quot;</code></pre>
 <p>Somewhere around here perhaps?</p>
 <p><img src="/assets/images/mauve/mauvepoints.svg" alt="image label" /></p>
-<h1 id="50_shades_of_mauve"><a href="#50_shades_of_mauve">50 shades of ... mauve</a></h1>
+<h1 id="50_shades_of_mauve"><a href="#50_shades_of_mauve" class="header-anchor">50 shades of ... mauve</a></h1>
 <p>To find the nearest named color to what I think the original mauve would have been, I used the <code>colordiff&#40;&#41;</code> function from Colors.jl. It’s probably a reasonable approximation to the truth.</p>
 <pre><code class="language-julia">function findnearestcolors&#40;sourcecol::Colorant, matches&#61;3, colordict&#61;Colors.color_names&#41;
     results &#61; Float64&#91;&#93;
@@ -347,13 +347,13 @@ end 600 600 &quot;_assets/images/mauve/nearestcolors1&quot;</code></pre>
 end 600 600 &quot;_assets/images/mauve/nearestcolors2&quot;</code></pre>
 <p>The results are fairly similar. Not sure what the reported nearness units are, though - perhaps “millishades”?</p>
 <p><img src="/assets/images/mauve/nearestcolors2.svg" alt="image label" /></p>
-<h1 id="fade_out"><a href="#fade_out">Fade out</a></h1>
+<h1 id="fade_out"><a href="#fade_out" class="header-anchor">Fade out</a></h1>
 <p>The mauve mania of 1857 and 1858 quickly became unfashionable nostalgia, and the color soon faded, both figuratively and literally. In 1859, while Napoleon III’s wife was still wearing her mauve dresses, their armies were fighting a decisive battle against Austrian forces at a little Italian town called Magenta - which gave its name to a newly invented color that was the next latest thing, at least for a while.</p>
 <p>If you liked any of the colors in this post, please consider going to <a href="https://github.com/JuliaGraphics/Colors.jl">Colors.jl</a> and <a href="https://github.com/JuliaGraphics/NamedColors.jl">NamedColors.jl</a> and giving them your Github star. It’s free, and makes people happy&#33;</p>
 <p>&#91;2020-02-13&#93;</p>
 <div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?mauve" alt="cormullion signing off" /></div>
-<h3 id="footnotes"><a href="#footnotes">Footnotes</a></h3>
-<h4 id="table_classfndef_idfndefsplash_td_classfndef-backrefa_hreffnrefsplash1_td_classfndef-contentcode_for_splash_image"><a href="#table_classfndef_idfndefsplash_td_classfndef-backrefa_hreffnrefsplash1_td_classfndef-contentcode_for_splash_image"><table class="fndef" id="fndef:splash">
+<h3 id="footnotes"><a href="#footnotes" class="header-anchor">Footnotes</a></h3>
+<h4 id="table_classfndef_idfndefsplash_td_classfndef-backrefa_hreffnrefsplash1_td_classfndef-contentcode_for_splash_image"><a href="#table_classfndef_idfndefsplash_td_classfndef-backrefa_hreffnrefsplash1_td_classfndef-contentcode_for_splash_image" class="header-anchor"><table class="fndef" id="fndef:splash">
     <tr>
         <td class="fndef-backref"><a href="#fnref:splash">[1]</a></td>
         <td class="fndef-content">Code for splash image</td>
@@ -376,7 +376,7 @@ end 600 600 &quot;_assets/images/mauve/nearestcolors2&quot;</code></pre>
             return npbp
         end&#41;
 end 800 250 &quot;_assets/images/mauve/brushstroke.svg&quot;</code></pre>
-<h4 id="table_classfndef_idfndefgarfield_td_classfndef-backrefa_hreffnrefgarfield2_td_classfndef-contentsimon_garfield"><a href="#table_classfndef_idfndefgarfield_td_classfndef-backrefa_hreffnrefgarfield2_td_classfndef-contentsimon_garfield"><table class="fndef" id="fndef:garfield">
+<h4 id="table_classfndef_idfndefgarfield_td_classfndef-backrefa_hreffnrefgarfield2_td_classfndef-contentsimon_garfield"><a href="#table_classfndef_idfndefgarfield_td_classfndef-backrefa_hreffnrefgarfield2_td_classfndef-contentsimon_garfield" class="header-anchor"><table class="fndef" id="fndef:garfield">
     <tr>
         <td class="fndef-backref"><a href="#fnref:garfield">[2]</a></td>
         <td class="fndef-content">&quot;Simon Garfield&quot;</td>
@@ -384,7 +384,7 @@ end 800 250 &quot;_assets/images/mauve/brushstroke.svg&quot;</code></pre>
 </table>
 </a></h4>
 <p><a href="https://www.simongarfield.com/books/mauve/">Link to author’s web site</a>.</p>
-<h4 id="table_classfndef_idfndefstevepemberton_td_classfndef-backrefa_hreffnrefstevepemberton3_td_classfndef-contentsteve_pemberton"><a href="#table_classfndef_idfndefstevepemberton_td_classfndef-backrefa_hreffnrefstevepemberton3_td_classfndef-contentsteve_pemberton"><table class="fndef" id="fndef:stevepemberton">
+<h4 id="table_classfndef_idfndefstevepemberton_td_classfndef-backrefa_hreffnrefstevepemberton3_td_classfndef-contentsteve_pemberton"><a href="#table_classfndef_idfndefstevepemberton_td_classfndef-backrefa_hreffnrefstevepemberton3_td_classfndef-contentsteve_pemberton" class="header-anchor"><table class="fndef" id="fndef:stevepemberton">
     <tr>
         <td class="fndef-backref"><a href="#fnref:stevepemberton">[3]</a></td>
         <td class="fndef-content">&quot;Steve Pemberton&quot;</td>
@@ -392,7 +392,7 @@ end 800 250 &quot;_assets/images/mauve/brushstroke.svg&quot;</code></pre>
 </table>
 </a></h4>
 <p>More criticisms from Steve Pemberton <a href="https://homepages.cwi.nl/~steven/2015/colours.html">here</a>. Also fun is <a href="https://www.youtube.com/watch?v&#61;HmStJQzclHc">Alex Sexton&#39;s linked YouTube video</a>.</p>
-<h4 id="table_classfndef_idfndefanalysis_td_classfndef-backrefa_hreffnrefanalysis4_td_classfndef-contentscientific_analysis"><a href="#table_classfndef_idfndefanalysis_td_classfndef-backrefa_hreffnrefanalysis4_td_classfndef-contentscientific_analysis"><table class="fndef" id="fndef:analysis">
+<h4 id="table_classfndef_idfndefanalysis_td_classfndef-backrefa_hreffnrefanalysis4_td_classfndef-contentscientific_analysis"><a href="#table_classfndef_idfndefanalysis_td_classfndef-backrefa_hreffnrefanalysis4_td_classfndef-contentscientific_analysis" class="header-anchor"><table class="fndef" id="fndef:analysis">
     <tr>
         <td class="fndef-backref"><a href="#fnref:analysis">[4]</a></td>
         <td class="fndef-content">“scientific analysis”</td>
@@ -400,7 +400,7 @@ end 800 250 &quot;_assets/images/mauve/brushstroke.svg&quot;</code></pre>
 </table>
 </a></h4>
 <p>If you want proper scientific analysis, and you like chemistry, try  “A Study in Mauve: Unveiling Perkin’s Dye in Historic Samples” by Micaela M. Sousa, Maria J. Melo, A. Jorge Parola, Peter J. T. Morris, Henry S. Rzepa, and J. Sørgio Seixas de Melo <a href="https://onlinelibrary.wiley.com/doi/pdf/10.1002/chem.200800718">DOI: 10.1002/chem.200800718</a>.</p>
-<h4 id="table_classfndef_idfndefimages_td_classfndef-backrefa_hreffnrefimages5_td_classfndef-contentimages"><a href="#table_classfndef_idfndefimages_td_classfndef-backrefa_hreffnrefimages5_td_classfndef-contentimages"><table class="fndef" id="fndef:images">
+<h4 id="table_classfndef_idfndefimages_td_classfndef-backrefa_hreffnrefimages5_td_classfndef-contentimages"><a href="#table_classfndef_idfndefimages_td_classfndef-backrefa_hreffnrefimages5_td_classfndef-contentimages" class="header-anchor"><table class="fndef" id="fndef:images">
     <tr>
         <td class="fndef-backref"><a href="#fnref:images">[5]</a></td>
         <td class="fndef-content">“Images”</td>

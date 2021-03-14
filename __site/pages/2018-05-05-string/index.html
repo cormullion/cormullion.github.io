@@ -30,7 +30,7 @@
 <div class="franklin-content"><blockquote>
 <p>If I ever get round to presenting something at a future Julia Conference &#40;not JuliaCon 2018, but perhaps JuliaCon 2019, who knows?&#41;, it will probably be something like this. Lots of graphics, and a little bit of Julia code.</p>
 </blockquote>
-<h1 id="string_logo"><a href="#string_logo">String logo</a></h1>
+<h1 id="string_logo"><a href="#string_logo" class="header-anchor">String logo</a></h1>
 <p>So, Scott asked me on Twitter: why don&#39;t I suggest some ideas for a logo for the JuliaString organization on Github?</p>
 <p><img src="/assets/images/string/twitter-1.png" alt="tweet 1" /></p>
 <p>Yes, that’s the infamous <em>Scott P. &#40;&quot;Mr. String&quot;&#41; Jones</em>&#33; Scott also mused on what he’d like to see in a logo: multiple concentric rings of text from all corners of the Unicode table, including Hindi, some Chinese, DNA strings, an annoying slogan, and a scattering of emojis for seasoning:</p>
@@ -42,13 +42,13 @@
 </blockquote>
 <p>I know that a logo should be a simple, distinctive, graphical construction recognisable at large and small scales, from the side of buildings to small computer icons 64 or 128 pixels across, and that it should preferably communicate well in both black and white and colour. It should also be witty, ingenious, and convey the essence of the thing it represents without being over-specific or over-restrictive. And it should also be—in a world with millions of existing logos—unique and unlike any other.</p>
 <p>That’s a tall order, and even the pros don&#39;t manage it all the time.</p>
-<h3 id="how_long_is_a_piece_of_string"><a href="#how_long_is_a_piece_of_string">How long is a piece of string?</a></h3>
+<h3 id="how_long_is_a_piece_of_string"><a href="#how_long_is_a_piece_of_string" class="header-anchor">How long is a piece of string?</a></h3>
 <p>Unfortunately, when I start thinking about the word &quot;string&quot;, it conveys to me just one thing: a long thin strand of fibrous material most likely overlapping itself, and possibly subject to random entanglements that both mathematicians and non-mathematicians call <em>knots</em>. A piece of string. So, my first thought was that a logo representing string has to look like, er, string.</p>
 <p>This should be straightforward enough: I’ll photograph some string, enhance the image, put it inside a box. Job done&#33;</p>
 <p>Oh, perhaps I should add the traditional Julian colours of purple, red, and green:</p>
 <p><img src="/assets/images/string/photo-ops.png" alt="silly photos" /></p>
 <p>That didn’t take long&#33;</p>
-<h3 id="but_seriously"><a href="#but_seriously">But seriously...</a></h3>
+<h3 id="but_seriously"><a href="#but_seriously" class="header-anchor">But seriously...</a></h3>
 <p>Seriously, though, I should really show a bit of geometric enthusiasm for the task. Besides, I have to <em>abide by the Code</em> for tasks like this, which means producing it entirely in Julia, basically just an excuse for testing the usability and reliability of the packages I develop, and for playing with some pretty pictures.</p>
 <p><img src="/assets/images/string/pirates-code.gif" alt="stick to the code" /></p>
 <p>Let’s start again, with a fresh cup of coffee to hand.</p>
@@ -70,7 +70,7 @@ end</code></pre>
 <p><img src="/assets/images/string/one-liner.png" alt="simple one liner" /></p>
 <p>The same comprehension can be inserted into an interactive Jupyter notebook cell. This allows me to explore some of the basic geometrical possibilities.</p>
 <p><img src="/assets/images/string/strings-interact.gif" alt="interactive Jupyter string" /></p>
-<h3 id="over_and_under"><a href="#over_and_under">Over and under</a></h3>
+<h3 id="over_and_under"><a href="#over_and_under" class="header-anchor">Over and under</a></h3>
 <p>The results are pleasant, but a wee bit dull. Also, the places where the string goes over and under itself—the <em>overlaps</em> and <em>underlaps</em>—these are part of the unique string-y quality of string that I should be trying to show, and you can&#39;t see them.</p>
 <p>Usually when you’re drawing a path in some graphics program, you can overlap your earlier traces again and again, but it’s not possible to go underneath earlier bits on the same path once you’ve already started drawing it. In the next example, perhaps after Point 18 we&#39;d want to show the path dipping below Point 6, which was drawn earlier. Wherever you start from, you go &quot;under→over→under&quot;, or &quot;over→under→over&quot;.</p>
 <p><img src="/assets/images/string/the-problem.png" alt="overlapping problem" /></p>
@@ -95,7 +95,7 @@ end</code></pre>
     end
 end</code></pre>
 <p>I tried to devise some algorithms to draw overlapping and underlapping paths automatically. For example, as you start to draw a path, remember the location of each line segment, then, when you have to go underneath an earlier segment, make a note of it, then later go back and erase it and redraw it.... Well, I didn’t manage to complete any of these thought algorithms, but I&#39;d love to know if anyone else has.</p>
-<h3 id="go_deeper"><a href="#go_deeper">Go deeper</a></h3>
+<h3 id="go_deeper"><a href="#go_deeper" class="header-anchor">Go deeper</a></h3>
 <p>The problem was literally asking for a more in-depth approach. I added Z-coordinates to the X and Y. The parametric equations are now:</p>
 \[\begin{array}{rcl}
   \begin{cases}
@@ -122,7 +122,7 @@ end</code></pre>
 <p>Fun fact: The software known as Adobe Acrobat was code-named Carousel during its development. I wonder if this logo had its origins with the idea of roundabouts...</p>
 </blockquote>
 <p>We&#39;re only enhancing the illusion of depth, though, by changing the size of the disks in response to the Z-coordinate.</p>
-<h3 id="ciao_cairo"><a href="#ciao_cairo">Ciao, Cairo?</a></h3>
+<h3 id="ciao_cairo"><a href="#ciao_cairo" class="header-anchor">Ciao, Cairo?</a></h3>
 <p><a href="https://github.com/JuliaGraphics/Cairo.jl">Cairo.jl</a> doesn&#39;t do 3D graphics &#40;and neither does <a href="https://github.com/JuliaGraphics/Luxor.jl">Luxor.jl</a>, which depends on it&#41;, but I thought there was a bit more mileage left in this idea before I moved on. Once you start down a rabbit hole, you want to see what&#39;s round the next bend; you probably know that “I’ll just give this ten more minutes...” feeling?</p>
 <blockquote>
 <p>Fun fact: The name of the graphics system Cairo derives from its original name Xr &#40;the X-Windows Renderer&#41;&#41; when the Greek letters for <code>X</code> and <code>r</code> &#40;<code>chi</code> and <code>rho</code>&#41; are pronounced.</p>
@@ -163,12 +163,12 @@ end</code></pre>
    return result
 end</code></pre>
 <p>&#40;And yes, this needs re-working to be more type stable. <code>@code_warntype</code> gives me a right telling off, with lots of red <code>result::Union&#123;Luxor.Point, Void&#125;</code>s&#33;&#41;</p>
-<h3 id="get_to_the_point3d"><a href="#get_to_the_point3d">Get to the Point3D</a></h3>
+<h3 id="get_to_the_point3d"><a href="#get_to_the_point3d" class="header-anchor">Get to the Point3D</a></h3>
 <p>I wrote a few more utilities, drank a few more cups of coffee, and eventually there’s a spinning shape on the screen:</p>
 <p><img src="/assets/images/string/knotjulia-animation.gif" alt="animated 3D string" /></p>
 <p>The gray carpet is just a polygon of 3D points with zeros for Z values, each one pushed onto the Luxor drawing using this <code>project&#40;&#41;</code> function. The animation is the usual <code>animate&#40;&#41;</code> to GIF which sends a bunch of stills to <code>ffmpeg</code>.</p>
 <p>At least I can see where the overlaps and underlaps occur, and I can start working out how to drop back to 2 dimensions while preserving the over/underlapping information from the 3D world.</p>
-<h3 id="try_colour"><a href="#try_colour">Try colour</a></h3>
+<h3 id="try_colour"><a href="#try_colour" class="header-anchor">Try colour</a></h3>
 <p>If the curve was split into three pieces, they could all be drawn “at the same time”, but in different colours. So for each point I collect the three z-coordinates and sort them into order with <code>sortperm&#40;&#41;</code>, so the point with the lowest Z could be drawn first, at the bottom of the stack, and points with higher Zs drawn on top.</p>
 <p><img src="/assets/images/string/part-string-animation-retimed.gif" alt="three, sir" /></p>
 <p>Fortuitously, most Julia logos also keep to the theme of three colours: purple, red, and green.</p>
@@ -176,7 +176,7 @@ end</code></pre>
 <p>I realise that 99&#37; of the time it’s not worth checking the Z values—it&#39;s only for those few occasions when the XY values are the same does the Z value matter. Perhaps I could predict mathematically where those points are? Well, let&#39;s worry about performance later.</p>
 <p>There&#39;s a hint of translucency in this one:</p>
 <p><img src="/assets/images/string/julia-colored-three.png" alt="julia coloured three" /></p>
-<h3 id="sorted"><a href="#sorted">Sorted</a></h3>
+<h3 id="sorted"><a href="#sorted" class="header-anchor">Sorted</a></h3>
 <p>Better still, let&#39;s generate all the points first, in <a href="http://grammarist.com/usage/one-fell-swoop/">one fell swoop</a>, then sort them by Z coordinate.</p>
 <pre><code class="language-julia">...
 points &#61; Point3D&#91;&#93;
@@ -188,11 +188,11 @@ sort&#33;&#40;points, by &#61; &#40;a&#41; -&gt; a.z&#41;
 <p><img src="/assets/images/string/3d-ribbons.png" alt="3d ribbon" /></p>
 <p>An animation shows how the points furthest from the eye are drawn first, then the nearer ones hide them in turn:</p>
 <p><img src="/assets/images/string/gradual-build-up.gif" alt="animated drawing" /></p>
-<h3 id="coloured_blends"><a href="#coloured_blends">Coloured blends</a></h3>
+<h3 id="coloured_blends"><a href="#coloured_blends" class="header-anchor">Coloured blends</a></h3>
 <p>After trying to draw the three Julia-coloured strands separately, I tried changing the colour continuously along the length of the string. This is possible with the <code>get&#40;&#41;</code> function from <a href="https://github.com/JuliaGraphics/ColorSchemes.jl">ColorSchemes.jl</a>, which lets you sample a set of colours at any point, not just where the colour stops occur. I created a Julia colour scheme, which goes from purple, to red, to green.</p>
 <p><img src="/assets/images/string/julia-continuous-not-valid.png" alt="julia continuous not valid" /></p>
 <p>However, the exact geometry of the knot is lost when you try to do this. &#40;Did you notice? I didn&#39;t for a while&#41;. Still, it looks OK.</p>
-<h3 id="get_some_zs"><a href="#get_some_zs">Get some Zs</a></h3>
+<h3 id="get_some_zs"><a href="#get_some_zs" class="header-anchor">Get some Zs</a></h3>
 <p>It&#39;s hard to resist playing with the various parameters and colour schemes.</p>
 <p><img src="/assets/images/string/six-fold.png" alt="six fold" /></p>
 <p>Changing the way the Z coordinates were generated led to some interesting permutations:</p>
@@ -201,11 +201,11 @@ sort&#33;&#40;points, by &#61; &#40;a&#41; -&gt; a.z&#41;
 <p><img src="/assets/images/string/woolly-strings-logo.png" alt="woolly strings" /></p>
 <p>The graphics look great in SVG &#40;says I, inserting a big PNG at this point...&#41;:</p>
 <p><img src="/assets/images/string/svg-ness.png" alt="svg circles version" /></p>
-<h3 id="fiddling_with_the_formula"><a href="#fiddling_with_the_formula">Fiddling with the formula</a></h3>
+<h3 id="fiddling_with_the_formula"><a href="#fiddling_with_the_formula" class="header-anchor">Fiddling with the formula</a></h3>
 <p>Using Julia for playing around with designs means that the solution space defined by a few basic graphic ideas can be explored, once you have <em>parameterized all the things</em>. Letting these cycle through at random is one possible strategy, or you could just step through some pre-arranged sequence of numbers. For a language as powerful as Julia this isn&#39;t very demanding stuff, computationally speaking, and the results are usually generated more or less instantly. &#40;It takes a few seconds to make the animations, because this involves creating and joining 100s of individual frames.&#41;</p>
 <p>Some of these are taxing my brain&#39;s ability to parse 3D shapes... Are these valid?</p>
 <p><img src="/assets/images/string/four-explorations.png" alt="four parameterized explorations" /></p>
-<h3 id="space_craft"><a href="#space_craft">Space craft</a></h3>
+<h3 id="space_craft"><a href="#space_craft" class="header-anchor">Space craft</a></h3>
 <p>When you use trig functions to generate curves, you’re often stepping through the angles by a fixed amount. The intermediate points on resulting curves have different spacings—wider apart one minute, closer the next. This is usually OK, because the tighter corners at inflection points use more points — it can even add some useful visual cues. But sometimes you want equidistant intermediate points on curves, no matter where the curve is going.</p>
 <p><img src="/assets/images/string/sine-sampling.png" alt="sine sampling" /></p>
 <p>The green version of the red curve above is made with the Luxor function <code>polyportion&#40;&#41;</code>, which lets you find any position along a polygon’s length: so for any polygon, a range of <code>0.0:0.1:1.0</code> produces 11 equally spaced points along the polygon’s length. With Julia’s speed it doesn’t take long to scan a curve and return a new set of equidistant points. &#40;For example it takes about 0.2 seconds to reinterpret a 12,000 point polygon as 4000 equidistant points.&#41;</p>
@@ -221,7 +221,7 @@ sort&#33;&#40;points, by &#61; &#40;a&#41; -&gt; a.z&#41;
 <p><img src="/assets/images/string/letters-in-string-small.png" alt="letters in string small" /></p>
 <p>Worryingly, I think Scott might like this one...</p>
 <p>An improvement would be to work out in advance where the curves overlap so as to align the circles &#40;because they look horrible here&#41;. This might take some mathematical know-how. Perhaps I should hire a math wiz like <a href="http://www.stochasticlifestyle.com">Chris Rackauckas</a> as Technical Consultant...</p>
-<h3 id="asymmetry"><a href="#asymmetry">Asymmetry</a></h3>
+<h3 id="asymmetry"><a href="#asymmetry" class="header-anchor">Asymmetry</a></h3>
 <p>I think there&#39;s always a desire for symmetry and graphical simplicity. The problem is that, by now, these simple geometric ideas are well-travelled paths. We haven&#39;t yet hit Peak Logo, but there are already millions of the things, with more being generated every second, and many of the simple and elegant designs have already been taken. This problem is seen elsewhere, such as product names, top-level internet domains, start-up company names, and perhaps even names for programming languages.</p>
 <p>Exploring asymmetry and randomness can be a useful technique because it immediately relaxes a constraint that, up to now, has been limiting the possibilities. If nothing else, you can get some ideas for further investigation.</p>
 <p>These are quite jaunty, if a bit formulaic:</p>
@@ -243,7 +243,7 @@ end</code></pre>
 <p>I&#39;ll let the computer play with this for a while, with some of the parameters randomized &#40;and remember to store the chosen settings somewhere, in case you find anything really cool&#33;&#41;. Some will be useless, perhaps others will show potential:</p>
 <p><img src="/assets/images/string/random-16-1.png" alt="random 16 1" /></p>
 <p><img src="/assets/images/string/random-16-2.png" alt="random 16 2" /></p>
-<h3 id="end_of_the_line"><a href="#end_of_the_line">End of the line</a></h3>
+<h3 id="end_of_the_line"><a href="#end_of_the_line" class="header-anchor">End of the line</a></h3>
 <p>Eventually, I find something that I quite like:</p>
 <p><img src="/assets/images/string/finished-version.png" alt="finished version" /></p>
 <p>It looks good—in SVG, at least. &#40;PNGs may take up less room, but the level of detail sometimes disappoints, compared with the vector-y precision of SVG.&#41; Either that, or I’ve just reached saturation point and my fatigued brain can no longer choose anything.</p>
@@ -268,7 +268,7 @@ end</code></pre>
         circle&#40;project&#40;pt1, projection&#41;, max&#40;1.0, d&#41;, :fill&#41;
     end
 end 256 256</code></pre>
-<h3 id="everyones_a_critic"><a href="#everyones_a_critic">Everyone&#39;s a critic</a></h3>
+<h3 id="everyones_a_critic"><a href="#everyones_a_critic" class="header-anchor">Everyone&#39;s a critic</a></h3>
 <p>After all the graphics have faded from view, with just one left standing as the final offering, the fun really starts, because we all have opinions about things like logos, and there&#39;s no easy way to measure their quality or effectiveness. There are <a href="http://www.bbc.com/culture/story/20150907-the-most-controversial-logos-ever">some famous examples</a> of good and bad logos getting all kinds of mixed reception, with praise and derision that they might not wholly deserve.</p>
 <p>Michael Bierut wrote an excellent piece &#40;<a href="https://designobserver.com/feature/graphic-design-criticism-as-a-spectator-sport/37607/">Graphic Design Criticism as a Spectator Sport: Design Observer</a>&#41; about how we all notice and talk about logos and designs these days:</p>
 <blockquote>

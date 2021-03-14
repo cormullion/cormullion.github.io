@@ -30,7 +30,7 @@
 <div class="franklin-content"><blockquote>
 <p>This post was inspired mostly by the arrival of the new Julia package <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a> by Fredrik Ekre. Literate lets you write a Julia source file, a Markdown blog post, and a Jupyter notebook all at the same time. It&#39;s magic, or, at least, indistinguishable from magic... As a result, you might be able to find a Jupyter notebook version of this Markdown-converted Julia source file somewhere nearby &#40;look in the <a href="https://github.com/cormullion/cormullion.github.io">github repo</a> for this blog, perhaps&#41;. The code uses the following packages, Literate, Luxor, Colors, Roots, Fontconfig, DataFrames, IterTools, ColorSchemes, and should work in Julia v1.0. <sup id="fnref:updated"><a href="#fndef:updated" class="fnref">[1]</a></sup></p>
 </blockquote>
-<h1 id="bézier_moi"><a href="#bézier_moi">Bézier moi&#33;</a></h1>
+<h1 id="bézier_moi"><a href="#bézier_moi" class="header-anchor">Bézier moi&#33;</a></h1>
 <p>Luxor provides some support for Bézier curves, but there&#39;s no room for any more documentation—it&#39;s already too big. So the intention of this post is to provide some of the missing information about what&#39;s up with Bézier curves and how you might use them. And I confess in advance to wasting some of your bandwidth with some pointlessly colourful graphics. <sup id="fnref:graphics"><a href="#fndef:graphics" class="fnref">[2]</a></sup></p>
 <p>There&#39;s not a lot of mathematical material here, but fortunately the internet is <em>awash</em> with high-quality information about Bézier curves. The two articles you should definitely read instead of this post, or at least before, are:</p>
 <ul>
@@ -39,7 +39,7 @@
 <li><p><a href="http://mae.engr.ucdavis.edu/~farouki/bernstein.pdf">http://mae.engr.ucdavis.edu/~farouki/bernstein.pdf</a> A paper exploring the history and mathematics of curves by Professor Rida T. Farouki &#40;University of California Davis&#41;.</p>
 </li>
 </ul>
-<h2 id="historical_background"><a href="#historical_background">Historical background</a></h2>
+<h2 id="historical_background"><a href="#historical_background" class="header-anchor">Historical background</a></h2>
 <p>The story is quite well known: two engineers employed in the French car industry, <em>Paul de Faget de Casteljau</em>, at Citroen, and <em>Pierre Etienne Bézier</em>, at Renault, worked—mostly independently—on the mathematics of curves in the early 1960s, as the industry made its first tentative steps towards using computers for design and production.</p>
 <p><img src="/assets/images/bezier/2560px-Bornholm_Rundt_2012.jpg" alt="Citroen DS" /></p>
 <p>&#40;This is the Citroen DS, which was once voted the most beautiful car ever made, apparently. Image from the WikiMedia Commons photographed by <a href="https://commons.wikimedia.org/w/index.php?curid&#61;28638457">Klugschnacker</a>&#41;</p>
@@ -50,7 +50,7 @@
 </blockquote>
 <p>Bézier popularized, but did not actually create, what we know today as the Bézier curve. He mainly developed the notation, and devised the idea of nodes with attached &quot;control handles&quot;, which the designers could use to adjust the shapes as easily as they used the turn indicators on their beloved Citroen DSs.</p>
 <p>De Casteljau is also remembered for the <a href="https://en.wikipedia.org/wiki/De_Casteljau&#37;27s_algorithm">algorithm</a> that bears his name.</p>
-<h2 id="the_shortest_distance"><a href="#the_shortest_distance">The shortest distance?</a></h2>
+<h2 id="the_shortest_distance"><a href="#the_shortest_distance" class="header-anchor">The shortest distance?</a></h2>
 <p>With the lingering thought of old Renaults and Citroens in mind, it&#39;s tempting to think of a Bézier curve as a line that takes, not the shortest distance between two points, but takes instead the scenic route.</p>
 <p>Let&#39;s define four points:</p>
 <pre><code class="language-julia">using Luxor
@@ -79,7 +79,7 @@ end 800 300 &quot;../images/bezier/fourpoints.png&quot;</code></pre>
 end 800 300 &quot;../images/bezier/curve.png&quot;</code></pre>
 <p><img src="/assets/images/bezier/curve.png" alt="simple bezier curve" /></p>
 <p>The control points are like handles, controlling the shape of the curve. If you&#39;ve used Adobe Illustrator or some other vector graphics software, you&#39;ll be familiar with the idea of interactively dragging the handles around to get interesting curves. In Luxor, though, we sacrifice interactivity in favour of ruthless machine-driven automation. In the following animation, the control handles explore the geometry of a couple of hypotrochoids, while the helpless Bézier curve is pinned between them and forced into sinuous contortions:</p>
-<h1 id="img_srcassetsimagesbezieranimationgif_altanimation_gif"><a href="#img_srcassetsimagesbezieranimationgif_altanimation_gif"><img src="/assets/images/bezier/animation.gif" alt="animation gif" /></a></h1>
+<h1 id="img_srcassetsimagesbezieranimationgif_altanimation_gif"><a href="#img_srcassetsimagesbezieranimationgif_altanimation_gif" class="header-anchor"><img src="/assets/images/bezier/animation.gif" alt="animation gif" /></a></h1>
 <p>Can I make this in Adobe Illustrator? Hold my beer...</p>
 <p>While you&#39;re waiting, have a look at another animation; this is my artist&#39;s impression of the De Casteljau algorithm dividing the control polygons around a Bézier curve as the parameter <code>n</code> moves from 0 to 1. The idea is that as <code>p1</code> divides <code>A</code> to <code>A1</code>, <code>p2</code> divides <code>A1</code> to <code>B1</code> and <code>p3</code> divides <code>B1</code> to <code>B</code>. So, <code>pp1</code> divides <code>p1</code> to <code>p2</code>, and <code>pp2</code> divides <code>p2</code> to <code>p3</code>. And you keep doing this until you can&#39;t divide any more, and eventually the point <code>P</code> plots the course of the final Bézier curve. The red and blue parts of the curve show that this technique is also a good way to split a single Bézier curve into two separate ones, and the red and blue parts are separate control polygons.</p>
 <p><img src="/assets/images/bezier/decasteljau.gif" alt="De Casteljau" /></p>
@@ -123,7 +123,7 @@ end 800 250 &quot;../images/bezier/drawbezierpath.png&quot;</code></pre>
 end 800 400 &quot;../images/bezier/makebezierpath.png&quot;</code></pre>
 <p><img src="/assets/images/bezier/makebezierpath.png" alt="make bezier path" /></p>
 <p>Here <code>makebezierpath&#40;&#41;</code> converted the three points into an array of three separate Bézier path segments. The control points are positioned so that the curve flows freely from one segment to the segment.</p>
-<h2 id="going_straight"><a href="#going_straight">Going straight</a></h2>
+<h2 id="going_straight"><a href="#going_straight" class="header-anchor">Going straight</a></h2>
 <p>Bézier curves can have straight bits too. This animation shows the control points moving towards the points they&#39;re controlling. When they merge, the Bézier path appears to become a series of straight lines:</p>
 <pre><code class="language-julia">function frame&#40;scene, framenumber&#41;
     background&#40;&quot;white&quot;&#41;
@@ -154,7 +154,7 @@ width, height &#61; &#40;256, 256&#41;
 bedtimemovie &#61; Movie&#40;width, height, &quot;bedtimemovie&quot;&#41;
 # probably requires ffmpeg installed
 animate&#40;bedtimemovie, &#91;Scene&#40;bedtimemovie, frame, 1:150, easingfunction&#61;easeoutquad&#41;&#93;, creategif&#61;true, framerate&#61;30, pathname&#61;&quot;../images/bezier/bedtimemovie.gif&quot;&#41;</code></pre>
-<h1 id="img_srcassetsimagesbezierbedtimemoviegif_altbedtime_for_béziers"><a href="#img_srcassetsimagesbezierbedtimemoviegif_altbedtime_for_béziers"><img src="/assets/images/bezier/bedtimemovie.gif" alt="bedtime for Béziers" /></a></h1>
+<h1 id="img_srcassetsimagesbezierbedtimemoviegif_altbedtime_for_béziers"><a href="#img_srcassetsimagesbezierbedtimemoviegif_altbedtime_for_béziers" class="header-anchor"><img src="/assets/images/bezier/bedtimemovie.gif" alt="bedtime for Béziers" /></a></h1>
 <p>This is a process known to very young Adobe Illustrator users as ‘putting the Bézier handles to bed’.</p>
 <p>It&#39;s also fun to move the control points somewhere else. Here, they&#39;re multiplied by 2, while the first and last points are left unchanged:</p>
 <pre><code class="language-julia">@png begin
@@ -207,7 +207,7 @@ end 800 400 &quot;../images/bezier/movecontrolpointsmore.png&quot;</code></pre>
 end 800 400 &quot;../images/bezier/thehardway.png&quot;</code></pre>
 <p><img src="/assets/images/bezier/thehardway.png" alt="bezier the hard way" /></p>
 <p>What happens if you step <code>u</code> from say, -25.0 to 25.0? And is that supposed to happen? &#40;Spoiler: the curve doubles back and shoots off to <code>&#40;±∞/∞&#41;</code>.&#41;</p>
-<h2 id="out_of_control"><a href="#out_of_control">Out of control</a></h2>
+<h2 id="out_of_control"><a href="#out_of_control" class="header-anchor">Out of control</a></h2>
 <p>Suppose you wanted to draw a Bézier curve but you didn&#39;t know where the control points were, but you did know a couple of points that should lie on the line? Again, Luxor has the answer for you, in the form of a function called <code>bezierfrompoints&#40;&#41;</code>. You supply four points, and the function returns the points of the Bézier curve that passes through them.</p>
 <pre><code class="language-julia">@png begin
     sethue&#40;&quot;grey80&quot;&#41;
@@ -231,16 +231,16 @@ end 800 400 &quot;../images/bezier/thehardway.png&quot;</code></pre>
 end 800 300 &quot;../images/bezier/bezierfrompoints.png&quot;</code></pre>
 <p><img src="/assets/images/bezier/bezierfrompoints.png" alt="bezier through four points" /></p>
 <p>Note that this function returns all four points, but of course you already knew the first and last ones &#40;in <code>corners</code>&#41;, you just wanted the two control points.</p>
-<h2 id="on_the_right_path"><a href="#on_the_right_path">On the right path?</a></h2>
+<h2 id="on_the_right_path"><a href="#on_the_right_path" class="header-anchor">On the right path?</a></h2>
 <p>In Luxor the three main ways to make graphic lines and shapes are: <em>paths</em>, <em>polygons</em>, and <em>BezierPaths</em>. Paths are the fundamental building blocks of graphics, consisting of one or more sequences of straight and Bézier curves. A polygon is an array of points, which will be converted to a path when you draw it. And BezierPaths consist of a list of BezierPathSegments, which will also be converted to ordinary paths when they&#39;re drawn.</p>
 <p>It&#39;s useful to be able to convert between the different types:</p>
 <table><tr><th align="right">Function</th><th align="right">Converts</th></tr><tr><td align="right"><code>makebezierpath&#40;pgon&#41;</code></td><td align="right">polygon to BezierPath</td></tr><tr><td align="right"><code>pathtopoly&#40;&#41;</code></td><td align="right">current path to array of polygons</td></tr><tr><td align="right"><code>pathtobezierpaths&#40;&#41;</code></td><td align="right">current path to array of BezierPaths</td></tr><tr><td align="right"><code>beziertopoly&#40;bpseg&#41;</code></td><td align="right">BezierPathSegment to polygon</td></tr><tr><td align="right"><code>bezierpathtopoly&#40;bezierpath&#41;</code></td><td align="right">BezierPath to polygon</td></tr><tr><td align="right"><code>bezierfrompoints&#40;p1, p2, p3, p4&#41;</code></td><td align="right">convert four points to BezierPathSegment</td></tr></table>
-<h2 id="cant_draw_a_circle"><a href="#cant_draw_a_circle">Can&#39;t draw a circle?</a></h2>
+<h2 id="cant_draw_a_circle"><a href="#cant_draw_a_circle" class="header-anchor">Can&#39;t draw a circle?</a></h2>
 <p>Having witnessed the ability of a simple Bézier curve to adopt so many shapes, it&#39;s a bit surprising to find out that you can&#39;t use a Bézier curve to draw a circle. Well, it can do a very good impression of one, of course, but mathematically it can&#39;t produce a purely circular curve. You can see this if you draw a <em>very</em> large circle and a <em>very</em> large matching Bézier segment. For a circle with radius 10 meters &#40;and that&#39;s one big PDF&#41;, the discrepancy between the pure circle and the Bézier approximation isn&#39;t much bigger than the size of this period/full stop.←</p>
 <p>We non-scientists are lucky in not having to worry about errors of this magnitude...</p>
-<h1 id="img_srcassetsimagesbezier10metrecirclepng_alta_10_metre_circle"><a href="#img_srcassetsimagesbezier10metrecirclepng_alta_10_metre_circle"><img src="/assets/images/bezier/10metrecircle.png" alt="a 10 metre circle" /></a></h1>
+<h1 id="img_srcassetsimagesbezier10metrecirclepng_alta_10_metre_circle"><a href="#img_srcassetsimagesbezier10metrecirclepng_alta_10_metre_circle" class="header-anchor"><img src="/assets/images/bezier/10metrecircle.png" alt="a 10 metre circle" /></a></h1>
 <p>In the above picture, the red circle is made by <code>circle&#40;&#41;</code>, the green one is made with Bézier curves &#40;as used by <code>circlepath&#40;&#41;</code> and <code>ellipse&#40;&#41;</code>&#41;.</p>
-<h2 id="055228474983_is_the_magic_number"><a href="#055228474983_is_the_magic_number">“0.55228474983 is the magic number”</a></h2>
+<h2 id="055228474983_is_the_magic_number"><a href="#055228474983_is_the_magic_number" class="header-anchor">“0.55228474983 is the magic number”</a></h2>
 <p>To draw approximate circles using Bézier curves, you need to know the magic number, usually called <em>kappa</em>, which has the value 0.552284.... We&#39;re looking at a Bézier curve pretending to be a circular quadrant, with control points positioned at a certain distance kappa from the end points. But how far? What value of kappa—what length of handle—will give us the most circular curve?</p>
 <p>A picture of the problem, using a deliberately not-very-good guess at a value for <em>kappa</em> of 0.5:</p>
 <pre><code class="language-julia">@png begin
@@ -432,7 +432,7 @@ end
 width, height &#61; &#40;400, 400&#41;
 circlefrombezier &#61; Movie&#40;width, height, &quot;circlefrombezier&quot;&#41;
 animate&#40;circlefrombezier, &#91;Scene&#40;circlefrombezier, frame, 1:150, easingfunction&#61;easeoutquad&#41;&#93;, creategif&#61;true, framerate&#61;30, pathname&#61;&quot;../images/bezier/circlefrombezier.gif&quot;&#41;</code></pre>
-<h1 id="img_srcassetsimagesbeziercirclefrombeziergif_altkappa_value_animation"><a href="#img_srcassetsimagesbeziercirclefrombeziergif_altkappa_value_animation"><img src="/assets/images/bezier/circlefrombezier.gif" alt="kappa value animation" /></a></h1>
+<h1 id="img_srcassetsimagesbeziercirclefrombeziergif_altkappa_value_animation"><a href="#img_srcassetsimagesbeziercirclefrombeziergif_altkappa_value_animation" class="header-anchor"><img src="/assets/images/bezier/circlefrombezier.gif" alt="kappa value animation" /></a></h1>
 <p>Luxor already provides a <code>Luxor.circlepath&#40;&#41;</code> function that uses four Bézier curve segments to build a path that draws a circle. The main advantage of using this instead of the default <code>arc</code>-based circle is that it&#39;s easier to build circles with holes:</p>
 <pre><code class="language-julia">@png begin
     background&#40;&quot;moccasin&quot;&#41;
@@ -451,7 +451,7 @@ animate&#40;circlefrombezier, &#91;Scene&#40;circlefrombezier, frame, 1:150, eas
     strokepath&#40;&#41;
 end 800 500 &quot;../images/bezier/circularpaths.png&quot;</code></pre>
 <p><img src="/assets/images/bezier/circularpaths.png" alt="circular paths" /></p>
-<h2 id="detour_into_typomania"><a href="#detour_into_typomania">Detour into Typomania</a></h2>
+<h2 id="detour_into_typomania"><a href="#detour_into_typomania" class="header-anchor">Detour into Typomania</a></h2>
 <p>In practice, not being able to draw perfect circles with Bezier curves isn&#39;t a big problem. Font designers &#40;you knew this was going to go ‘all typographical’ sooner or later&#41; are big users of Bézier curves, and typically they don&#39;t like drawing perfect circles anyway, because of the optical corrections required to make things ‘look right’.</p>
 <p>There are a number of optical illusions that demonstrate that the human eye and the brain don&#39;t always see reality accurately. The following is one of the simplest, but most people would be prepared to bet that the horizontal bar is thicker and shorter than the vertical bar. I had to draw a grid to double-check...</p>
 <pre><code class="language-julia">@png begin
@@ -525,7 +525,7 @@ end
 end 800 400 &quot;../images/bezier/drawletteraspect.png&quot;</code></pre>
 <p><img src="/assets/images/bezier/drawletteraspect.png" alt="aspect ratios of letter O" /></p>
 <p>The fonts on your system will be different, of course.</p>
-<h2 id="the_story_of_o"><a href="#the_story_of_o">The story of “o”</a></h2>
+<h2 id="the_story_of_o"><a href="#the_story_of_o" class="header-anchor">The story of “o”</a></h2>
 <p>I wondered which fonts used the most circular circles for the letter “o”. This script wanders through all the fonts registered with Fontconfig and stores the bounding boxes of the letter “o”, then finds “the most circular”.</p>
 <pre><code class="language-julia">using Fontconfig, Luxor, DataFrames
 
@@ -711,7 +711,7 @@ end 800 300 &quot;../images/bezier/kabelfonts.png&quot;</code></pre>
 <p>its eccentricities reveal Koch’s unwavering expressionistic and humanist instincts</p>
 </blockquote>
 <p>But at least the ‘o’s are circular...</p>
-<h2 id="curvy"><a href="#curvy">Curvy</a></h2>
+<h2 id="curvy"><a href="#curvy" class="header-anchor">Curvy</a></h2>
 <p>Moving back to Bézier curves, you can summarize the behaviour of a Bézier curve at a point by finding the curvature. The Luxor function <code>beziercurvature&#40;&#41;</code> returns a number, called <code>kappa</code>, that varies and flips from positive to negative as the Bézier path varies in ‘curviness’. We&#39;re using the first and second derivatives to find the kappa value:</p>
 \[
 \kappa = \frac{\mid \dot{x}\ddot{y}-\dot{y}\ddot{x}\mid}
@@ -719,7 +719,7 @@ end 800 300 &quot;../images/bezier/kabelfonts.png&quot;</code></pre>
 \]
 <p>The following <code>drawcurvature&#40;&#41;</code> function uses the kappa value to work out the slope, and draw a perpendicular to the curve, with lengths varying according to the value of kappa, indicating the way the curvature changes.</p>
 <p>&#40;This is another <em>kappa</em>, by the way, no relation to the Bézier circularity kappa. Or indeed to the Lancia Kappa...</p>
-<h1 id="img_srcassetsimagesbezier2880px-lancia_kappa_front_20110130jpg_altlancia_kappa_from_wikimedia_commons"><a href="#img_srcassetsimagesbezier2880px-lancia_kappa_front_20110130jpg_altlancia_kappa_from_wikimedia_commons"><img src="/assets/images/bezier/2880px-Lancia_Kappa_front_20110130.jpg" alt="Lancia Kappa from Wikimedia Commons" /></a></h1>
+<h1 id="img_srcassetsimagesbezier2880px-lancia_kappa_front_20110130jpg_altlancia_kappa_from_wikimedia_commons"><a href="#img_srcassetsimagesbezier2880px-lancia_kappa_front_20110130jpg_altlancia_kappa_from_wikimedia_commons" class="header-anchor"><img src="/assets/images/bezier/2880px-Lancia_Kappa_front_20110130.jpg" alt="Lancia Kappa from Wikimedia Commons" /></a></h1>
 <p><a href="https://commons.wikimedia.org/wiki/File:Lancia_Kappa_front_20110130.jpg">Photograph by Rudolf Stricker</a></p>
 <p>...or to many of the other things called kappa, such as the curvature of the universe, the torsional constant of an oscillator, Einstein&#39;s constant of gravitation, the coupling coefficient in magnetostatics—and that&#39;s just in physics.&#41;</p>
 <pre><code class="language-julia">function drawcurvature&#40;bezpathsegment::BezierPathSegment;
@@ -789,7 +789,7 @@ end 600 500 &quot;../images/bezier/drawcurvaturecomb.png&quot;</code></pre>
 end 800 500 &quot;../images/bezier/typecomb.png&quot;</code></pre>
 <p><img src="/assets/images/bezier/typecomb.png" alt="curvature comb for the g" /></p>
 <p>The dots over the ‘i’ and ‘j’ don&#39;t look like perfect circles; these are defined by 8 points, not 4, for some reason.</p>
-<h3 id="osculate_my_béziers"><a href="#osculate_my_béziers">Osculate my Béziers</a></h3>
+<h3 id="osculate_my_béziers"><a href="#osculate_my_béziers" class="header-anchor">Osculate my Béziers</a></h3>
 <p>The value of kappa is typically very small, so the <em>radius of curvature</em>, which is defined as </p>
 \[\frac{1}{kappa}\]
 <p>, can become very large. This radius value defines a circle that just touches the curve and follows the curvature at that point. Mathematicians, in typically romantic mood, call it the <em>osculating circle</em>, <em>osculate</em> being from the Latin noun <em>osculum</em>, meaning &quot;kiss&quot;.</p>
@@ -842,7 +842,7 @@ end 800 500 &quot;../images/bezier/typecomb.png&quot;</code></pre>
     end
 end 800 800 &quot;../images/bezier/osculate.png&quot;</code></pre>
 <p><img src="/assets/images/bezier/osculate.png" alt="osculating" /></p>
-<h2 id="a_blot_on_the_landscape"><a href="#a_blot_on_the_landscape">A blot on the landscape</a></h2>
+<h2 id="a_blot_on_the_landscape"><a href="#a_blot_on_the_landscape" class="header-anchor">A blot on the landscape</a></h2>
 <p>Bézier curves became popular because they allow us to specify gently curving shapes that would be impractical and cumbersome to specify with circular arcs. The Comprehensive Taxonomy of Irregular Amoeboid Shapes is perhaps still waiting to be written, but here&#39;s my contribution to the ‘random ink blot’ chapter. Sometimes you&#39;ll get lucky and get a nice one.</p>
 <pre><code class="language-julia">function blot&#40;;pos&#61;O, radius&#61;50, npoints&#61;10, action&#61;:fill&#41;
     center &#61; pos
@@ -889,7 +889,7 @@ end 800 500 &quot;../images/bezier/blot.png&quot;</code></pre>
     drawcurvature.&#40;b, colors&#61;&#91;&quot;white&quot;, &quot;black&quot;&#93;&#41;
 end 800 500 &quot;../images/bezier/blobcomb.png&quot;</code></pre>
 <p><img src="/assets/images/bezier/blobcomb.png" alt="blob comb" /></p>
-<h2 id="a_brush_in_the_rough"><a href="#a_brush_in_the_rough">A brush in the rough</a></h2>
+<h2 id="a_brush_in_the_rough"><a href="#a_brush_in_the_rough" class="header-anchor">A brush in the rough</a></h2>
 <p>Not all lines generated by computers have to be rigidly straight and precise. What if we could easily make graphics that are a bit more relaxed in style, rather than the rigid CAD-like &#40;and yes, awesome&#41; precision graphics we&#39;re used to?</p>
 <pre><code class="language-julia">@png begin
     t &#61; Table&#40;1, 3&#41;
@@ -901,7 +901,7 @@ end 800 500 &quot;../images/bezier/blobcomb.png&quot;</code></pre>
            boxv&#91;mod1.&#40;2:5, 4&#41;&#93;&#41;
 end 800 300 &quot;../images/bezier/lines.png&quot;</code></pre>
 <p><img src="/assets/images/bezier/lines.png" alt="rough lines" /></p>
-<h2 id="a_line_is_a_breadthless_length_euclid"><a href="#a_line_is_a_breadthless_length_euclid">“A line is a breadthless length.” &#40;Euclid&#41;</a></h2>
+<h2 id="a_line_is_a_breadthless_length_euclid"><a href="#a_line_is_a_breadthless_length_euclid" class="header-anchor">“A line is a breadthless length.” &#40;Euclid&#41;</a></h2>
 <p>The idea here is that a single line between two points is replaced with some BezierPathSegments that together define a shape that can vary in thickness along its length. This shape can be then filled, and is independent of the set line thickness.</p>
 <pre><code class="language-julia">@png begin
     setline&#40;60&#41; # &lt;— pointless
@@ -959,7 +959,7 @@ end 800 600 &quot;../images/bezier/graph.png&quot;</code></pre>
     text&#40;&quot;pint of milk   cat food   stamps   something for dinner? &quot;, halign&#61;:center&#41;
 end 800 100 &quot;../images/bezier/shoppinglist.png&quot;</code></pre>
 <p><img src="/assets/images/bezier/shoppinglist.png" alt="a shopping list" /></p>
-<h2 id="a_fist_full_of_brushes"><a href="#a_fist_full_of_brushes">A fist full of brushes</a></h2>
+<h2 id="a_fist_full_of_brushes"><a href="#a_fist_full_of_brushes" class="header-anchor">A fist full of brushes</a></h2>
 <p>But it&#39;s always fun to explore an idea to see where it leads:</p>
 <pre><code class="language-julia">@png begin
     t &#61; Table&#40;5, 5, 130, 100&#41;
@@ -1128,8 +1128,8 @@ unpetitbang&#40;&#41;</code></pre>
 <p><img src="/assets/images/bezier/unpetitbang.png" alt="un petit bang" /></p>
 <p>&#91;2018-06-20&#93;</p>
 <div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?bezier" alt="cormullion signing off" /></div>
-<h3 id="footnotes"><a href="#footnotes">Footnotes</a></h3>
-<h4 id="table_classfndef_idfndefupdated_td_classfndef-backrefa_hreffnrefupdated1_td_classfndef-contentupdates"><a href="#table_classfndef_idfndefupdated_td_classfndef-backrefa_hreffnrefupdated1_td_classfndef-contentupdates"><table class="fndef" id="fndef:updated">
+<h3 id="footnotes"><a href="#footnotes" class="header-anchor">Footnotes</a></h3>
+<h4 id="table_classfndef_idfndefupdated_td_classfndef-backrefa_hreffnrefupdated1_td_classfndef-contentupdates"><a href="#table_classfndef_idfndefupdated_td_classfndef-backrefa_hreffnrefupdated1_td_classfndef-contentupdates" class="header-anchor"><table class="fndef" id="fndef:updated">
     <tr>
         <td class="fndef-backref"><a href="#fnref:updated">[1]</a></td>
         <td class="fndef-content"><em>Updates</em></td>
@@ -1137,7 +1137,7 @@ unpetitbang&#40;&#41;</code></pre>
 </table>
 </a></h4>
 <p>I&#39;ve updated this post to work with Julia v1.0 and to take advantage of Franklin&#39;s ever-growing feature set.</p>
-<h4 id="table_classfndef_idfndefgraphics_td_classfndef-backrefa_hreffnrefgraphics2_td_classfndef-contentgraphic_formats"><a href="#table_classfndef_idfndefgraphics_td_classfndef-backrefa_hreffnrefgraphics2_td_classfndef-contentgraphic_formats"><table class="fndef" id="fndef:graphics">
+<h4 id="table_classfndef_idfndefgraphics_td_classfndef-backrefa_hreffnrefgraphics2_td_classfndef-contentgraphic_formats"><a href="#table_classfndef_idfndefgraphics_td_classfndef-backrefa_hreffnrefgraphics2_td_classfndef-contentgraphic_formats" class="header-anchor"><table class="fndef" id="fndef:graphics">
     <tr>
         <td class="fndef-backref"><a href="#fnref:graphics">[2]</a></td>
         <td class="fndef-content"><em>Graphic formats</em></td>
@@ -1145,7 +1145,7 @@ unpetitbang&#40;&#41;</code></pre>
 </table>
 </a></h4>
 <p>All the images in this post are in PNG, but they looked better in the vector-based SVG format. However, there was an annoying ‘bug’ in Jupyter/IJulia/IPython involving text in SVG images created by Cairo. What happened was that Cairo tried to be smart and stored text in XML symbols, suitable for re-use. A good idea, but unfortunately they&#39;re stored in the notebook&#39;s ‘global XML scope’, and so later cells accidentally picked up symbol definitions from earlier cells and re-used them, even though that&#39;s not always what you wanted.</p>
-<h4 id="table_classfndef_idfndefdonlancaster_td_classfndef-backrefa_hreffnrefdonlancaster3_td_classfndef-contentdon_lancaster"><a href="#table_classfndef_idfndefdonlancaster_td_classfndef-backrefa_hreffnrefdonlancaster3_td_classfndef-contentdon_lancaster"><table class="fndef" id="fndef:donlancaster">
+<h4 id="table_classfndef_idfndefdonlancaster_td_classfndef-backrefa_hreffnrefdonlancaster3_td_classfndef-contentdon_lancaster"><a href="#table_classfndef_idfndefdonlancaster_td_classfndef-backrefa_hreffnrefdonlancaster3_td_classfndef-contentdon_lancaster" class="header-anchor"><table class="fndef" id="fndef:donlancaster">
     <tr>
         <td class="fndef-backref"><a href="#fnref:donlancaster">[3]</a></td>
         <td class="fndef-content"><em>Don Lancaster</em></td>
