@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/libs/katex/katex.min.css">
+     
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>Asterisk</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><p><em>Challenged to write about a single Unicode character, I chose the humble asterisk. In this post, Julia takes a back seat but it’s working hard behind the scenes. <sup id="fnref:Franklin1"><a href="#fndef:Franklin1" class="fnref">[1]</a></sup> The font used for the examples is JuliaMono.</em></p>
+<h1 id="asterisk"><a href="#asterisk" class="header-anchor">Asterisk</a></h1>
+<p>The asterisk has a long history. The first appearance of this simple mark was probably on a cave wall somewhere, but we like to assign inventions to known individuals, so the inventor of the asterisk was: Aristarchus of Samothrace, in about 200 BCE.</p>
+<p>I was disappointed that this wasn’t the other Aristarchus, Aristarchus of Samos, the famous mathematician with an interest in astronomy, because ἀστερίσκος means “little star”. The man from Samothrace however was a librarian, scholar, critic, and proofreader, who liked to make numerous marks &#40;*&#41; in the margin of texts and manuscripts, like notes, queries, and critical comments.</p>
+<img src="/assets/images/asterisk/unicodechar-2a-tidy.svg" alt="" />
+<div class="marginnote">&#42; Like this.</div>
+<p>As well as writing little stars in the margin he also used other marks, such as the one we now call the reference mark &#40;<code>\u203b</code>&#41;*.</p>
+<div class="marginnote">&#42; Perhaps this was a refinement of the asterisk, or perhaps it came first. They look quite similar...</div>
+<img src="/assets/images/asterisk/unicodechar-203b-tidy.svg" alt="" />
+<p>This use of the asterisk and related marks has continued right up to the present day. Medieval scribes and scholars used a range of symbols to indicate their marginal annotations, and these continued as the printing revolution superseded hand-written manuscripts. Marginal notes were often replaced by footnotes, and the asterisk and dagger were the primary two symbols used for indicating these.</p>
+<img src="/assets/images/asterisk/unicodechar-2a_2020-tidy.svg" alt="" />
+<p>Another name for the dagger was the obelisk, hence the comic book characters Asterix and Obelix &#40;which are probably familiar to you if you grew up in Europe&#41;.</p>
+<p><img src="/assets/images/asterisk/asterix.jpeg" alt="asterix and obelisk" /></p>
+<p>If you’re writing a book, you can re-use these two indicators on every page, but if you want more than two footnotes on the same page, you have to reach into some of the less rarely seen marks, such as the double dagger &#40;a ‘diesis’&#41;; the triple dagger; the section sign; the pilcrow; the ‘parallel to’; and the asterism.</p>
+<img src="/assets/images/asterisk/unicodechar-2021_2e4b_a7_b6_2225_2042-tidy.svg" alt="" />
+<p>Medieval scribes, and readers who enjoy writing in the margins of books, can get carried away with the possibilities. The pointing hand or manicule* is also seen in the margins of manuscripts, and adds some human interest to the dullest of scriptural documents.</p>
+<div class="marginnote"><p>&#42; also called the printers’ fist</p>
+<div class="fontsize3rem">☜</div></div>
+<p>If you run out of symbols, you might have to start doubling up on them. A heavily-footnoted page could work through the following:</p>
+<img src="/assets/images/asterisk/unicodestring-13647275826048974339-tidy.svg" alt="image" />
+<p>But by now you’re probably using too many footnotes on a single page. It could be time to switch to numbered footnotes, numbered from 1 to n for the whole chapter rather than starting at 1 on each page. These days, we can leave it to the software &#40;such as \( \LaTeX \) or, for this web page, Franklin <sup id="fnref:Franklin2"><a href="#fndef:Franklin2" class="fnref">[2]</a></sup>&#41; to do that for us.</p>
+<h2 id="aspersion"><a href="#aspersion" class="header-anchor">Aspersion</a></h2>
+<p>To this day, the word “asterisk” carries with it a few additional meanings derived from its history as a pointer to important additional content. It’s used in advertising, to indicate the presence of small print which you should probably read – but perhaps they hope you don’t. In American journalism, often dominated by sport and politics, the word “asterisk” has come to mean “no, you’d better read more about this before you decide what to think”. It was famously applied to George W Bush after his disputed “victory”* in the 2000 US presidential election, when the cartoon strip Doonesbury started featuring Bush as a literal asterisk.</p>
+<div class="marginnote"><p>&#42; Bush got fewer votes than Al Gore in Florida, but still won there.</p>
+<p>I originally thought this cartoon was written by a chap called Doonesbury, because the signature isn&#39;t very legible. But I&#39;ve since learned he&#39;s called Trudeau.</p></div>
+<p><img src="/assets/images/asterisk/doonesbury.jpeg" alt="gw bush in doonesbury" /></p>
+<p>In baseball, there&#39;s always talk of <a href=" https://www.villagevoice.com/2011/06/27/roger-maris-and-the-myth-of-the-asterisk/">asterisks</a> set against players’ recorded achievements. According to the New York Times, the US Tennis Open this year &#40;2020&#41; should be called “The Asterisk Open”, because of the many players who couldn’t attend, and so the winner isn’t the best player.<sup id="fnref:tennis"><a href="#fndef:tennis" class="fnref">[3]</a></sup></p>
+<p>Another famous bearer of the insinuating asterisk is drug-peddler and bike-pedaller Lance Armstrong.</p>
+<p><img src="/assets/images/asterisk/nyt-lance-armstrong-asterisk.png" alt="lance armstrong" /></p>
+<p>So the word itself has picked up a bit of a smell.</p>
+<h2 id="asterisk_assessment"><a href="#asterisk_assessment" class="header-anchor">Asterisk assessment</a></h2>
+<p>So far, this is the history of the asterisk as told in books and web pages. Keith Hou­s­ton’s excellent book <em>Shady Characters</em> <sup id="fnref:shady"><a href="#fndef:shady" class="fnref">[4]</a></sup> covers the history of most of the punctuation marks in great detail. But his chapter on the asterisk concentrates entirely on the asterisk’s use as a footnote indicator, and ends more or less here.</p>
+<p>Today we&#39;re used to seeing it used for many more things than footnotes, such as multiplication. In mathematics, various symbols have been used for multiplication, although the default operation is multiplication: for mathematicians, if you place two symbols in intimate contact, they’ll naturally multiply without needing any help from a third symbol.</p>
+<p>The Julia language allows for implicit multiplication between numbers and variables:</p>
+<pre><code class="language-julia">julia&gt;
+
+julia&gt; x &#61; 2
+2
+
+julia&gt; 2x
+4</code></pre>
+<p>although Python doesn’t:</p>
+<pre><code class="language-julia">&#37; python
+Python 3.8.1 &#40;default, Mar  8 2020, 13:39:36&#41;
+&#91;Clang 10.0.0 &#40;clang-1000.11.45.5&#41;&#93; on darwin
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; x &#61; 2
+&gt;&gt;&gt; 2x
+File &quot;&lt;stdin&gt;&quot;, line 1
+2x
+^
+SyntaxError: invalid syntax
+&gt;&gt;&gt;</code></pre>
+<p>Most languages use <code>*</code> for multiplication. Mathematica* is more capable than most. Spaces denote multiplication, but you can also use a <code>*</code> for multiplication if you want to.</p>
+<div class="marginnote">&#42; probably renamed to the Wolfram Language since I last used it</div>
+<p>Let&#39;s go back in time again, to see how the asterisk started this journey.</p>
+<h2 id="galileo_galileo"><a href="#galileo_galileo" class="header-anchor">Galileo Galileo</a></h2>
+<p>Up to the 1600s, the asterisk was used mainly for footnotes and decorative purposes in scientific books. For example, it finds its astronomical roots in the famous publication by Galileo, <em>Sidereus Nuncius</em>, the Sidereal &#40;Starry&#41; Message, printed in 1610.</p>
+<p>These asterisks show what Galileo called the Medicean Stars, which we now call the Galilean Moons, orbiting Jupiter.*</p>
+<div class="marginnote">&#42; It looks like the typesetter is using the same “O” to represent Jupiter here that was used on the title page for “GalileO GalileO” and “COsmO Medici”. The asterisk ‘plot markers’ do the job perfectly.</div>
+<p><img src="/assets/images/asterisk/sidereal-messenger.png" alt="Galileo sidereal message" /></p>
+<h2 id="symbols"><a href="#symbols" class="header-anchor">Symbols</a></h2>
+<p>Science, and mathematics, the language of science, had gradually developed from medieval manuscripts written in elaborate Latin sentences to printed books embroidered with algebraic symbols. Mathematics moved away from the wordy descriptive approach to a more algebraic style.*</p>
+<div class="marginnote">&#42; This always wasn’t an unopposed process. It&#39;s been called “The struggle between symbolists and rhetoricians”. <sup id="fnref:Florian"><a href="#fndef:Florian" class="fnref">[5]</a></sup></div>
+<p>From the 1500s on, various authors enthusiastically promoted new syntax and probably hoped that their favourite symbols would take hold and become standard. No doubt the printers of mathematical books were happy to add the cost of designing, punch-cutting, and hot-lead-moulding all those extra new pieces of type to the final invoice.*</p>
+<div class="marginnote">&#42; Perhaps these days it’s not that much easier to add new symbols to a font.</div>
+<p>In 1668, the Swiss author Johan Heinrich Rahn was the first to introduce the asterisk to indicate multiplication, in his algebraic treatise <em>Teutsche Algebra</em>.</p>
+<p><img src="/assets/images/asterisk/rahn-multiply.png" alt="rahn" /></p>
+<p>That spiral character denotes ‘involution’ &#40;an old word for exponentiation&#41;. His book also contains, on another page, the first printed use of the division symbol ÷.</p>
+<p>Until recently, Rahn’s score had been: won 1, lost 1. The multiplying asterisk didn’t catch on at all at the time, although his division sign did.</p>
+<h3 id="the_saltire"><a href="#the_saltire" class="header-anchor">The saltire</a></h3>
+<p>Earlier, in 1631, William Oughtred<sup id="fnref:Oughtred"><a href="#fndef:Oughtred" class="fnref">[6]</a></sup>* had published the <em>Clavis Mathematicae, The Key to Mathematics</em>, and this famous textbook, with its profusion of new symbols, was very influential and studied by many, including the young Isaac Newton.</p>
+<div class="marginnote">&#42; 1574 – 1660 • He was a clergyman, mathematician, teacher, inventor – he taught Christopher Wren, among others. He invented the slide rule and introduced the abbreviations “sin” and “cos” for the sine and cosine functions.</div>
+<p>Oughtred’s book popularized the saltire, a rotated plus sign, for use as the visible multiplication symbol. Here’s the first time it appeared in print:</p>
+<p><img src="/assets/images/asterisk/oughtred-clavis.png" alt="oughtred" /></p>
+<p>In the hands of this typesetter, it’s quite small compared with the other operators. It wouldn&#39;t easily be confused with the usually seriff-ed letter X.</p>
+<p>Here&#39;s ×, the times sign &#40;<code>\u00d7</code>&#41;, and the saltire:</p>
+<img src="/assets/images/asterisk/unicodechar-d7_2613-tidy.svg" alt="" />
+<div class="marginnote">&#42; The saltire also goes by the name St Andrew’s Cross – who was crucified on a larger wooden version. In heraldry, it’s formed by ‘a bend and a bend sinister’.</div>
+<p>Sadly, × doesn’t work as a multiplication sign in Julia, although it’s easy enough to make it work:</p>
+<pre><code class="language-julia">julia&gt; const × &#61; *
+* &#40;generic function with 385 methods&#41;
+
+julia&gt; x &#61; 3 × 4
+12
+
+julia&gt; a &#61; &quot;hello&quot; × &quot;world&quot; # ⁉
+&quot;helloworld&quot;</code></pre>
+<p>I don&#39;t know if there are any unexpected side effects when doing this.</p>
+<h2 id="leibniz"><a href="#leibniz" class="header-anchor">Leibniz</a></h2>
+<p>The influential mathematician and philosopher Gottfried Leibniz didn’t like Oughtred’s saltire symbol, and wrote to Bernoulli in 1698:</p>
+<blockquote>
+<p>I do not like the <code>×</code> symbol as a symbol for multiplication, since it is easily confounded with <code>x</code>; … often I simply relate two quantities by an interposed dot and indicate multiplication with <code>ZC ⋅ LM</code>.</p>
+</blockquote>
+<p>The saltire probably found more favour in England than Germany. Newton adopted it, doubtless after seeing a need for it. Here’s the first edition of his Principia Mathematica<sup id="fnref:principia"><a href="#fndef:principia" class="fnref">[7]</a></sup>, published in 1687.</p>
+<p><img src="/assets/images/asterisk/newton-principia-first.png" alt="newton principia first edition" /></p>
+<p>I’d say Leibniz definitely has a ‘point’ here, because Newton&#39;s used a lowercase <code>x</code> as a surrogate saltire, although to be fair he doesn&#39;t often use <code>x</code> as a variable. But in the revised 1723 edition, Newton improves most of his font choices*:</p>
+<p><img src="/assets/images/asterisk/newton-principia-third.png" alt="newton principia third edition" /></p>
+<div class="marginnote">&#42; That letter Q is eye-catching.</div>
+<p>Now the saltire is much larger and, without the serifs used for most mathematical printing at the time, is less likely to be confused with an X of any size.</p>
+<p>More so than Oughtred and Rahn, Leibniz was very influential: he popularized the dx/dy notation, the integration symbol, the multiplication dot, signs for congruence and similarity, and many more, and even used an asterisk for the occasional multiplication.</p>
+<h3 id="too_useful"><a href="#too_useful" class="header-anchor">Too useful</a></h3>
+<p>In general, though, the multiplying asterisk wasn’t often used in most mathematics &#40;as opposed to arithmetical&#41; texts, and was more likely to be used to indicate footnotes or for other more specialized uses. If multiplication was required, Leibniz’ dot was considered sufficient. Mathematical symbols for common operations had largely been agreed upon.</p>
+<p>The asterisk was too useful and recognizable a symbol to be left in the dusty corner of the upper case, kept just for occasional multiplication duties</p>
+<p><img src="/assets/images/asterisk/typecase.jpg" alt="a type case" /></p>
+<p>or for the occasional footnote. Mathematicians adopted it for all kinds of things. In 1774, one J B Basedow used an asterisk to indicate factorial: so <code>5* &#61; 5.4.3.2.1</code>. Later, it found many other more specialized uses:</p>
+<ul>
+<li><p><code>A*</code> is the conjugate transpose of A</p>
+</li>
+<li><p><code>V*</code> is the Dual space of vector space V</p>
+</li>
+<li><p><code>R*</code> is the Reflexive closure of relation R</p>
+</li>
+<li><p><code>z*</code> is the Complex conjugate of z</p>
+</li>
+<li><p>in the <code>A*</code> algorithm, the <code>*</code> is a wildcard &#40;there were algorithms called A1 and A2, so <code>A*</code> includes all possible versions&#41;</p>
+</li>
+<li><p><code>R*</code> is the set of numbers without zero</p>
+</li>
+<li><p><code>Q*</code> is the set of numbers without zero</p>
+</li>
+<li><p><code>C*</code> is the set of complex numbers without zero</p>
+</li>
+<li><p><code>*</code> is &#40;noncommutative&#41; string concatenation in Julia</p>
+</li>
+</ul>
+<p>and so on.</p>
+<h2 id="that_dn_terisk"><a href="#that_dn_terisk" class="header-anchor">That d**n **terisk</a></h2>
+<p>The asterisk also took over some of the jobs formerly done by the dash &#40;—&#41;. Dashes were often used in 19th century fiction to indicate a pause, or an omission, and sometimes to imply that real names were being concealed to avoid legal problems &#40;a clever way to add realism to a story&#41;. &#40;The humble dash has of course been been extensively studied by scholars <sup id="fnref:austen"><a href="#fndef:austen" class="fnref">[8]</a></sup>.&#41;</p>
+<p>The dash&#39;s task of indicating omission has gradually been taken over by the asterisk. In more modern times, it allow writers to use swear* words that the printers aren&#39;t brave enough to show in full, as this page from the New Zealand Sunday Star demonstrates.</p>
+<div class="marginnote">&#42; a technical name for this desire to protect readers without stifling writers, this ellipsis-as-pretend-kindness. is “audience-respecting aposiopesis”</div>
+<p><img src="/assets/images/asterisk/sunday-star-sun-headline.jpg" alt="Sunday Star NZ" /></p>
+<p>Perhaps this is where the use of * as the wild-card character comes from. I find regular expressions can induce swearing, occasionally.</p>
+<h2 id="typewriters_and_teleprinters"><a href="#typewriters_and_teleprinters" class="header-anchor">Typewriters and teleprinters</a></h2>
+<p>The rapid rise of the typewriter in the 1860s with its restricted character set meant a few symbols had to go, since the typewriter wasn’t able to inherit everything from the printer’s type cases.</p>
+<p>The first machines had just uppercase letters. And models were often shipped that didn&#39;t have keys for <code>1</code> &#40;just use an <code>l</code>&#41;, <code>0</code> &#40;just use an <code>O</code>&#41; or <code>&#33;</code> &#40;just use a <code>&#39;</code> then type a backspace and then type a <code>.</code> underneath&#41;. But the technology progressed, and ingenious double-shift key machines such as the Corona 3<sup id="fnref:typewriter"><a href="#fndef:typewriter" class="fnref">[9]</a></sup> were able to produce most of the characters we would expect to see:</p>
+<p><img src="/assets/images/asterisk/corona3.jpg" alt="corona typewriter" /></p>
+<p>But very few machines carried a times &#40;×&#41; key, so you would have to use the letter “x” or the “*”. And some machines didn’t even have an asterisk – presumably you had to fake that by overtyping an <code>x</code> and <code>|</code> and <code>-</code>, or something similarly inventive.</p>
+<p>Using typewriting technology to do mathematical typesetting requires some work. The book seen in the following image was published in 1978, coincidentally the same year that Donald Knuth introduced the \( \TeX \) software that would eventually make such efforts unnecessary. It puts the Courier typeface, a frequent presence on the IBM Selectric typewriter before it took up residence on the world’s laser printers, through its paces.</p>
+<p><img src="/assets/images/asterisk/1978-typed-book.png" alt="1978  typed book" /></p>
+<p>Here, the asterisk has found other jobs to do, and the occasional requirement for a multiplication sign was met by a sneaky lowercase <code>x</code>, unambiguous in context.</p>
+<p>Typewriter technology evolved into the teleprinter and teletype machines of the mid-20th century. For example, a machine like the Friden Flexowriter was a fearsome beast containing a keyboard, printer, paper tape reader, card reader, and a programmable plug-board controlling dozens of electrical relays, and it weighed about 60kg. &#40;Nostalgic video <a href="https://vimeo.com/79331917">here</a>.&#41; It could communicate over a serial connection, so inevitably it had a major influence on the development of the early computer.</p>
+<h2 id="formula_translation"><a href="#formula_translation" class="header-anchor">Formula translation</a></h2>
+<p>Mathematical texts can largely do without a multiplication sign, resorting to the old saltire when necessary.</p>
+<p>So the design documents for the new proposed Fortran* programming language in 1954 show the 500-year old Oughtred multiplication symbol being used extensively, not a single asterisk in sight: <sup id="fnref:Fortran"><a href="#fndef:Fortran" class="fnref">[10]</a></sup></p>
+<div class="marginnote">&#42; Still going strong and old enough to draw a pension&#33;</div>
+<p><img src="/assets/images/asterisk/fortran1.png" alt="fortran" /></p>
+<p>I can’t tell whether these have been inserted by hand, or whether the printer was physically modified so that it could generate this symbol &#40;something which people could do, and did, apparently&#41;.</p>
+<p>When the language was implemented, though, the saltire wasn’t available, because programs were initially loaded from punched cards, and only the characters that made it as far as the 1960s-era punch card machines survived into the computer era.</p>
+<p><img src="/assets/images/asterisk/keypunch.png" alt="keypunch" /></p>
+<p>The asterisk was the obvious stand-in.</p>
+<p>Much of this early computing machinery was designed primarily for commercial use, so the symbols available to early programmers were designed for accounting and statistics, rather than programming.</p>
+<p>That character on the top &#40;43&#41; looks like the rare square lozenge:</p>
+<img src="/assets/images/asterisk/unicodechar-2311-tidy.svg" alt="" />
+<p>which, like the other keys, was part of the IBM 1401 code, an early character encoding pre-dating ASCII. This symbol was commonly used in 1960s computerized banking systems to indicate second level totals.</p>
+<div class="marginnote">&#42; The @ sign has a similar history: it survived onto the business-oriented computing machines because of its commercial uses, and was therefore available for other uses, such as the first ever email.</div>
+<p>Some programmers would have wanted keyboards like this, the APL keyboard:<sup id="fnref:APL"><a href="#fndef:APL" class="fnref">[11]</a></sup></p>
+<p><img src="/assets/images/asterisk/APL-keybd2.png" alt="APL" /></p>
+<div class="marginnote">&#42; Unicode <code>\u2336</code> to <code>\u2376</code></div>
+<p>so that they could input all these APL symbols*:</p>
+<div class="fontsize2rem"><pre><code class="language-julia">⌰⌱⌲⌳⌴⌵⌶⌷⌸⌹⌺⌻⌼⌽⌾⌿⍀⍁⍂⍃⍄⍅⍆⍇⍈⍉⍊⍋
+⍌⍍⍎⍏⍐⍑⍒⍓⍔⍕⍖⍗⍘⍙⍚⍛⍜⍝⍞⍟⍠⍡⍢⍣⍤⍥⍦⍧
+⍨⍩⍪⍫⍬⍭⍮⍯⍰⍱⍲⍳⍴⍵⍶⍷⍸⍹⍺</code></pre></div>
+<p>The APL language was developed in the 1960s, and predicted the abundance of symbols that we take for granted in the Unicode era. I think there&#39;s still a bit of reluctance to use characters whose codes stray outside the ASCII page, but this is probably a natural desire to avoid compatibility issues. Most programmers have suffered Unicode and font display issues before. Also, not all programming environments provide an easy way to access thousands of symbols from a QWERTY keyboard &#40;like Julia users can from the REPL&#41;.</p>
+<h2 id="how_high_is_your_asterisk"><a href="#how_high_is_your_asterisk" class="header-anchor">How high is your asterisk?</a></h2>
+<p>The asterisk today &#40;at Unicode <code>\u002a</code>&#41; is a Jekyll-and-Hyde character. It&#39;s either a footnote indicator or a multiplication symbol. So typeface designers have a choice: position it discreetly at the top of the line, to line up with the dagger and other superscript characters, or place it on the same level as the other arithmetic operators such as <code>&#43;</code> and <code>-</code>. A few fonts can&#39;t decide, and settle for a compromise, somewhere between the two.</p>
+<p>This diagram shows how a few fonts position their asterisks at different heights above the baseline. An equals sign is shown in blue.</p>
+<p><img src="/assets/images/asterisk/asterisk-heights.svg" alt="asterisk heights" /></p>
+<p>I originally expected this to show that the asterisk has been slowly getting lower over time. But, although most non-programming fonts keep their asterisks held high, footnote-style, not all programming fonts keep aligned with the math operators, which I think is the obvious place to put it.</p>
+<p>One slight wrinkle here is that mathematicians have their very own asterisk, <code>\u2217</code>. In the words of Wikipedia:</p>
+<blockquote>
+<p>This should be used in fine typography for a large asterisk that lines up with the other mathematical operators.</p>
+</blockquote>
+<p>Here’s the non-‘fine’ footnote asterisk for multiplication, the one used in programming code:</p>
+<img src="/assets/images/asterisk/unicodestring-17379302595486995763-tidy.svg" alt="image" />
+<p>And here’s the ‘fine’ mathematical one:</p>
+<img src="/assets/images/asterisk/unicodestring-15218405567524156037-tidy.svg" alt="image" />
+<p>In some fonts there might be a height difference between the footnote-asterisk and the multiplication-asterisk, but in the font I’ve used here, they happen to be the more or less the same. Unfortunately, the ‘fine asterisk’, like the × symbol, doesn’t work as a multiplication symbol in Julia &#40;or any other language, I expect&#41;. But it remains available in the Unicode glyph warehouse, awaiting incorporation by enthusiastic lovers of ‘fine’ typography.</p>
+<h2 id="its_full_of_stars"><a href="#its_full_of_stars" class="header-anchor">It’s full of stars</a></h2>
+<p>The Unicode Consortium have an ‘inordinate fondness’<sup id="fnref:inordinate"><a href="#fndef:inordinate" class="fnref">[12]</a></sup> for arrows and stars, but they’re also quite keen on asterisks:</p>
+<p><img src="/assets/images/asterisk/unicodechar-2a_2a6e_29c6_204e-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-229b_273a_273b_273c-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-273d_274a_274b_359-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-2042_2051_2217_2722-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-2723_2724_2725_2731-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-2732_2733_2743_2749-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-fe61_ff0a_1f7af_2605-tidy.svg" alt="" /></p>
+<p><img src="/assets/images/asterisk/unicodechar-272f_66d_272d_2606-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-2735_2730_2721_2742-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-2363_1f7b0_1f7b1_1f7b2-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-1f7b3_1f7b4_1f7b5_1f7b6-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-1f7b7_1f7b8_1f7b9_1f7ba-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-1f7bb_1f7bc_1f7bd_1f7be-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-1f7bf-tidy.svg" alt="" /></p>
+<p>There&#39;s also a handful of saltires:</p>
+<p><img src="/assets/images/asterisk/unicodechar-2613_26dd_1f7ab_1f7ae-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-2b59_1f7ac_1f7a9_1f7aa-tidy.svg" alt="" /> <img src="/assets/images/asterisk/unicodechar-1f7a8_1f7ad-tidy.svg" alt="" /></p>
+<p>Perhaps there aren’t many people who take ages deliberating over which asterisk and saltire they want, but it’s good that they’re catered for.</p>
+<h2 id="pointless"><a href="#pointless" class="header-anchor">Pointless</a></h2>
+<p>How many points should an asterisk have, 5 or 6? Designer Tony Seddon<sup id="fnref:Seddon"><a href="#fndef:Seddon" class="fnref">[13]</a></sup> says:</p>
+<blockquote>
+<p>traditionally serif faces included a six-pointed asterisk, while sans serif asterisks had five, but in practice this is no longer an observed convention.</p>
+</blockquote>
+<p>I made a poster of a few<sup id="fnref:poster"><a href="#fndef:poster" class="fnref">[14]</a></sup>, and I don&#39;t think there&#39;s much of a pattern. Bodoni has five, Gotham has six, plenty of sans serif fonts sport six, and there are serif fonts with five and eight, and there&#39;s a couple of sevens, too.</p>
+<p><img src="/assets/images/asterisk/asteriskybusiness.svg" alt="asterisk compilation" /></p>
+<h2 id="roll_your_own"><a href="#roll_your_own" class="header-anchor">Roll your own</a></h2>
+<p>If you feel that none of these quite work for you, you could always whip up your own. Here&#39;s how you might use Julia in a <a href="https://github.com/fonsp/Pluto.jl">Pluto</a> notebook to start designing your own.</p>
+<p><img src="/assets/images/asterisk/plutostar.gif" alt="pluto star" /></p>
+<h2 id="conclusion"><a href="#conclusion" class="header-anchor">Conclusion</a></h2>
+<p>If you’ve read all the way to the end, thank you – you’re a ∗&#33;</p>
+<h2 id="notes_at_the_foot"><a href="#notes_at_the_foot" class="header-anchor">Notes at the foot</a></h2>
+<p><table class="fndef" id="fndef:Franklin1">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:Franklin1">[1]</a></td>
+        <td class="fndef-content">Franklin.jl worked very hard, building the pages and creating the images of Unicode glyphs.</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:Franklin2">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:Franklin2">[2]</a></td>
+        <td class="fndef-content">Franklin.jl&#39;s good for automatic numbering – although I couldn&#39;t persuade it to use footnote markers such as *, †, ‡, §, ||, #, **, ††, ‡‡, §§, ||||, ###, ***, †††, ‡‡‡ ... 😃.</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:tennis">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:tennis">[3]</a></td>
+        <td class="fndef-content"><a href="https://www.nytimes.com/2020/08/31/sports/tennis/-us-open-serena-djokovic.html">NY Times, Aug 31 2020</a></td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:shady">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:shady">[4]</a></td>
+        <td class="fndef-content">See the <a href="https://shadycharacters.co.uk">Shady Characters web site</a>.</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:Florian">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:Florian">[5]</a></td>
+        <td class="fndef-content">facsimile of <a href="https://archive.org/details/historyofmathema031756mbp/page/n269/mode/2up">A History Of Mathematical Notations by Cajori, Florian</a></td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:Oughtred">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:Oughtred">[6]</a></td>
+        <td class="fndef-content">facsimile of <a href="https://archive.org/details/bub_gb_ddMxgr27tNkC/page/n3/mode/2up">Oughtred’s Clavis Mathematicae</a></td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:principia">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:principia">[7]</a></td>
+        <td class="fndef-content">facsimile of <a href="https://archive.org/details/b3041412x/page/126/mode/2up">Newton’s Principia Mathematica</a></td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:austen">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:austen">[8]</a></td>
+        <td class="fndef-content">See <a href="https://kressiekornis.com/2019/03/20/austensdashes/">Kressie Kornis – My two-year study of Jane Austen&#39;s dashes</a></td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:typewriter">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:typewriter">[9]</a></td>
+        <td class="fndef-content">image from the <a href="https://typewriterdatabase.com">Typewriter database</a></td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:Fortran">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:Fortran">[10]</a></td>
+        <td class="fndef-content"><a href="http://www.softwarepreservation.org/projects/FORTRAN/">Fortran documentation</a></td>
+    </tr>
+</table>
+  <table class="fndef" id="fndef:APL">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:APL">[11]</a></td>
+        <td class="fndef-content">image of APL keyboard from <a href="https://en.wikipedia.org/wiki/File:APL-keybd2.svg">wikipedia</a></td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:inordinate">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:inordinate">[12]</a></td>
+        <td class="fndef-content">“inordinate fondness” at <a href="https://quoteinvestigator.com/2010/06/23/beetles/">quoteinvestigator.com</a></td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:Seddon">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:Seddon">[13]</a></td>
+        <td class="fndef-content">“Essential Type: An Illustrated Guide to Understanding and Using Fonts”, Yale University Press, 2016</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:poster">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:poster">[14]</a></td>
+        <td class="fndef-content">You can find similar posters for other letters <a href="https://github.com/cormullion/know-your-fonts">here</a></td>
+    </tr>
+</table>
+ &#91;2020-10-09&#93;</p>
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?asterisk" alt="cormullion signing off" /></div>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: June 22, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+        <script src="/libs/katex/katex.min.js"></script>
+<script src="/libs/katex/auto-render.min.js"></script>
+<script>renderMathInElement(document.body)</script>
+
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>

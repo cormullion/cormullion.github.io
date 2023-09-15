@@ -1,0 +1,262 @@
+
+
+.jm_franklin-content {
+	display: flex;
+	flex-direction: column;
+	margin-left: 25%;
+	margin-right: 25%;
+}
+
+
+.jm_franklin-toc {
+	font-family: JuliaMono-Regular;
+	font-size: 0.9rem;
+}
+
+.jm_franklin-toc ol {
+	list-style: square;
+	margin-left: 1rem;
+	font-size: 0.9rem;
+}
+
+.jm_franklin-toc li {
+	list-style: square;
+}
+
+.jm_h1 {
+	font-size: 3rem;
+	font-family: JuliaMono-Black;
+	max-width: 50ch;
+	hanging-punctuation: first;
+}
+
+.jm_h2, .jm_h3 {
+	font-size: 2.0rem;
+	font-family: JuliaMono-ExtraBold;
+	max-width: 50ch;
+	margin-bottom: 1.5rem;
+	hanging-punctuation: first;
+	padding-bottom: 0.3em;
+}
+
+.jm_h4, .jm_h5 {
+	font-size: 1.5rem;
+	line-height: 2rem;
+	font-family: JuliaMono-ExtraBold;
+	max-width: 50ch;
+	margin-bottom: 0.5rem;
+	hanging-punctuation: first;
+}
+
+.jm_p  {
+	font-size: 1rem;
+	line-height: 2rem;
+	font-family: JuliaMono-Regular;
+	text-align: left;
+	margin-left: 0%;
+	margin-right: 0%;
+	hanging-punctuation: first;
+}
+
+.jm_strong {
+	font-family: JuliaMono-Bold;
+}
+
+
+.franklin-content table.fndef  {
+	background-color: white;
+    margin: 0;
+    margin-bottom: 10px;
+}
+.franklin-content .fndef tr, td {
+    padding: 0;
+	background-color: white;
+    border: 0;
+    text-align: left;
+}
+.franklin-content .fndef tr {
+    border-left: 2px solid;
+    }
+.franklin-content .fndef td.fndef-backref {
+    vertical-align: top;
+    font-size: 70%;
+    padding-left: 5px;
+}
+.franklin-content .fndef td.fndef-content {
+    font-size: 80%;
+    padding-left: 10px;
+}
+
+
+jm_p > jm_code {
+	font-family: JuliaMono-Regular;
+	margin-top: 0.25rem;
+	margin-right: 0.25rem;
+}
+
+jm_ul {
+	margin-top: 0.75rem;
+	margin-right: 0.25rem;
+}
+
+jm_pre, jm_code {
+	font-family: JuliaMono-Regular;
+	width: 100%;
+	margin:0;
+}
+
+.jm_copyright {
+	margin: 10rem 2rem 2rem 2rem;
+	font-family: JuliaMono-Regular;
+	font-size: 0.5rem;
+	text-align: center;
+}
+
+.jm_smallercode {
+  font-size: 0.7em;
+}
+
+.jm_codealt * {
+	font-feature-settings: "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "ss10", "ss11", "ss12";
+	font-variant-ligatures: no-contextual;
+}
+
+.jm_code_zero_on {
+	/* slash zero */
+	font-feature-settings: "zero";
+	font-variant-ligatures: no-contextual;
+}
+
+.jm_code_alt_zero {
+	font-feature-settings: "ss04";
+}
+
+.jm_code_ss_on {
+	width:100%;
+	font-feature-settings: "zero", "ss01", "ss02", "ss03", "ss04", "ss05", "ss06", "ss07", "ss08", "ss09", "ss10", "ss11", "ss12";
+	font-variant-ligatures: no-contextual;
+}
+
+.jm_code_ss_thinnergrave {
+	width:100%;
+	font-feature-settings: "ss11";
+}
+
+.jm_code_ss_off {
+	font-feature-settings: normal;
+	font-variant-ligatures: no-contextual;
+}
+
+.jm_code_ss_on_dl {
+	font-feature-settings: "ss08";
+	font-variant-ligatures: no-contextual;
+}
+
+.jm_code_calt_on {
+	font-feature-settings: normal;
+	font-variant-ligatures: contextual;
+}
+
+/* language sample table */
+.jm_language * {
+	font-family: JuliaMono-Regular;
+	vertical-align: top;
+	line-height: 1.3em;
+	padding: 0.5rem;
+	max-width: 100%;
+	color: hsl(12, 97%, 97%);
+	background-color: hsl(238, 13%, 15%);
+}
+
+/* stylistic alts table */
+.jm_sstable {
+	font-family: JuliaMono-Regular;
+	width: 100%;
+	vertical-align: top;
+	text-align: center;
+	color: hsl(12, 97%, 97%);
+	background-color: hsl(238, 13%, 15%);
+}
+
+.jm_sstable th {
+	color: hsl(12, 97%, 97%);
+	background-color: hsl(238, 13%, 15%);
+	text-align: center;
+}
+
+.jm_sstable td {
+	color: hsl(12, 97%, 97%);
+	height: 2rem;
+	background-color: hsl(238, 13%, 15%);
+	text-align: center;
+	width: 25%;
+}
+
+.hljs-comment,.hljs-quote {
+	color:#998;
+	font-style:normal;
+}
+
+.hljs-keyword,.hljs-selector-tag,.hljs-subst {
+	font-weight:bold
+}
+
+.hljs-literal,.hljs-number,.hljs-tag .hljs-attr,.hljs-template-variable,.hljs-variable {
+	color:#99dd22;
+}
+
+.hljs-doctag,.hljs-string {
+	color:#ef8673;
+}
+
+.hljs-section,.hljs-selector-id,.hljs-title {
+	color:#99007d;
+	font-weight:bold;
+}
+
+.hljs-subst {
+	font-weight:normal;
+}
+
+.hljs-class .hljs-title,.hljs-type {
+	color:#758;
+	font-weight:bold;
+}
+
+.hljs-attribute,.hljs-name,.hljs-tag {
+	color:#ddee80;
+	font-weight:normal;
+}
+
+.hljs-link,.hljs-regexp {
+	color:#dd9926;
+}
+
+.hljs-bullet,.hljs-symbol {
+	color:#990073;
+}
+
+.hljs-built_in,.hljs-builtin-name {
+	color:#ff86b3;
+}
+
+.hljs-meta {
+	color:#999;
+	font-weight:bold;
+}
+
+.hljs-deletion {
+	background:#fdd;
+}
+
+.hljs-addition {
+	background:#dfd;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}

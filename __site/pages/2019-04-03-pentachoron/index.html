@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/libs/katex/katex.min.css">
+     
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>Pentachoron</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><p><em>This page contains quite a few animated GIFs. I apologise in advance if your browser or network connection doesn’t like them. It’s much easier to add a GIF than it is to embed a video into a GitHub pages blog, unfortunately.</em></p>
+<h1 id="pentachoron"><a href="#pentachoron" class="header-anchor">Pentachoron</a></h1>
+<p><img src="/assets/images/pentachoron/header-image.svg" alt="image label" /></p>
+<p>I encountered the word “pentachoron’ recently for the first time, and I thought it had to be something cool. Turns out it is, so I thought I’d have a go at drawing one...</p>
+<p>Unfortunately, it’s a 4-dimensional object, which is going to tax my limited 2D skills. But I like being out of my depth.</p>
+<h2 id="first_steps"><a href="#first_steps" class="header-anchor">First steps</a></h2>
+<p>The first job is to define a couple of types to help organize all the various points.</p>
+<p>Here’s an immutable structure to hold the coordinates of a point in four dimensions. In four dimensions, the axes are usually called <code>x</code>, <code>y</code>, <code>z</code>, and <code>w</code>.</p>
+<pre><code class="language-julia">struct Point4D&#123;T&#125; &lt;: AbstractArray&#123;T, 1&#125;
+    x::T
+    y::T
+    z::T
+    w::T
+end
+
+Point4D&#40;a::Array&#123;T, 1&#125;&#41; where T &lt;: Real &#61; Point4D&#40;a...&#41;
+
+Base.size&#40;pt::Point4D&#41; &#61; &#40;4, &#41;
+
+Base.getindex&#40;pt::Point4D, i&#41; &#61; &#91;pt.x, pt.y, pt.z, pt.w&#93;&#91;i&#93;</code></pre>
+<p>By adopting the AbstractArray as our stepmother type, we can pick up many useful behaviors. <code>size&#40;&#41;</code> and <code>getindex&#40;&#41;</code> can be taught how to handle Point4Ds. If you browse the <a href="https://docs.julialang.org/en/v1/manual/interfaces/#man-interface-array-1">official documentation</a> for a while you’ll find out how to effectively tap in to many desirable pre-defined abilities that our new type can inherit.</p>
+<p>While we’re here, let’s do three-dimensional points as well:</p>
+<pre><code class="language-julia">struct Point3D&#123;T&#125; &lt;: AbstractArray&#123;T, 1&#125;
+    x::T
+    y::T
+    z::T
+end
+
+Base.size&#40;pt::Point3D&#41; &#61; &#40;3, &#41;</code></pre>
+<h2 id="conversion"><a href="#conversion" class="header-anchor">Conversion</a></h2>
+<p>The primary task we have to address is how to convert a 4D point into a 2D point. Let’s start with the easier task: how to convert a 3D point into a 2D point, ie how can we draw a 3D shape on a flat surface?</p>
+<p>Consider a simple cube. The front face and the back face could have the same X and Y coordinates, and vary only by their Z values.</p>
+<p>&#40;This is just a diagram, it’s not really 3D...&#41;</p>
+<p><img src="/assets/images/pentachoron/cube.svg" alt="image label" /></p>
+<pre><code class="language-julia">using Luxor
+
+@svg begin
+    fontface&#40;&quot;Menlo&quot;&#41;
+    fontsize&#40;8&#41;
+    setblend&#40;blend&#40;
+        boxtopcenter&#40;BoundingBox&#40;&#41;&#41;,
+        boxmiddlecenter&#40;BoundingBox&#40;&#41;&#41;,
+        &quot;skyblue&quot;,
+        &quot;white&quot;&#41;&#41;
+    box&#40;boxtopleft&#40;BoundingBox&#40;&#41;&#41;,
+    boxmiddleright&#40;BoundingBox&#40;&#41;&#41;, :fill&#41;
+
+    setblend&#40;blend&#40;
+        boxmiddlecenter&#40;BoundingBox&#40;&#41;&#41;,
+        boxbottomcenter&#40;BoundingBox&#40;&#41;&#41;,
+        &quot;grey95&quot;,
+        &quot;grey45&quot;&#41;&#41;
+    box&#40;boxmiddleleft&#40;BoundingBox&#40;&#41;&#41;,
+    boxbottomright&#40;BoundingBox&#40;&#41;&#41;, :fill&#41;
+
+    sethue&#40;&quot;black&quot;&#41;
+    setline&#40;2&#41;
+    bx1 &#61; box&#40;O, 250, 250, vertices&#61;true&#41;
+    poly&#40;bx1, :stroke, close&#61;true&#41;
+    label.&#40;&#91;&quot;-1/1/1&quot;, &quot;-1/-1/1&quot;, &quot;1/-1/1&quot;, &quot;1/1/1&quot;&#93;,
+        slope.&#40;O, bx1&#41;, bx1&#41;
+
+    setline&#40;1&#41;
+    bx2 &#61; box&#40;O, 150, 150, vertices&#61;true&#41;
+    poly&#40;bx2, :stroke, close&#61;true&#41;
+    label.&#40;&#91;&quot;-1/1/0&quot;, &quot;-1/-1/0&quot;, &quot;1/-1/0&quot;, &quot;1/1/0&quot;&#93;,
+    slope.&#40;O, bx2&#41;, bx2, offset&#61;-45&#41;
+
+    map&#40;&#40;x, y&#41; -&gt; line&#40;x, y, :stroke&#41;, bx1, bx2&#41;
+end 500 500 &quot;../images/pentachoron/cube.svg&quot;</code></pre>
+<p>So the idea is to project the cube from 3D to 2D by keeping the first two values, and multiplying or modifying them by the third value. We’ll make a <code>convert&#40;&#41;</code> function to do this:</p>
+<pre><code class="language-julia">function Base.convert&#40;type::Type&#123;Point&#125;, pt3::Point3D&#41;
+    k &#61; 1/&#40;K - pt3.z&#41;
+    return Point&#40;pt3.x * k, pt3.y * k&#41;
+end</code></pre>
+<p><code>K</code> is just a constant which provides a consistent value for depth:</p>
+<pre><code class="language-julia">const K &#61; 4.0</code></pre>
+<p>Testing this quickly in Luxor.jl gives promising results:</p>
+<pre><code class="language-julia">@svg begin
+    cube &#61; &#91;
+    Point3D&#40;-1, -1,  1&#41;,
+    Point3D&#40;-1,  1,  1&#41;,
+    Point3D&#40; 1, -1,  1&#41;,
+    Point3D&#40; 1,  1,  1&#41;,
+    Point3D&#40;-1, -1, -1&#41;,
+    Point3D&#40;-1,  1, -1&#41;,
+    Point3D&#40; 1, -1, -1&#41;,
+    Point3D&#40; 1,  1, -1&#41;,
+    &#93;
+    circle.&#40;convert.&#40;Point, cube&#41; * 300, 5, :fill&#41;
+end 500 500 &quot;../images/pentachoron/basic3_to_2.png&quot;</code></pre>
+<p><img src="/assets/images/pentachoron/basic3_to_2.png" alt="image label" /></p>
+<p>It’s a simple type of perspective projection.</p>
+<p>Using the same principle, let’s make a method for converting a 4D point.</p>
+<pre><code class="language-julia">function Base.convert&#40;::Type&#123;Point3D&#125;, pt4::Point4D&#41;
+    k &#61; 1/&#40;K - pt4.w&#41;
+    return Point3D&#40;pt4.x * k, pt4.y * k, pt4.z * k&#41;
+end</code></pre>
+<p>Let’s hope it works.</p>
+<p>We can combine these into a single utility function called <code>flatten&#40;&#41;</code> that takes a list of 4D points and double-maps them into a list of 2D points suitable for drawing.</p>
+<pre><code class="language-julia">function flatten&#40;shape4&#41;
+    return map&#40;pt3 -&gt; convert&#40;Point, pt3&#41;, map&#40;pt4 -&gt; convert&#40;Point3D, pt4&#41;, shape4&#41;&#41;
+end</code></pre>
+<h2 id="going_up_a_level"><a href="#going_up_a_level" class="header-anchor">Going up a level</a></h2>
+<p>To test this, we’ll define the vertices of a unit pentachoron:</p>
+<pre><code class="language-julia">const n &#61; -1/√5
+
+const pentachoron &#61; &#91;Point4D&#40;vertex...&#41; for vertex in &#91;
+    &#91; 1.0,  1.0,  1.0, n&#93;,
+    &#91; 1.0, -1.0, -1.0, n&#93;,
+    &#91;-1.0,  1.0, -1.0, n&#93;,
+    &#91;-1.0, -1.0,  1.0, n&#93;,
+    &#91; 0.0,  0.0,  0.0, n &#43; √5&#93;&#93;&#93;</code></pre>
+<p>&#40;According to <a href="https://en.wikipedia.org/wiki/5-cell">Wikipedia</a>, other names for the pentachoron include:</p>
+<ul>
+<li><p>Regular 5-cell</p>
+</li>
+<li><p>C5</p>
+</li>
+<li><p>pentatope</p>
+</li>
+<li><p>pentahedroid</p>
+</li>
+<li><p>tetrahedral pyramid</p>
+</li>
+<li><p>4-simplex</p>
+</li>
+</ul>
+<p>I think <em>pentachoron</em> is the coolest, though.&#41;</p>
+<p>Here’s a list of “faces”, with each face defined by three of the vertices:</p>
+<pre><code class="language-julia">const pentachoronfaces &#61; &#91;
+    &#91;1, 2, 3&#93;,
+    &#91;1, 2, 4&#93;,
+    &#91;1, 2, 5&#93;,
+    &#91;1, 3, 4&#93;,
+    &#91;1, 3, 5&#93;,
+    &#91;1, 4, 5&#93;,
+    &#91;2, 3, 4&#93;,
+    &#91;2, 3, 5&#93;,
+    &#91;2, 4, 5&#93;,
+    &#91;3, 4, 5&#93;&#93;</code></pre>
+<p>A quick test:</p>
+<pre><code class="language-julia">@svg begin
+    setopacity&#40;0.2&#41;
+    pentachoron2D &#61; flatten&#40;pentachoron&#41;
+    for &#40;n, face&#41; in enumerate&#40;pentachoronfaces&#41;
+        randomhue&#40;&#41;
+        poly&#40;1500 * pentachoron2D&#91;face&#93;, :fillpreserve, close&#61;true&#41;
+        sethue&#40;&quot;black&quot;&#41;
+        strokepath&#40;&#41;
+    end
+end 600 250 &quot;../images/pentachoron/firstdraw.svg&quot;</code></pre>
+<p><img src="/assets/images/pentachoron/firstdraw.svg" alt="image label" /></p>
+<p>This isn’t very interesting, although I <em>think</em> it’s correct. To see a more appealing display, let’s make it dance...</p>
+<h2 id="swings_and_roundabouts"><a href="#swings_and_roundabouts" class="header-anchor">Swings and roundabouts</a></h2>
+<p>You usually rotate 2D points about a 1D point. You usually rotate 3D points about a 2D line &#40;often one of the XYZ axes&#41;. So logically you’d rotate 4D points with reference to a 3D plane. We’ll define some matrices that do 4D rotations relative to a plane defined by two of the X, Y, Z, and W axes.</p>
+<p>As I’m thinking about it, the XY plane is typically the plane of the drawing surface. If you think of the XY plane as a computer screen straight in front of you, the XZ plane is parallel to your desk or floor, and the YZ plane is like a wall beside your desk on your right or left side.</p>
+<p>But what about the XW plane? And the YW and ZW planes, for that matter? This is the mystery of 4D shapes: we can’t see these planes, we can only imagine their existence by watching shapes moving through and around them.</p>
+<p>Here’s a function that generates a suitable rotation matrix for rotating a 4D point in the XY plane:</p>
+<pre><code class="language-julia">function XY&#40;θ&#41;
+    &#91;cos&#40;θ&#41;   -sin&#40;θ&#41;  0        0;
+    sin&#40;θ&#41;    cos&#40;θ&#41;   0        0;
+    0         0        1        0;
+    0         0        0        1&#93;
+end</code></pre>
+<p>and here’s another one that rotates a 4D point in the XW plane:</p>
+<pre><code class="language-julia">function XW&#40;θ&#41;
+    &#91;cos&#40;θ&#41;   0        0        -sin&#40;θ&#41;;
+    0         1        0        0;
+    0         0        1        0;
+    sin&#40;θ&#41;    0        0        cos&#40;θ&#41;&#93;
+end</code></pre>
+<p>Oh, it looks like we’re having a matrix party, so we might as well do the others while we’re here:</p>
+<pre><code class="language-julia">function XZ&#40;θ&#41;
+    &#91;cos&#40;θ&#41;   0        -sin&#40;θ&#41;  0;
+    0         1        0        0;
+    sin&#40;θ&#41;    0        cos&#40;θ&#41;   0;
+    0         0        0        1&#93;
+end
+
+
+function YZ&#40;θ&#41;
+    &#91;1        0        0        0;
+    0         cos&#40;θ&#41;   -sin&#40;θ&#41;  0;
+    0         sin&#40;θ&#41;   cos&#40;θ&#41;   0;
+    0         0        0        1&#93;
+end
+
+function YW&#40;θ&#41;
+    &#91;1        0        0        0;
+    0         cos&#40;θ&#41;   0        -sin&#40;θ&#41;;
+    0         0        1        0;
+    0         sin&#40;θ&#41;   0        cos&#40;θ&#41;&#93;
+end
+
+function ZW&#40;θ&#41;
+    &#91;1        0        0        0;
+    0         1        0        0;
+    0         0        cos&#40;θ&#41;   -sin&#40;θ&#41;;
+    0         0        sin&#40;θ&#41;   cos&#40;θ&#41;&#93;;
+end</code></pre>
+<p>We’ll make a handy utility function that uses one of these matrix functions to rotate an array of 4D points <code>A</code> in the plane defined by the matrix function:</p>
+<pre><code class="language-julia">function rotate4&#40;A, matrixfunction&#41;
+    return map&#40;A&#41; do pt4
+        Point4D&#40;matrixfunction * pt4&#41;
+    end
+end</code></pre>
+<p>So we can write <code>rotate4&#40;A, XW&#40;π/2&#41;&#41;</code> to rotate the array of points in <code>A</code> in the XW plane by π/2. We can also write <code>rotate4&#40;A, XW&#40;π/2&#41; * XY&#40;π/2&#41;&#41;</code> to rotate the points first in the XW plane and then in the XY plane.</p>
+<p>Notice that the <code>rotate4&#40;&#41;</code> function returns a new array, rather than modifying the original one. This probably has some disadvantages, but for now it means that we don’t have to keep track of mutating objects so carefully.</p>
+<h2 id="it_moves"><a href="#it_moves" class="header-anchor">It moves</a></h2>
+<p>We’re now able to make an animation that rotates our pentachoron in one or more planes.</p>
+<p>The <code>frame&#40;&#41;</code> function generates a single frame, using the framenumber &#40;<code>eased_n</code> provides a normalized version of the framenumber modulated by the easing function&#41; to control the rotation between 0 and 2π. The scalefactor makes the unit shape big enough to fill the frame.</p>
+<p>It’s helpful to color the faces very slightly, using <code>poly&#40;..., :fill&#41;</code>-er.</p>
+<pre><code class="language-julia">using ColorSchemes
+
+function frame&#40;scene, framenumber, scalefactor&#61;1000&#41;
+    background&#40;&quot;antiquewhite&quot;&#41;
+    setlinejoin&#40;&quot;bevel&quot;&#41;
+    setline&#40;1.0&#41;
+    sethue&#40;&quot;black&quot;&#41;
+    eased_n &#61; scene.easingfunction&#40;framenumber, 0, 1, scene.framerange.stop&#41;
+    pentachoron′  &#61; rotate4&#40;pentachoron, XZ&#40;eased_n * 2π&#41;&#41;
+    pentachoron2D &#61; flatten&#40;pentachoron′&#41;
+
+    setopacity&#40;0.2&#41;
+    for &#40;n, face&#41; in enumerate&#40;pentachoronfaces&#41;
+        sethue&#40;get&#40;ColorSchemes.diverging_rainbow_bgymr_45_85_c67_n256,
+            n/length&#40;pentachoronfaces&#41;&#41;&#41;
+        poly&#40;scalefactor * pentachoron2D&#91;face&#93;, :fillpreserve, close&#61;true&#41;
+        sethue&#40;&quot;black&quot;&#41;
+        strokepath&#40;&#41;
+    end
+end</code></pre>
+<p>And this function generates a series of frames and saves them to an animation:</p>
+<pre><code class="language-julia">function makemovie&#40;w, h, fname;
+        scalefactor&#61;1000&#41;
+    movie1 &#61; Movie&#40;w, h, &quot;4D movie&quot;&#41;
+    animate&#40;movie1,
+        Scene&#40;movie1, &#40;s, f&#41;  -&gt; frame&#40;s, f, scalefactor&#41;,
+        1:300,
+        easingfunction&#61;easeinoutsine&#41;,
+        creategif&#61;true,
+        pathname&#61;&quot;../images/pentachoron/&#36;&#40;fname&#41;&quot;&#41;
+end
+
+makemovie&#40;600, 600, &quot;pentachoron-xz.gif&quot;, scalefactor&#61;2000&#41;</code></pre>
+<p>This is a rotation in the “parallel to the desk my computer’s resting on” XZ plane.</p>
+<p><img src="/assets/images/pentachoron/pentachoron-xz.gif" alt="image label" /></p>
+<p>It’s not a realistic rendering with hidden-surface removal—I wouldn’t know how to do that in 3D, let alone 4D. But it does make it slightly easier to follow some of the faces. Something to do one day might be to sort the “faces” to determine which are drawn first, but given the maths involved this is a challenge I’m dubious about tackling...</p>
+<p>We can modify <code>frame&#40;&#41;</code> to allow various permutations of XY, XW, XZ, YZ, YW, and ZW rotations. Here’s a version that rotates in XZ, followed by YW:</p>
+<pre><code class="language-julia">function frame&#40;scene, framenumber, scalefactor&#61;1000&#41;
+    background&#40;&quot;antiquewhite&quot;&#41;
+    setlinejoin&#40;&quot;bevel&quot;&#41;
+    setline&#40;1.0&#41;
+    setopacity&#40;0.2&#41;
+
+    eased_n &#61; scene.easingfunction&#40;framenumber, 0, 1,
+        scene.framerange.stop&#41;
+
+    pentachoron2D &#61; flatten&#40;
+        rotate4&#40;
+            pentachoron,
+            XZ&#40;eased_n * 2π&#41; *
+            YW&#40;eased_n * 2π&#41;&#41;&#41;
+
+    for &#40;n, face&#41; in enumerate&#40;pentachoronfaces&#41;
+        sethue&#40;get&#40;ColorSchemes.diverging_rainbow_bgymr_45_85_c67_n256,
+            n/length&#40;pentachoronfaces&#41;&#41;&#41;
+        poly&#40;scalefactor * pentachoron2D&#91;face&#93;, :fillpreserve, close&#61;true&#41;
+        sethue&#40;&quot;black&quot;&#41;
+        strokepath&#40;&#41;
+    end
+end
+
+makemovie&#40;800, 800, &quot;pentachoron-xz-yw.gif&quot;, scalefactor&#61;2000&#41;</code></pre>
+<p><img src="/assets/images/pentachoron/pentachoron-xz-yw.gif" alt="image label" /></p>
+<p>These are starting to make me think of kneading machines for making pizza dough.</p>
+<p>You can draw a few different models at once, placing each one in a separate cell:</p>
+<p><img src="/assets/images/pentachoron/showall-pentachoronmovie.gif" alt="image label" /></p>
+<p>This is showing 2D shadows of 3D shadows of 4D objects. Do these objects exist? I don’t know...</p>
+<h3 id="other_shapes"><a href="#other_shapes" class="header-anchor">Other shapes</a></h3>
+<p>While the word “pentachoron” was unfamiliar to me until recently, the word “tesseract” is much more familiar. After all, didn’t the tesseract contain the Space Stone, one of the six Infinity Stones that apparently predate the universe and possess unlimited energy? &#40;According to the scientists at Marvel Comics, at least...&#41; It’s also the name of a 4-dimensional hypercube, one step up from the pentachoron.</p>
+<p>Here are the vital numbers for the tesseract:</p>
+<pre><code class="language-julia">const tesseract &#61; &#91;Point4D&#40;vertex...&#41; for vertex in &#91;
+    &#91;-1, -1, -1,  1&#93;,
+    &#91; 1, -1, -1,  1&#93;,
+    &#91; 1,  1, -1,  1&#93;,
+    &#91;-1,  1, -1,  1&#93;,
+    &#91;-1, -1,  1,  1&#93;,
+    &#91; 1, -1,  1,  1&#93;,
+    &#91; 1,  1,  1,  1&#93;,
+    &#91;-1,  1,  1,  1&#93;,
+    &#91;-1, -1, -1, -1&#93;,
+    &#91; 1, -1, -1, -1&#93;,
+    &#91; 1,  1, -1, -1&#93;,
+    &#91;-1,  1, -1, -1&#93;,
+    &#91;-1, -1,  1, -1&#93;,
+    &#91; 1, -1,  1, -1&#93;,
+    &#91; 1,  1,  1, -1&#93;,
+    &#91;-1,  1,  1, -1&#93;&#93;&#93;
+
+const tesseractfaces &#61; &#91;
+    &#91;1,   2,   3,   4&#93;,
+    &#91;1,   2,  10,   9&#93;,
+    &#91;1,   4,   8,   5&#93;,
+    &#91;1,   5,   6,   2&#93;,
+    &#91;1,   9,  12,   4&#93;,
+    &#91;2,   3,  11,  10&#93;,
+    &#91;2,   3,   7,   6&#93;,
+    &#91;3,   4,   8,   7&#93;,
+    &#91;5,   6,  14,  13&#93;,
+    &#91;5,   6,   7,   8&#93;,
+    &#91;5,   8,  16,  13&#93;,
+    &#91;6,   7,  15,  14&#93;,
+    &#91;7,   8,  16,  15&#93;,
+    &#91;9,  10,  11,  12&#93;,
+    &#91;9,  10,  14,  13&#93;,
+    &#91;9,  13,  16,  12&#93;,
+    &#91;10, 11,  15,  14&#93;,
+    &#91;13, 14,  15,  16&#93;&#93;</code></pre>
+<p>Replace <code>pentachoron</code> everywhere by <code>tesseract</code> in the above code, choosing the rotations to taste.</p>
+<pre><code class="language-julia">function frame&#40;scene, framenumber, scalefactor&#61;1000&#41;
+    background&#40;&quot;black&quot;&#41;
+    setlinejoin&#40;&quot;bevel&quot;&#41;
+    setline&#40;10.0&#41;
+    setopacity&#40;0.7&#41;
+
+    eased_n &#61; scene.easingfunction&#40;framenumber, 0, 1,
+        scene.framerange.stop&#41;
+
+    tesseract2D &#61; flatten&#40;
+        rotate4&#40;
+            tesseract,
+            XZ&#40;eased_n * 2π&#41; *
+            YW&#40;eased_n * 2π&#41;&#41;&#41;
+
+    for &#40;n, face&#41; in enumerate&#40;tesseractfaces&#41;
+        sethue&#40;&#91;Luxor.lighter_blue, Luxor.lighter_green,
+            Luxor.lighter_purple, Luxor.lighter_red&#93;&#91;mod1&#40;n, 4&#41;&#93;...&#41;
+
+        poly&#40;scalefactor * tesseract2D&#91;face&#93;, :fillpreserve, close&#61;true&#41;
+
+        sethue&#40;&#91;Luxor.darker_blue, Luxor.darker_green,
+            Luxor.darker_purple, Luxor.darker_red&#93;&#91;mod1&#40;n, 4&#41;&#93;...&#41;
+        strokepath&#40;&#41;
+    end
+end
+
+makemovie&#40;800, 800, &quot;tesseract-xz-yw.gif&quot;, scalefactor&#61;2000&#41;</code></pre>
+<p><img src="/assets/images/pentachoron/tesseract-xz-yw.gif" alt="image label" /></p>
+<p>&#40;Just for fun I temporarily switched the color scheme over to the Julia logo colors. You can see the 3D rendering problems more clearly, as well&#33;&#41;</p>
+<p>Here’s a composite of four pairs of rotations:</p>
+<p><img src="/assets/images/pentachoron/showall-tesseractmovie.gif" alt="image label" /></p>
+<h2 id="enough_is_enough"><a href="#enough_is_enough" class="header-anchor">Enough is enough</a></h2>
+<p>It’s tempting to go further, but these web pages do get very big with all these GIFs. But just one more... I quite like this one, the <em>hexadecachoron</em>:</p>
+<pre><code class="language-julia">const hexadecachoron &#61; &#91;Point4D&#40;vertex...&#41; for vertex in &#91;
+    &#91; 1,  0,  0,  0&#93;,
+    &#91; 0,  1,  0,  0&#93;,
+    &#91; 0,  0,  1,  0&#93;,
+    &#91; 0,  0,  0,  1&#93;,
+    &#91;-1,  0,  0,  0&#93;,
+    &#91; 0, -1,  0,  0&#93;,
+    &#91; 0,  0, -1,  0&#93;,
+    &#91; 0,  0,  0, -1&#93;&#93;&#93;
+
+using Combinatorics
+
+const hexadecachoronfaces &#61; combinations&#40;1:8, 3&#41;
+
+function frame&#40;scene, framenumber, scalefactor&#61;1000&#41;
+    background&#40;&quot;antiquewhite&quot;&#41;
+    setlinejoin&#40;&quot;bevel&quot;&#41;
+    setline&#40;1.0&#41;
+    setopacity&#40;0.15&#41;
+    eased_n &#61; scene.easingfunction&#40;framenumber, 0, 1, scene.framerange.stop&#41;
+
+    hexadecachoron2D &#61; flatten&#40;
+        rotate4&#40;
+            hexadecachoron,
+            YZ&#40;eased_n * 2π&#41; *
+            XZ&#40;eased_n * 2π&#41; *
+            YW&#40;eased_n * 2π&#41;&#41;&#41;
+    for &#40;n, face&#41; in enumerate&#40;hexadecachoronfaces&#41;
+        sethue&#40;get&#40;ColorSchemes.magma, n/length&#40;hexadecachoronfaces&#41;&#41;&#41;
+        poly&#40;scalefactor * hexadecachoron2D&#91;face&#93;, :fillpreserve, close&#61;true&#41;
+        sethue&#40;&quot;black&quot;&#41;
+        strokepath&#40;&#41;
+    end
+end
+
+makemovie&#40;650, 650, &quot;movie-hexadecachoron.gif&quot;, scalefactor&#61;5000&#41;</code></pre>
+<p><img src="/assets/images/pentachoron/movie-hexadecachoron.gif" alt="image label" /></p>
+<p>There’s lots more fun to be had &#40;combining two or more different shapes is fun&#41;, but I’m worried about your network and my brain cells, so that’s enough animated GIFs for today.</p>
+<p>&#91;2018-04-03&#93;</p>
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?pentachoron" alt="cormullion signing off" /></div>
+<p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: June 22, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+        <script src="/libs/katex/katex.min.js"></script>
+<script src="/libs/katex/auto-render.min.js"></script>
+<script>renderMathInElement(document.body)</script>
+
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>

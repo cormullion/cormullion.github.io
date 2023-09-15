@@ -1,0 +1,375 @@
+@font-face {
+	font-family: JuliaMono-Light;
+	src: url("https://cdn.jsdelivr.net/gh/cormullion/juliamono/webfonts/JuliaMono-Light.woff2");
+	font-display: fallback;	/* allow 100 milliseconds then display fallback */
+	unicode-range: U+0020-00FF, U+2049-2050, U+2000-2020;
+}
+
+@font-face {
+	font-family: JuliaMono-Regular;
+	src: url("https://cdn.jsdelivr.net/gh/cormullion/juliamono/webfonts/JuliaMono-Regular.woff2");
+}
+
+@font-face {
+	font-family: JuliaMono-Medium;
+	src: url("https://cdn.jsdelivr.net/gh/cormullion/juliamono/webfonts/JuliaMono-Medium.woff2");
+	font-display: fallback;	/* allow 100 milliseconds then display fallback */
+	unicode-range: U+0020-00FF, U+2049-2050, U+2000-2020;
+}
+
+@font-face {
+	font-family: JuliaMono-Bold;
+	src: url("https://cdn.jsdelivr.net/gh/cormullion/juliamono/webfonts/JuliaMono-Bold.woff2");
+	font-display: fallback;	/* allow 100 milliseconds then display fallback */
+	unicode-range: U+0020-00FF, U+2049-2050, U+2000-2020;
+}
+
+@font-face {
+	font-family: JuliaMono-ExtraBold;
+	font-display: fallback;	
+	src: url("https://cdn.jsdelivr.net/gh/cormullion/juliamono/webfonts/JuliaMono-ExtraBold.woff2");
+	unicode-range: U+0020-00FF, U+2049-2050, U+2000-2020;
+}
+
+@font-face {
+	font-family: JuliaMono-Black;
+	font-display: fallback;	
+	src: url("https://cdn.jsdelivr.net/gh/cormullion/juliamono/webfonts/JuliaMono-Black.woff2");
+	unicode-range: U+0020-00FF, U+2049-2050, U+2000-2020;
+}
+
+@font-face {
+	font-family: Baskerville;
+	font-display: fallback;	
+	src: url("/assets/fonts/LibreBaskerville-Regular.woff2");
+}
+@font-face {
+	font-family: Baskerville;
+	font-weight: bold;
+	font-display: fallback;	
+	src: url("/assets/fonts/LibreBaskerville-Bold.woff2");
+}
+@font-face {
+	font-family: Baskerville;
+	font-style: italic;
+	font-display: fallback;	
+	src: url("/assets/fonts/LibreBaskerville-Italic.woff2");
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+h1 {
+	font-size:1.3rem;
+	line-height: 1.6rem;
+	font-weight: 700;
+}
+
+h2 {
+	font-size:1.2rem;
+	line-height: 1.5rem;
+	font-weight: 700;
+}
+
+h3 {
+	font-weight: 600;
+}
+
+h4 {
+	font-weight: 500;
+}
+
+p {
+	font-family: Baskerville, "Baskerville Old Face", "LibreBaskerville", "Hoefler Text", Garamond, "Times New Roman", serif;
+	font-size: 16px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 400;
+	line-height: 22px;
+}
+
+pre {
+	font-family: JuliaMono-Light;
+	margin: 0;
+	width: 100%;
+}
+
+.franklin-content img {
+	width: 100%;
+	text-align: center;
+}
+
+h1 {
+	fontfamily: 
+	line-height: 1.7rem;
+}
+
+p > code  {
+		font-family: JuliaMono-Regular;
+		color: inherit;
+		font-size: 0.95rem;
+		background-color: inherit;
+}
+
+code {
+		font-family: JuliaMono-Light;
+		color: white;
+		background-color: hsl(12, 5%, 5%);
+		font-size: 0.8em;
+		line-height: 1.5em;
+		overflow: auto;
+		page-break-inside: avoid;
+		text-wrap: unrestricted;
+		/* Mozilla, since 1999 */
+		/* Opera 7 */
+		/* Opera 4-6 */
+		white-space: pre-wrap;
+		/* css-3 */
+		word-wrap: break-word;
+		/* Internet Explorer 5.5+ */
+		border: none;
+}
+
+.language-julia.hljs  {
+	font-family: JuliaMono-Regular;
+	color: white;
+	background-color: hsl(12, 5%, 5%);
+
+	line-height: 1.5em;
+	overflow: auto;
+	page-break-inside: avoid;
+	text-wrap: unrestricted;
+	/* Mozilla, since 1999 */
+	/* Opera 7 */
+	/* Opera 4-6 */
+	white-space: pre-wrap;
+	/* css-3 */
+	word-wrap: break-word;
+	/* Internet Explorer 5.5+ */
+	border: none;
+}
+
+.marginnote {
+	 float: right;
+     clear: right;
+	 margin-right: -30%;
+     width: 20%;
+     margin-top: -4rem;
+     margin-bottom: 0;
+     font-size: .8rem;
+     line-height: 1.3;
+     vertical-align: baseline;
+     position: relative;
+	 hanging-punctuation: first;
+ }
+
+.smallimage img {
+	text-align: center;
+  	width: auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-gap: 1rem;
+}
+
+.grid > p {
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  font-size: 0.9em;
+  font-family: Open Sans, sans-serif;
+  font-weight: 600;
+  line-height: 1.1rem;
+  border-radius: 5px;
+  border: 1px solid #BFBFBF;
+  background-color: white;
+  box-shadow: 1px 1px 5px #aaaaaa;
+  text-align:left;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.grid > p a {
+  display: block;
+  padding-bottom: 0.5em;
+}
+
+.fontsize2rem {
+	font-size: 2rem;
+	line-height: 2.5rem;
+}
+
+
+.fontsize3rem {
+	font-size: 3rem;
+}
+
+
+.language * {
+	color: inherit;
+	background-color: hsl(12, 21%, 13%);
+}
+
+.language-julia.hljs {
+	color: #def;
+}
+
+.language-julia {
+	background-color: #010;
+}
+
+.language-css {
+    background-color: #111;
+    color: #999;
+}
+
+.language-html {
+	background-color: #223;
+	color: #aaa;
+}
+
+.hljs-built_in {
+	color: #caa !important;
+}
+
+.hljs-keyword {
+	font-family: JuliaMono-Medium;
+	color: #d46f0e;
+}
+
+.hljs-string {
+	color: #1cd;
+}
+
+.hljs-number {
+	color: #abc;
+}
+
+.hljs-literal {
+	color: #999;
+}
+
+.hljs-meta {
+	color: #aa7;
+}
+
+.hljs-variable {
+	color: #800;
+}
+
+.hljs-subst {
+	color: #999;
+}
+
+.hljs-built_in {
+	color: #acb;
+}
+
+.hljs-attribute {
+	color: #adf;
+}
+
+.hljs-selector-tag {
+	color: #c80;
+}
+
+.hljs-name {
+	color: #8f8;
+}
+
+.hljs-tag {
+	color: #88f;
+}
+
+
+.language-xml.hljs{
+	color: #9aa;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #998;
+  font-style: normal;
+}
+
+header .blog-name {
+    font-family: JuliaMono-Bold, "Lucida Console", Monaco, monospace;
+}
+
+summary {
+	list-style: none;
+}
+
+summary::-webkit-details-marker {
+	display: none;
+}
+
+details summary::before {
+	font-family: JuliaMono-Bold;
+	content: " ";
+}
+
+details summary {
+	font-size: 0.7em;
+}
+
+/* By using [open] we can define different styles when the disclosure widget is open */
+details[open] summary::before {
+	content: "🡑";
+}
+
+
+blockquote p {
+	display: inline;
+	font-size: 0.9rem;
+}
+
+blockquote {
+	background: #eeeeee;
+	border-left: 7px solid #a8a8a8;
+	margin: 1.5em 10px;
+	padding: 0.5em 10px;
+}
+
+blockquote:before {
+	position: relative;
+	top: 3rem;
+	content: "“";
+	font-size: 120px;
+	color: rgba(0, 0, 0, 0.2);
+}
+
+.figurecaption {
+	text-align: center;
+	font-family: Baskerville;
+	font-style: italic;
+}
+
+/* images in grid */
+
+.imagegridcontainer {
+    display: grid;
+	grid-template-columns: 1fr 1fr;
+	width: 100%;
+}
+
+.imagegridcontainersingle {
+    display: grid;
+	grid-template-columns: 1fr;
+	width: 100%;
+}
+
+.imagegridcell {
+  justify-content: center;
+  align-items: center;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  object-fit: contain;
+  box-border:hsl(12, 71%, 13%);
+}
+
+.inlinesvg {
+	padding: 3;
+	vertical-align: text-top;
+}

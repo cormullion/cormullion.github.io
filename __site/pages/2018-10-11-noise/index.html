@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/libs/katex/katex.min.css">
+     
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>Random noise</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><p><img src="/assets/images/noise/ice-800.png" alt="noise" /></p>
+<h1 id="noise"><a href="#noise" class="header-anchor">Noise</a></h1>
+<p>This is another post in the ongoing series in which I try to learn 2D vector graphics using Julia. It doesn&#39;t contain any revelations or new material, and you should visit the following sites if you&#39;re looking for a good introduction to the subject of noise in graphics:</p>
+<ul>
+<li><p><a href="https://www.redblobgames.com/articles/noise/introduction.html">red blob games</a></p>
+</li>
+<li><p><a href="http://flafla2.github.io/2014/08/09/perlinnoise.html">adrianbiagioli</a></p>
+</li>
+<li><p><a href="https://www.khanacademy.org/partner-content/pixar/pattern/perlin-noise/v/patterns-9">khan academy</a></p>
+</li>
+</ul>
+<p>I&#39;m using Julia version 1.0 if you want to play along; you can find the source files and notebooks on the github. If you do, you&#39;ll need the packages <a href="https://github.com/JuliaGraphics/Luxor.jl">Luxor</a>, <a href="https://github.com/JuliaGraphics/Colors.jl">Colors</a>, and <a href="https://github.com/JuliaGraphics/ColorSchemes.jl">ColorSchemes</a>. I used  <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a> to produce the Markdown and Jupyter notebook versions.</p>
+<h3 id="random_versus_noise"><a href="#random_versus_noise" class="header-anchor">Random versus Noise</a></h3>
+<p>Luxor provides a function called <code>noise&#40;&#41;</code>. This can accept a single floating-point number as input, and it returns a value between 0.0 and 1.0.</p>
+<pre><code class="language-julia">using Luxor
+
+noise&#40;0.0&#41;
+0.8261106995884773
+
+noise&#40;1.0&#41;
+0.5
+
+noise&#40;2.0&#41;
+0.4460609053497945</code></pre>
+<p>It will be easier to draw some graphs. Here&#39;s a quick throwaway function to draw a simple graph.</p>
+<pre><code class="language-julia">function graph&#40;a, width &#61; 800;
+        startnumber     &#61; 0,
+        endnumber       &#61; 1,
+        style           &#61; :line,
+        margin          &#61; 30&#41;
+    setline&#40;1&#41;
+    bars&#40;a, labels      &#61;false,
+            xwidth      &#61; &#40;width - 2margin&#41;/length&#40;a&#41;,
+            yheight     &#61;40,
+            barfunction &#61; &#40;bottom::Point, top::Point, value;
+        extremes&#61;extrema&#40;a&#41;, barnumber&#61;0, bartotal&#61;0&#41; -&gt;
+            begin
+                if style &#61;&#61; :line
+                    line&#40;bottom, top, :stroke&#41;
+                else
+                    circle&#40;top, 1, :fill&#41;
+                end
+            end&#41;
+    sethue&#40;&quot;black&quot;&#41;
+    label&#40;string&#40;startnumber&#41;, :S,
+        Point&#40;0, 0&#41;, offset&#61;10&#41;
+    label&#40;string&#40;endnumber&#41;, :S,
+        Point&#40;width - 2margin, 0&#41;, offset&#61;10&#41;
+end
+
+function drawgraph&#40;startvalue, endvalue, filename&#41;
+    Drawing&#40;800, 150, filename&#41;
+    background&#40;&quot;white&quot;&#41;
+    origin&#40;&#41;
+    # move to top left corner
+    margin&#61;30
+    translate&#40;BoundingBox&#40;&#41;&#91;1&#93; &#43; &#40;margin, boxheight&#40;BoundingBox&#40;&#41;/2&#41;&#41;&#41;
+    sethue&#40;&quot;black&quot;&#41;
+    graph&#40;noise.&#40;range&#40;startvalue, endvalue, length&#61;200&#41;&#41;,
+        startnumber&#61;startvalue,
+        endnumber&#61;endvalue&#41;
+    finish&#40;&#41;; preview&#40;&#41;
+end</code></pre>
+<p>To test this out, graph 200 random integers:</p>
+<pre><code class="language-julia">Drawing&#40;800, 150, &quot;images/noise/graph-random.png&quot;&#41;
+background&#40;&quot;white&quot;&#41;
+origin&#40;&#41; ## move to top left corner
+margin&#61;30
+translate&#40;BoundingBox&#40;&#41;&#91;1&#93; &#43; &#40;margin, boxheight&#40;BoundingBox&#40;&#41;/2&#41;&#41;&#41;
+sethue&#40;&quot;black&quot;&#41;
+graph&#40;rand&#40;200&#41;&#41;
+finish&#40;&#41;; preview&#40;&#41;</code></pre>
+<p><img src="/assets/images/noise/graph-random.png" alt="image label" /></p>
+<p>To start with, let&#39;s graph the output of the <code>noise&#40;&#41;</code> function for the first 200 integers:</p>
+<pre><code class="language-julia">drawgraph&#40;0, 200, &quot;images/noise/graph-0-200.png&quot;&#41;</code></pre>
+<p><img src="/assets/images/noise/graph-0-200.png" alt="image label" /></p>
+<p>It looks very random. But let&#39;s look at 200 values between 0 and 10:</p>
+<pre><code class="language-julia">drawgraph&#40;0, 10, &quot;images/noise/graph-0-10.png&quot;&#41;</code></pre>
+<p><img src="/assets/images/noise/graph-0-10.png" alt="image label" /></p>
+<p>There&#39;s some randomness, but it&#39;s smoother, and looks more natural.</p>
+<p>Zoom and enhance, between 0 and 5:</p>
+<pre><code class="language-julia">drawgraph&#40;0, 5, &quot;images/noise/graph-5.png&quot;&#41;</code></pre>
+<p><img src="/assets/images/noise/graph-5.png" alt="image label" /></p>
+<p>You can see that the left half of the 0 to 10 graph has been stretched.</p>
+<p>Between 0 and 1:</p>
+<pre><code class="language-julia">drawgraph&#40;0, 1, &quot;images/noise/graph-0-1.png&quot;&#41;</code></pre>
+<p><img src="/assets/images/noise/graph-0-1.png" alt="image label" /></p>
+<p>One more for luck:</p>
+<pre><code class="language-julia">drawgraph&#40;0, 0.5, &quot;images/noise/graph-0-05.png&quot;&#41;</code></pre>
+<p><img src="/assets/images/noise/graph-0-05.png" alt="image label" /></p>
+<p>The more often you sample the noise space &#40;ie the shorter the gaps between the set of values passed to <code>noise&#40;&#41;</code>, the closer together the output values will be.</p>
+<p>So the <code>noise&#40;&#41;</code> function provides gently changing undulations rather than the unpredictable jumps of randomness. Here&#39;s a slowly changing color pattern in the LCHab color space, using a set of noisy values to choose the hue. We&#39;ll change the length of each line as well just for fun:</p>
+<pre><code class="language-julia">using Colors
+@svg begin  ## switch to SVG for better graphic quality
+    rate &#61; .009
+    setline&#40;2&#41;
+    for x in -250:2:250
+        yn &#61; noise&#40;x * rate&#41;
+        hue &#61; rescale&#40;yn, 0, 1, 0, 359&#41;
+        sethue&#40;LCHab&#40;50, 100, hue&#41;&#41;
+        ht &#61; rescale&#40;yn, 0, 1, 10, 100&#41;
+        line&#40;Point&#40;x, -ht/2&#41;, Point&#40;x, ht/2&#41;, :stroke&#41;
+    end
+end 600 200 &quot;images/noise/colorbars.svg&quot;</code></pre>
+<p><img src="/assets/images/noise/colorbars.svg" alt="image label" /></p>
+<p>You can use noisy values to specify other changing parameters. For example, let&#39;s place some pebbles at random, and control their size using a noisy distribution, to give the illusion of a naturally changing distribution.</p>
+<pre><code class="language-julia">function drawpebble&#40;pt, radius&#41;
+    sethue&#40;&quot;grey60&quot;&#41;
+    @layer begin
+        transform&#40;&#91;rand&#40;0.5:0.1:1&#41; 0 0 rand&#40;0.5:0.1:1&#41; 0 0&#93;&#41;
+        circle&#40;pt, radius, :fill&#41;
+        for i in 1:-0.02:0.2
+            sethue&#40;rescale&#40;i, 1, 0,   0.5 &#43; rand&#40;0:0.1:0.3&#41;, 1.0&#41;,
+                   rescale&#40;i, 1, 0.1, 0.4 &#43; rand&#40;0:0.1:0.5&#41;, 1.0&#41;,
+                   rescale&#40;i, 1, 0.3, 0.5, 1.0&#41;&#41;
+            setopacity&#40;1 - i&#41;
+            circle&#40;pt &#43; &#40;-2i, -2i&#41;, i * radius, :fill&#41;
+        end
+    end
+end
+
+
+@png begin
+    # switch to PNG, SVG can&#39;t handle this
+    background&#40;&quot;palegoldenrod&quot;&#41;
+    pebblesize &#61; 12
+    for i in 1:6000
+        pt &#61; Point&#40;rand&#40;-400:400&#41;, rand&#40;-200:200&#41;&#41;
+        n &#61; noise&#40;pt.x * 0.002&#41;
+        drawpebble&#40;pt, pebblesize * n&#41;
+    end
+end 800 400 &quot;images/noise/pebbles.png&quot;</code></pre>
+<p><img src="/assets/images/noise/pebbles.png" alt="image label" /></p>
+<h3 id="detail_and_persistence"><a href="#detail_and_persistence" class="header-anchor">Detail and persistence</a></h3>
+<p>The <code>noise&#40;&#41;</code> function has two optional keyword arguments that let you tweak the knobs of the noise generator.</p>
+<p>The first is <code>detail</code>, an integer. Increasing it from the default value of 1 upwards will add finer detail to the basic noise. The second is <code>persistence</code>, a floating-point value between 0 and 1 &#40;or more&#41;.</p>
+<p><code>detail</code> is graphed here with values from 1 to 12. As the level increases, you can see that the same overall noise contours are gradually modulated with finer variations.</p>
+<pre><code class="language-julia">function detailgraph&#40;&#41;
+    @svg begin
+        margin&#61;30
+        translate&#40;BoundingBox&#40;&#41;&#91;1&#93; &#43; &#40;margin, 0&#41;&#41;
+        setline&#40;.5&#41;
+        sethue&#40;&quot;black&quot;&#41;
+        stopat &#61; 2
+        r &#61; range&#40;0, length&#61;400, stop&#61;stopat&#41;
+        for detail in 1:2:12
+            translate&#40;0, 100&#41;
+            sethue&#40;&quot;red&quot;&#41;
+            graph&#40;noise.&#40;r&#41;, style&#61;:circle, endnumber&#61;stopat&#41;
+            sethue&#40;&quot;black&quot;&#41;
+            text&#40;&quot;detail &#61; &#36;detail, persistence &#61; 0.9&quot;, Point&#40;200, 15&#41;&#41;
+            graph&#40;noise.&#40;r, detail&#61;detail, persistence&#61;0.9&#41;, endnumber&#61;stopat&#41;
+        end
+    end 800 650 &quot;images/noise/detail-graph.svg&quot;
+ end
+detailgraph&#40;&#41;</code></pre>
+<p><img src="/assets/images/noise/detail-graph.svg" alt="image label" /></p>
+<p>You can see the original noisy curve &#40;in red&#41; behind each more detailed graph. The noise generator is doubling the frequency but halving the amplitude every time you go one level higher. Noise, like music, can have octaves of higher frequencies mixed with lower fundamental frequency. The <code>detail</code> keyword is adding one or more octaves of noise.</p>
+<p>The <code>persistence</code> argument defaults to zero. The value controls the amplitude of each successive octave of noise, with higher values of persistence producing higher levels of finer detail, as the values persist for longer.</p>
+<pre><code class="language-julia">function persistencegraph&#40;&#41;
+    @svg begin
+        setline&#40;.5&#41;
+        sethue&#40;&quot;black&quot;&#41;
+        margin&#61;30
+        translate&#40;BoundingBox&#40;&#41;&#91;1&#93; &#43; &#40;margin, 0&#41;&#41;
+        stopat &#61; 10
+        r &#61; range&#40;0, length&#61;400, stop&#61;stopat&#41;
+        for p in 0:0.25:2
+            translate&#40;0, 70&#41;
+            sethue&#40;&quot;red&quot;&#41;
+            graph&#40;noise.&#40;r, detail&#61;4, persistence&#61;0&#41;,
+                endnumber&#61;stopat, style&#61;:circle&#41;
+            sethue&#40;&quot;black&quot;&#41;
+            text&#40;&quot;detail &#61; 4, persistence &#61; &#36;p&quot;, Point&#40;200, 15&#41;&#41;
+            graph&#40;noise.&#40;r, detail&#61;4, persistence&#61;p&#41;,
+                endnumber&#61;stopat&#41;
+        end
+    end 800 675 &quot;images/noise/persistence-graph.svg&quot;
+end
+
+persistencegraph&#40;&#41;</code></pre>
+<p><img src="/assets/images/noise/persistence-graph.svg" alt="image label" /></p>
+<p>Here, the detail is kept at 4, and the persistence varies from 0 upwards. As the persistence increases, the effects accumulate, until the original curve is barely visible.</p>
+<p>There are many uses for noisy input, such as generating varying shapes that don&#39;t have that undesirable &#39;too random&#39; quality.</p>
+<pre><code class="language-julia">using ColorSchemes
+
+function treerings&#40;&#41;
+    @svg begin
+        nrate &#61; 0.01
+        npoints&#61; 500
+        nrings &#61; 400
+        rad &#61; 20
+        setline&#40;0.5&#41;
+        for ring in nrings:-5:1
+            pts &#61; Point&#91;&#93;
+            for i in 1:npoints
+                push&#33;&#40;pts, polar&#40;rad &#43; &#40;ring * noise&#40;i * nrate&#41;&#41;,
+                    rescale&#40;i, 1, npoints, 0, 2pi&#41;&#41;&#41;
+            end
+            sethue&#40;get&#40;ColorSchemes.sienna, noise&#40;ring * 5nrate&#41;&#41;&#41;
+            poly&#40;pts, :fill, close&#61;false&#41;
+            sethue&#40;&quot;black&quot;&#41;
+            poly&#40;pts, :stroke, close&#61;false&#41;
+        end
+    end 800 800 &quot;images/noise/treerings.svg&quot;
+end
+
+treerings&#40;&#41;</code></pre>
+<p><img src="/assets/images/noise/treerings.svg" alt="image label" /></p>
+<p>Here&#39;s a more questionable idea, using noise to control the setting of a line of text.</p>
+<pre><code class="language-julia">function drawtextline&#40;t, point, fsize; rate&#61;0.1&#41;
+    for &#40;n, c&#41; in enumerate&#40;split&#40;t, &quot;&quot;&#41;&#41;
+        f &#61; fsize * noise&#40;n * rate, persistence&#61;0, detail&#61;4&#41;
+        fontsize&#40;f&#41;
+        te &#61; textextents&#40;c&#41;
+        text&#40;c, point&#41;
+        point &#61; Point&#40;point.x &#43; te&#91;5&#93; * 0.98, 0&#41; ## tightness is tight
+        move&#40;point&#41;
+    end
+end
+
+@png begin
+    fontface&#40;&quot;Bodoni&quot;&#41;
+    drawtextline&#40;&quot;variablefontsizetextsettingiscool,orisit?&quot;,
+        O - &#40;380, 0&#41;, 50, rate&#61;.11&#41;
+end 800 120 &quot;images/noise/text-setting.png&quot;</code></pre>
+<p><img src="/assets/images/noise/text-setting.png" alt="image label" /></p>
+<p>I then used the <code>readpng&#40;&#41;</code> and <code>placeimage&#40;&#41;</code> functions to add a background image &#40;the original Tenniel illustration&#41;, with the following result:</p>
+<p><img src="/assets/images/noise/jabberwocky.png" alt="image label" /></p>
+<h3 id="why_noise"><a href="#why_noise" class="header-anchor">Why noise?</a></h3>
+<p>The first use of computer graphics in movies is generally considered to be Tron &#40;1981&#41;.</p>
+<p>Tron lies at the very beginning of the history of CGI in the movies, and the technology available to the artists, mathematicians, and programmers making Tron was amazingly underpowered compared with the computing power that we have today on our wrists, let alone on our phones.</p>
+<p>Ken Perlin was a mathematician and programmer who worked on Tron, and &#40;I think after the film was released&#41; he realised that there was room for using mathematical techniques for realistic-looking surfaces and textures, such as terrain.</p>
+<p><img src="/assets/images/noise/tron-800.png" alt="image label" /></p>
+<p>Ken&#39;s noise, or Perlin Noise as it became known, was quickly adodpted as the best way to generate naturalistic surfaces.</p>
+<p>I think the reason why natural scenes appear to us as variable but not completely random is due to the &#40;possibly hidden&#41; larger scale processes that make smaller and more visible details clump together, and appear to work together and change gradually. For example, clouds, mountains, and pebble beaches have large scale structure controlled by unseen forces like heat, pressure, and gravity. We mostly see the objects that are subject to these forces, rather than the forces themselves.</p>
+<h3 id="moving_into_2d"><a href="#moving_into_2d" class="header-anchor">Moving into 2D</a></h3>
+<p>So far the noise we&#39;ve been producing has been one-dimensional, although we&#39;ve been using 2D graphics to draw it.</p>
+<p>The <code>noise&#40;&#41;</code> function can accept two floating-point numbers as input. These effectively define a rectangular grid of varying noise values: the x and y inputs produce a third value which requires representation.</p>
+<p>A simple way of doing this is to draw a table and vary the color of each square, giving a type of heat map.</p>
+<pre><code class="language-julia">using ColorSchemes
+
+@svg begin
+    nrows &#61; 40
+    ncols &#61; 40
+    cellwidth &#61; 15
+    cellheight &#61; 15
+    table &#61; Table&#40;nrows, ncols, cellwidth, cellheight&#41;
+    rate &#61; 0.1
+    fontsize&#40;5&#41;
+    for row in 1:nrows
+        for col in 1:ncols
+            zvalue &#61; noise&#40;row * rate, col * rate&#41;
+            sethue&#40;get&#40;ColorSchemes.temperaturemap, zvalue&#41;&#41;
+            box&#40;table&#91;row, col&#93;, table.colwidths&#91;1&#93;, table.rowheights&#91;1&#93;, :fill&#41;
+            sethue&#40;&quot;black&quot;&#41;
+            text&#40;string&#40;round&#40;zvalue, digits&#61;1&#41;&#41;, table&#91;row, col&#93;, halign&#61;:center, valign&#61;:middle&#41;
+        end
+    end
+end 800 700 &quot;images/noise/table.svg&quot;</code></pre>
+<p><img src="/assets/images/noise/table.svg" alt="image label" /></p>
+<p>Alternatively, we can create a 3D surface and use the noise values for the height at each point. Normally this would require a visit to Julia&#39;s colorful and generally awesome Swedish-nightclub-themed Package manager, Pkg:</p>
+<p><img src="/assets/images/noise/imstillfree.gif" alt="image label" /></p>
+<p>to download some of the cool plotting packages available, not least Simon Danisch&#39;s impressive <a href="https://github.com/JuliaPlots/Makie.jl">Makie.jl</a>.</p>
+<p>But, just to be contrary, I decided to whip up a simple isometric projection:</p>
+<pre><code class="language-julia">function project&#40;x, y, z;
+        scalingfactor &#61; 3, heightmultiplier &#61; -1&#41;
+    # negative because y is positive downwards&#33;
+    u &#61; &#40;x - y&#41;/sqrt&#40;2&#41;
+    v &#61; &#40;x &#43; 2&#40;heightmultiplier * z&#41; &#43; y&#41;/sqrt&#40;6&#41;
+    return Point&#40;scalingfactor * u, scalingfactor * v&#41;
+end
+
+project&#40;t; kwargs...&#41; &#61; project&#40;t&#91;1&#93;, t&#91;2&#93;, t&#91;3&#93;; kwargs...&#41;
+
+function generatenoisearray&#40;sx&#61;100, sy&#61;100;
+    rate&#61;0.5,
+    detail&#61;1,
+    persistence&#61;0&#41;
+    a &#61; Array&#123;Float64&#125;&#40;undef, sx, sy&#41;
+    for x in 1:sx
+        for y in 1:sy
+            a&#91;x, y&#93; &#61; noise&#40;x * rate, y * rate,
+                detail&#61;detail, persistence&#61;persistence&#41;
+        end
+    end
+    return a
+end
+
+function isograph&#40;a&#41;
+    @svg begin
+        background&#40;&quot;grey30&quot;&#41;
+        translate&#40;0, -300&#41;
+        setline&#40;0.5&#41;
+        sx, sy &#61; size&#40;a&#41;
+        scalingfactor &#61; 5
+        heightmultiplier &#61; -6
+        for x in 1:sx-1
+            newpath&#40;&#41;
+            move&#40;project&#40;x, sy, -10,
+                    scalingfactor &#61; scalingfactor,
+                    heightmultiplier &#61; heightmultiplier&#41;&#41;
+            for y in sy-1:-1:1
+                toppolygon &#61; project.&#40;&#91;
+                    &#40;x,     y,     a&#91;x, y&#93;&#41;,
+                    &#40;x &#43; 1, y,     a&#91;x &#43; 1, y&#93;&#41;,
+                    &#40;x &#43; 1, y &#43; 1, a&#91;x &#43; 1, y &#43; 1&#93;&#41;,
+                    &#40;x,     y &#43; 1, a&#91;x, y &#43; 1&#93;&#41;&#93;,
+                        scalingfactor &#61; scalingfactor,
+                        heightmultiplier &#61; heightmultiplier&#41;
+                centroid &#61; polycentroid&#40;toppolygon&#41;
+                line&#40;centroid&#41;
+            end
+            line&#40;project&#40;x, 1, -10,
+                scalingfactor &#61; scalingfactor,
+                heightmultiplier &#61; heightmultiplier&#41;&#41;
+            sethue&#40;&quot;grey20&quot;&#41;
+            fillpreserve&#40;&#41;
+            sethue&#40;&quot;grey85&quot;&#41;
+            strokepath&#40;&#41;
+        end
+    end 800 700 &quot;images/noise/isograph.svg&quot;
+end
+
+isograph&#40;generatenoisearray&#40;80, 80, rate&#61;0.08&#41;&#41;</code></pre>
+<p><img src="/assets/images/noise/isograph.svg" alt="image label" /></p>
+<p>&#40;This image reminds me of the famous Joy Division LP cover and T-shirt image, which features plots of the first ever pulsar discovered by Jocelyn Bell Burnell and Antony Hewish in 1967. This then became the basis of many entertaining blog posts, such as <a href="https://adamcap.com/2011/05/19/history-of-joy-division-unknown-pleasures-album-art/">this one</a>.&#41;</p>
+<p><img src="/assets/images/noise/joydivision.jpg" alt="image label" /></p>
+<p>A more conventional surface rendering is also possible:</p>
+<pre><code class="language-julia">function isograph&#40;a&#41;
+    @png begin
+        background&#40;&quot;grey20&quot;&#41;
+        translate&#40;0, -200&#41;
+        setline&#40;0.5&#41;
+        sx, sy &#61; size&#40;a&#41;
+        for x in 1:sx-1
+            for y in sy-1:-1:1
+                toppolygon &#61; project.&#40;&#91;
+                    &#40;x,     y,     a&#91;x, y&#93;&#41;,
+                    &#40;x &#43; 1, y,     a&#91;x &#43; 1, y&#93;&#41;,
+                    &#40;x &#43; 1, y &#43; 1, a&#91;x &#43; 1, y &#43; 1&#93;&#41;,
+                    &#40;x,     y &#43; 1, a&#91;x, y &#43; 1&#93;&#41;&#93;,
+                        heightmultiplier&#61;-10,
+                        scalingfactor&#61;5&#41;
+                sethue&#40;&quot;black&quot;&#41;
+                poly&#40;toppolygon, close&#61;true, :stroke&#41;
+                sethue&#40;get&#40;ColorSchemes.inferno, a&#91;x, y&#93;&#41;&#41;
+                poly&#40;toppolygon, close&#61;true, :fill&#41;
+            end
+        end
+    end 800 500 &quot;images/noise/isosurface-2.png&quot;
+end
+
+isograph&#40;generatenoisearray&#40;100, 100, rate&#61;0.08&#41;&#41;</code></pre>
+<p><img src="/assets/images/noise/isosurface-2.png" alt="image label" /></p>
+<h3 id="what_more_dimensions"><a href="#what_more_dimensions" class="header-anchor">What, more dimensions?</a></h3>
+<p>So far we&#39;ve been generating 2D noise. The <code>noise&#40;&#41;</code> function can also accept three floating-point numbers as input. This produces noise values in 3D space, where each 3D point can have a noise value between 0 and 1. Rendering these point clouds is definitely a job for something other than a simple 2D graphics system. But, while we&#39;re here, let&#39;s have a go:</p>
+<pre><code class="language-julia">function buildarray&#40;a::AbstractArray; rate&#61;20&#41;
+    sx, sy, sz &#61; size&#40;a&#41;
+    for x in 1:sx
+        for y in 1:sy
+            for z in 1:sz
+                a&#91;x, y, z&#93; &#61; noise&#40;x * rate, y * rate, z * rate&#41;
+            end
+        end
+    end
+    return a
+end
+
+function iso3d&#40;a&#41;
+    background&#40;&quot;grey20&quot;&#41;
+    sethue&#40;&quot;gray80&quot;&#41;
+    setline&#40;0.15&#41;
+    rule.&#40;&#91;Point&#40;0, y&#41; for y in -400:10:400&#93;&#41;
+    sx, sy, sz &#61; size&#40;a&#41;
+    for x in 1:sx
+        for y in 1:sy
+            for z in 1:sz
+                noisevalue &#61; a&#91;x, y, z&#93;
+                sethue&#40;get&#40;ColorSchemes.plasma, noisevalue&#41;&#41;
+                pt &#61; project&#40;x, y, z, scalingfactor&#61;8&#41;
+                setopacity&#40;noisevalue&#41;
+                circle&#40;pt, rescale&#40;noisevalue, 0, 1, 0.05, 6&#41;, :fill&#41;
+            end
+        end
+    end
+end
+
+const A &#61; Array&#123;Float64, 3&#125;&#40;undef, 50, 50, 50&#41;
+
+@png begin
+    iso3d&#40;buildarray&#40;A, rate&#61;0.05&#41;&#41;
+end 800 800 &quot;images/noise/isosolid.png&quot;</code></pre>
+<p><img src="/assets/images/noise/isosolid.png" alt="image label" /></p>
+<p>The noise values nearer 1 look like hot plasma, whereas values nearer 0 are almost translucent. It suggests what you might expect to see from a real volume visualization tool.</p>
+<h2 id="journey_to_algorithmia"><a href="#journey_to_algorithmia" class="header-anchor">Journey to Algorithmia</a></h2>
+<p>The final images in this post combine 2D noise and 1D noise; 2D noise for the sky, and 1D noise to create the contours.</p>
+<p>There&#39;s an <code>initnoise&#40;&#41;</code> function. This is broadly the equivalent of the <code>Random.seed&#33;&#40;&#41;</code> function in Julia. This is useful when you want the noise to vary from image to image.</p>
+<pre><code class="language-julia">function layer&#40;leftminheight, rightminheight, noiserate;
+        detail&#61;1, persistence&#61;0&#41;
+    c1, c2, c3, c4 &#61; box&#40;BoundingBox&#40;&#41;, vertices&#61;true&#41;
+    ip1 &#61; between&#40;c1, c2, leftminheight&#41;
+    ip2 &#61; between&#40;c4, c3, rightminheight&#41;
+    topedge &#61; Point&#91;&#93;
+    initnoise&#40;rand&#40;1:12&#41;&#41;
+    for x in ip1.x:2:ip2.x
+        ypos &#61; between&#40;ip1, ip2, rescale&#40;x, ip1.x, ip2.x, 0, 1&#41;&#41;.y
+        ypos *&#61; noise&#40;x/noiserate, detail&#61;detail, persistence&#61;persistence&#41;
+        push&#33;&#40;topedge, Point&#40;x, ypos&#41;&#41;
+    end
+    p &#61; &#91;c1, topedge..., c4&#93;
+    poly&#40;p, :fill, close&#61;true&#41;
+end
+
+function clouds&#40;&#41;
+    tiles &#61; Tiler&#40;boxwidth&#40;BoundingBox&#40;&#41;&#41;,
+                  boxheight&#40;BoundingBox&#40;&#41;&#41;,
+                  800, 800, margin&#61;0&#41;
+    @layer begin
+        transform&#40;&#91;3 0 0 1 0 0&#93;&#41;
+        setopacity&#40;0.3&#41;
+        noiserate &#61; 0.03
+        for &#40;pos, n&#41; in tiles
+            nv &#61; noise&#40;pos.x * noiserate,
+                       pos.y * noiserate,
+                    detail&#61;4, persistence&#61;.4&#41;
+            setgray&#40;nv&#41;
+            box&#40;pos, tiles.tilewidth, tiles.tileheight, :fill&#41;
+        end
+    end
+end
+
+function colorblend&#40;fromcolor, tocolor, n&#61;0.5&#41;
+    f &#61; clamp&#40;n, 0, 1&#41;
+    nc1 &#61; convert&#40;RGBA, fromcolor&#41;
+    nc2 &#61; convert&#40;RGBA, tocolor&#41;
+    from📕, from📗, from📘, from💡 &#61;
+        convert.&#40;Float64, &#40;nc1.r, nc1.g, nc1.b, nc1.alpha&#41;&#41;
+    to📕, to📗, to📘, to💡 &#61;
+        convert.&#40;Float64, &#40;nc2.r, nc2.g, nc2.b, nc1.alpha&#41;&#41;
+    new📕 &#61; &#40;f * &#40;to📕 - from📕&#41;&#41; &#43; from📕
+    new📗 &#61; &#40;f * &#40;to📗 - from📗&#41;&#41; &#43; from📗
+    new📘 &#61; &#40;f * &#40;to📘 - from📘&#41;&#41; &#43; from📘
+    new💡 &#61; &#40;f * &#40;to💡 - from💡&#41;&#41; &#43; from💡
+    return RGBA&#40;new📕, new📗, new📘, new💡&#41;
+end
+
+function landscape&#40;scheme, filename&#41;
+    Drawing&#40;800, 300, &quot;&#36;&#40;filename&#41;.png&quot;&#41;
+    origin&#40;&#41;
+    # sky is gradient mesh
+    bb &#61; BoundingBox&#40;&#41;
+    mesh1 &#61; mesh&#40;box&#40;bb, vertices&#61;true&#41;, &#91;
+      get&#40;scheme, rand&#40;&#41;&#41;,
+      get&#40;scheme, rand&#40;&#41;&#41;,
+      get&#40;scheme, rand&#40;&#41;&#41;,
+      get&#40;scheme, rand&#40;&#41;&#41;
+      &#93;&#41;
+    setmesh&#40;mesh1&#41;
+    box&#40;bb, :fill&#41;
+    # clouds are 2D noise
+    clouds&#40;&#41;
+    # the sun is a disk placed at random
+    @layer begin
+        setopacity&#40;0.25&#41;
+        sethue&#40;get&#40;scheme, .95&#41;&#41;
+        sunposition &#61; boxtop&#40;bb&#41; &#43;
+            &#40;rand&#40;-boxwidth&#40;bb&#41;/3:boxwidth&#40;bb&#41;/3&#41;, boxheight&#40;bb&#41;/10&#41;
+        circle&#40;sunposition, boxdiagonal&#40;bb&#41;/30, :fill&#41;
+    end
+    setopacity&#40;0.8&#41;
+    # how many layers
+    len &#61; 6
+    noiselevels &#61;  range&#40;100, length&#61;len, stop&#61;10&#41;
+    detaillevels &#61; 1:len
+    persistencelevels &#61; range&#40;0.5, length&#61;len, stop&#61;0.95 &#41;
+    for &#40;n, i&#41; in enumerate&#40;range&#40;1, length&#61;len, stop&#61;0&#41;&#41;
+        # avoid extremes of range
+        sethue&#40;colorblend&#40;get&#40;scheme, .05&#41;, get&#40;scheme, .95&#41;, i&#41;&#41;
+        layer&#40;i - rand&#40;&#41;/2, i - rand&#40;&#41;/2,
+            noiselevels&#91;n&#93;, detail&#61;detaillevels&#91;n&#93;,
+            persistence&#61;persistencelevels&#91;n&#93;&#41;
+    end
+    finish&#40;&#41;
+    preview&#40;&#41;
+end
+
+landscape&#40;ColorSchemes.leonardo, &quot;images/noise/landscape-leonardo&quot;&#41;</code></pre>
+<p><img src="/assets/images/noise/landscape-leonardo.png" alt="image label" /></p>
+<pre><code class="language-julia">landscape&#40;ColorSchemes.starrynight, &quot;images/noise/landscapes-starrynight&quot;&#41;</code></pre>
+<p><img src="/assets/images/noise/landscapes-starrynight.png" alt="image label" /></p>
+<p>I generated a few hundred of these &#40;there are over 300 colorschemes that can be selected at random&#41; and, scrolling through them quickly, I found that sometimes the results were good, sometimes they weren&#39;t. Randomness—and noise—can be hard to predict.</p>
+<p>&#91;2018-10-16&#93;</p>
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?noise" alt="cormullion signing off" /></div>
+<hr />
+<p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: June 22, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+        <script src="/libs/katex/katex.min.js"></script>
+<script src="/libs/katex/auto-render.min.js"></script>
+<script>renderMathInElement(document.body)</script>
+
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>
