@@ -58,7 +58,7 @@
 <stop offset="1" style="stop-color:rgb(39.901861%,0%,100%);stop-opacity:1;"/>
 </radialGradient>
 </defs>
-<g id="surface794">
+<g id="surface829">
 <rect x="0" y="0" width="800" height="500" style="fill:rgb(52.941176%,80.784314%,92.156863%);fill-opacity:1;stroke:none;"/>
 <path style="fill-rule:nonzero;fill:url(#radial0);stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke:url(#radial1);stroke-miterlimit:10;" d="M 220 250 L 210 250 C 210 145.066406 295.066406 60 400 60 C 504.933594 60 590 145.066406 590 250 L 580 250 C 580 150.589844 499.410156 70 400 70 C 300.589844 70 220 150.589844 220 250 Z M 220 250 "/>
 <path style="fill-rule:nonzero;fill:url(#radial2);stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke:url(#radial3);stroke-miterlimit:10;" d="M 230 250 L 220 250 C 220 150.589844 300.589844 70 400 70 C 499.410156 70 580 150.589844 580 250 L 570 250 C 570 156.113281 493.886719 80 400 80 C 306.113281 80 230 156.113281 230 250 Z M 230 250 "/>
