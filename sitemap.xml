@@ -15,7 +15,7 @@
 </url>
 <url>
     <loc>pages/2023-06-22-modern/index.html</loc>
-    <lastmod>2023-06-22</lastmod>
+    <lastmod>2023-09-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
@@ -57,7 +57,7 @@
 </url>
 <url>
     <loc>index.html</loc>
-    <lastmod>2023-07-08</lastmod>
+    <lastmod>2023-09-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>
@@ -76,6 +76,12 @@
 <url>
     <loc>pages/2019-03-13-piday/index.html</loc>
     <lastmod>2023-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>pages/2023-09-22-paths/index.html</loc>
+    <lastmod>2023-09-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
 </url>

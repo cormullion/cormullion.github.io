@@ -1,0 +1,1 @@
+Luxor.AnimatedGif("_assets/images/path/tribal-kitten-1.gif")
