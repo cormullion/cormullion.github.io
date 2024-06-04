@@ -1,0 +1,2 @@
+failed process: Process(`/Users/pete/.julia/artifacts/ab49fb08fb4494ca6d30bd5124515c4b34ca6c9b/bin/ffmpeg -loglevel panic -r 10 -f image2 -i /var/folders/0n/rxl1scks0f19tnxt9pgjcs_40000gp/T/jl_0vAYTk/%10d.png -filter_complex '[0:v] split [a][b]; [a] palettegen=stats_mode=full:reserve_transparent=on:transparency_color=FFFFFF [p]; [b][p] paletteuse=new=1:alpha_threshold=128' -y /var/folders/0n/rxl1scks0f19tnxt9pgjcs_40000gp/T/jl_0vAYTk/kitten.gif`, ProcessSignaled(6)) [0]
+

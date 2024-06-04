@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>Infographic</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><p><em>This is an updated version of an old post - I ran the script again against the latest updates in the Julia repository.</em></p>
+<h1 id="infographic"><a href="#infographic" class="header-anchor">Infographic</a></h1>
+<p>Instead of my usual graphical doodles, I thought I&#39;d try to draw an infographic about Julia. I got hold of the git log for the <a href="https://github.com/JuliaLang/julia">main Julia repository on github.com</a>, and rendered it visually.</p>
+<p>A good infographic can both confirm and reveal truths about the data. Usually the visuals confirm what we probably already know, or could easily find out from scanning the numbers in a table. There&#39;s nothing wrong with that; it can enable faster and better communication, and promote wider understanding. Occasionally, though, an infographic can reveal new things that you might not have spotted without the graphical interpretation. Either way, an infographic can offer both Confirmation and Revelation. </p>
+<p>There are four different colorschemes, I couldn&#39;t decide which to use:</p>
+<p><img src="/assets/images/infographic/assembly.png" alt="assembly of PDFs" /></p>
+<div class="smallimage"><p>ice: </p>
+<p><a href="/assets/images/infographic/infographic-ColorSchemes.ice.pdf"><img src="/assets/images/infographic/infographic-ice-thumb.png" alt="infographic ice" /></a> </p>
+<p>leonardo: </p>
+<p><a href="/assets/images/infographic/infographic-ColorSchemes.leonardo.pdf"><img src="/assets/images/infographic/infographic-leonardo-thumb.png" alt="infographic leonardo da vinci" /></a></p>
+<p>auerbach: </p>
+<p><a href="/assets/images/infographic/infographic-ColorSchemes.auerbach.pdf"><img src="/assets/images/infographic/infographic-auerbach-thumb.png" alt="infographic auerbach" /></a> </p>
+<p>greys: </p>
+<p><a href="/assets/images/infographic/infographic-ColorSchemes.Greys_9.pdf"><img src="/assets/images/infographic/infographic-greys-thumb.png" alt="infographic 50 shades of grey" /></a></p></div>
+<p>The rest of this post consists of implementation notes.</p>
+<p><img src="/assets/images/infographic/commits.png" alt="" /></p>
+<h2 id="commits_as_data_units"><a href="#commits_as_data_units" class="header-anchor">Commits as data units</a></h2>
+<p>The git log contains all the commits to the repository. A commit is a precise piece of information in some ways, but is quite loosely defined in others. For example, a single commit might be a substantial addition to the language, the final result of months of intensive work. Or it could be merely the addition of a missing <a href="https://www.grammarly.com/blog/what-is-the-oxford-comma-and-why-do-people-care-so-much-about-it/">Oxford comma</a> in a docstring, the work of a few seconds.</p>
+<p>One of the great things about Julia is that you don&#39;t have to be an advanced programmer to contribute to its development.</p>
+<p>It&#39;s possible to retrieve added and deleted line counts for each commit. This might give some indication of the importance of the associated work. But then, sometimes it takes a long time to find and fix a misfeature that&#39;s caused by a small amount of erroneous code. And is it better to remove lines of code or documentation, or add them? Rewriting and refactoring doesn&#39;t automatically lead to more or less code.</p>
+<p>So I&#39;d consider the frequency and quantity of commits a indication of activity but not too much more. In other words, don&#39;t draw conclusions in ink, but sketch a few thoughts with a pencil.</p>
+<p>You can obtain the git log of a repository at the Julia REPL using the nifty <code>pipeline&#40;&#41;</code> function  &#40;<a href="https://docs.julialang.org/en/v1/manual/running-external-programs/#Pipelines">here</a>&#39;s the documentation&#41;. This lets you chain shell commands together without having to worry about escaping half the characters in the ASCII table:</p>
+<pre><code class="language-julia">repo &#61; &quot;Julia&quot;
+cd&#40;&quot;/Users/me/.julia/dev/&#36;&#40;repo&#41;&quot;&#41;
+run&#40;pipeline&#40;&#96;git log
+    --after &quot;2014-02-01&quot;
+    --before &quot;2016-02-02&quot;&#96;,
+    stdout&#61;&quot;/tmp/&#36;&#40;repo&#41;-gitlog.csv&quot;&#41;&#41;</code></pre>
+<p>There are lots of options to <code>git log</code>, useful for obtaining things like dates in the required format.</p>
+<p>Once loaded into a DataFrame, I used functions from the <a href="https://github.com/JuliaTime/TimeZones.jl">TimeZones.jl</a> package to retrieve the time zone data. This package provides a new type, the <code>ZonedDateTime</code>. So if you have a list of dates as strings:</p>
+<pre><code class="language-julia">dates &#61; &#91;&quot;2014-06-21 20:27:12 -0400&quot;,
+         &quot;2014-06-22 08:42:34 &#43;0530&quot;,
+         &quot;2014-06-21 18:55:37 -0400&quot;,
+         &quot;2014-06-21 18:17:57 -0400&quot;,
+         &quot;2014-06-21 18:08:18 -0400&quot;,
+         &quot;2014-06-21 17:50:48 -0400&quot;,
+         &quot;2014-06-21 16:54:24 -0400&quot;,
+         &quot;2014-06-21 16:28:08 -0400&quot;,
+         &quot;2014-06-21 15:08:14 -0500&quot;,
+         &quot;2014-06-21 14:58:17 -0400&quot;,
+         &quot;2014-06-21 14:44:11 -0400&quot;,
+         &quot;2014-06-21 14:41:45 -0400&quot;,
+         &quot;2014-06-21 14:41:37 -0400&quot;,
+         &quot;2014-06-18 21:34:03 -0400&quot;,
+         &quot;2014-06-21 13:00:22 -0500&quot;,
+         &quot;2014-06-21 10:48:42 -0700&quot;,
+         &quot;2014-06-21 10:45:51 -0500&quot;,
+         &quot;2014-06-20 23:23:06 -0400&quot;&#93;</code></pre>
+<p>you can convert them into <code>ZonedDateTime</code>s with:</p>
+<pre><code class="language-julia">ZonedDateTime.&#40;dates&#41;</code></pre>
+<p>or extract just the zones with:</p>
+<pre><code class="language-julia">getfield.&#40;ZonedDateTime.&#40;dates, &quot;yyyy-mm-dd H:M:S z&quot;&#41;, :zone&#41;</code></pre>
+<p>giving you:</p>
+<pre><code class="language-julia">18-element Array&#123;TimeZones.FixedTimeZone,1&#125;:
+ UTC-04:00
+ UTC&#43;05:30
+ UTC-04:00
+ UTC-04:00
+ UTC-04:00
+ UTC-04:00
+ UTC-04:00
+ UTC-04:00
+ UTC-05:00
+ UTC-04:00
+ UTC-04:00
+ UTC-04:00
+ UTC-04:00
+ UTC-04:00
+ UTC-05:00
+ UTC-07:00
+ UTC-05:00
+ UTC-04:00</code></pre>
+<p><img src="/assets/images/infographic/names.png" alt="names" /></p>
+<h2 id="noise_in_the_data"><a href="#noise_in_the_data" class="header-anchor">Noise in the data</a></h2>
+<p>I doubt whether many data sources are perfect. I couldn&#39;t check for all possible errors in the incoming git log file. But I did notice a few things that I&#39;d thought I&#39;d repair. For example, I noticed that occasionally different names appeared for the same person:</p>
+<pre><code class="language-julia">5×2 DataFrames.DataFrame
+│ Row │ Author              │ Count │
+├─────┼─────────────────────┼───────┤
+│ 1   │ Jeff Bezanson       │ 8801  │
+│ 2   │ JeffBezanson        │ 48    │
+│ 3   │ Jeffrey Bezanson    │ 34    │
+│ 4   │ Jeffrey W. Bezanson │ 21    │
+│ 5   │ Jeffrey W Bezanson  │ 1     │</code></pre>
+<p>I&#39;m hoping these are all the same Jeff, because I grouped them together &#40;after searching github.com just in case...&#41;.</p>
+<p>After spotting that, I spent a bit of time with <a href="https://github.com/JuliaMath/Combinatorics.jl">Combinatorics.jl</a> and <a href="https://github.com/rawrgrr/Levenshtein.jl">Levenshtein.jl</a>, running over all combinations of author names with distances below 4 or 5. I found a few and renamed them, I hope correctly, but cautiously decided to leave some unchanged.</p>
+<p><img src="/assets/images/infographic/lineplot.png" alt="" /></p>
+<h2 id="total_contributors_and_total_commits"><a href="#total_contributors_and_total_commits" class="header-anchor">Total contributors and total commits</a></h2>
+<p>The graphs for total contributors and total commits weren&#39;t very interesting &#40;at least visually speaking—it&#39;s really cool in reality&#33;&#41;. Obviously, each new contributor brings at least one commit, so there&#39;s naturally some correlation.</p>
+<p>Perhaps one day the early days of the creation of Julia leading up to the first commit will be told and dramatized on TV.</p>
+<p>The <em>Commits per month</em> bar chart shows how many commits were made in each month. Perhaps you can spot a pre-release increase, or a post-release relaxation?</p>
+<p><img src="/assets/images/infographic/releases.png" alt="" /></p>
+<h2 id="please_release_me"><a href="#please_release_me" class="header-anchor">Please release me</a></h2>
+<p>I thought I&#39;d add data about Julia releases. Obtaining this was a bit of a pain, because I ended up on <a href="https://developer.github.com/v4/">GitHub GraphQL API v4</a>, trying to use GraphQL, which is about as user-friendly as a hungry tiger trying to order groceries online, but eventually I got something useful in JSON, and <a href="https://github.com/JuliaIO/JSON.jl">JSON.jl</a> did the rest. Once converted to Julia&#39;s nifty version strings, I could then extract the release numbers and use them for useful and important tasks, such as choosing colors.</p>
+<p>I avoided starting the line for each release in an obvious place, and marked just the release date precisely. The increasing saturation and changing colors of the bars breaks more than one of <a href="https://www.edwardtufte.com/tufte/">Professor Edward Tufte</a>&#39;s Ten Commandments; all the &quot;ink&quot; in these bars represents virtually zero data, and, with those vague blends, defies commandments numbers 1 and 2 &#40;whatever they are&#41;.</p>
+<p><img src="/assets/images/infographic/timezones.png" alt="" /></p>
+<h2 id="in_the_zone"><a href="#in_the_zone" class="header-anchor">In the zone</a></h2>
+<p>I assumed that the time zone information stored in the git log is mostly correct. I don&#39;t understand time zones. My excuse is that I live in the land of Greenwich Mean Time, UTC 0, and can just about cope with British Summer Time.</p>
+<p>It&#39;s easy to spot the main centers of Julia development—the distinctive 5 hour and 30 minute offset from UTC of Indian Standard Time is a steady signal dominated though by the primary Julia community living in the UTC-4 and UTC-5 zones, and the recent increase in activity from the UTC&#43;2 zone.</p>
+<p>There are a few examples of commits from authors in multiple time zones in the space of a few minutes. This could be evidence of some very high speed travel, but more likely the result of virtuoso performances on the keyboards.</p>
+<p><img src="/assets/images/infographic/firstandlast.png" alt="" /></p>
+<h2 id="the_first_shall_be_last"><a href="#the_first_shall_be_last" class="header-anchor">The first shall be last</a></h2>
+<p>The lowest panel on the infographic is an attempt to draw each contributor&#39;s earliest and most recent commits, joined with a line. At normal viewing scale, it&#39;s a thicket of unreadability, but if you zoom in you might be able to see more of the contributors&#39; names, in font sizes that are scaled relative to their share of the total. It was difficult to avoid the names overlapping other names.</p>
+<p>Of course, the recent endpoints aren&#39;t permanently fixed - people do move on to other things but may come back. Anyway, you don&#39;t always have to make new commits to the base language to continue contributing to Julia.</p>
+<p>I&#39;d like to say that you can search for names in the PDF using a PDF viewer, but I did notice some small problems with overlapping text and indexing &#40;that&#39;s either a bug or a feature&#41; in some PDF reader applications, so I can&#39;t promise.</p>
+<p>It&#39;s also worth remembering that this is only showing the base Julia repository; many Julia contributors are very active in other areas of the Julia ecosystem. I&#39;m not going to attempt to draw the entire Juliaverse. At least not yet.</p>
+<p><img src="/assets/images/infographic/boxes.png" alt="" /></p>
+<h2 id="little_boxes"><a href="#little_boxes" class="header-anchor">Little boxes</a></h2>
+<p>The boxmap on the right-hand side shows each contributors&#39; share of the Julia language in terms of percentages of commits to the main repository. It clearly shows the &#39;long tail&#39; of the community. You could say that 50&#37; of the Julia language is written by about six people. Equally you could say that 50&#37; is written by the rest of the contributors. It&#39;s probably safe to say that that first 50&#37; is probably the more important half, but some of these smaller boxes will represent significant commits that are just as important.</p>
+<p>I was unsure about including the names of individuals here because, obviously, there&#39;s just not enough room to include everyone&#39;s name; it&#39;s good to include everyone, and bad to miss people out. At least everyone has a box of their own, even if it&#39;s too small to be located or labelled.</p>
+<p>The colors are not significant. It would mostly work without different colors at all, but the contrast between adjacent boxes is useful. With so many boxes to be drawn, some people will most likely have to share the same color, because &#39;for aesthetic reasons&#39; all colors are chosen from a single colorscheme provided by <a href="https://github.com/JuliaGraphics/ColorSchemes.jl">ColorSchemes.jl</a>. The color of the box is found by hashing the author&#39;s name to get a decimal number to place it somewhere on the &#91;0, 1&#93; color scale.</p>
+<p>Sidenote: In preparing the data, I needed a function to find the duplicates in an array. Surprisingly Julia doesn&#39;t have a built-in function to do this, but the awesome Matt Bauman wrote this elegantly simple solution in about 15 seconds after I asked:</p>
+<pre><code class="language-julia">function repeated_elements&#40;A::AbstractVector&#41;
+    seen &#61; Set&#123;eltype&#40;A&#41;&#125;&#40;&#41;
+    out &#61; eltype&#40;A&#41;&#91;&#93;
+    for x in A
+        if x ∉ seen
+            push&#33;&#40;seen, x&#41;
+        else
+            push&#33;&#40;out, x&#41;
+        end
+    end
+    out
+end</code></pre>
+<p><img src="/assets/images/infographic/variations.png" alt="" /></p>
+<h2 id="theme_and_variations"><a href="#theme_and_variations" class="header-anchor">Theme and variations</a></h2>
+<p>One minor benefit of analysing data using Julia is that you can try different dates or different repositories. For example, <a href="/assets/images/infographic/infographic-images-ColorSchemes.ice.pdf">here&#39;s</a> a look through the same &quot;lens&quot; at the <a href="https://github.com/JuliaImages/Images.jl">Images.jl</a> repository, which has been evolving for a few years now, guided chiefly by the amazing Professor Tim Holy. I&#39;ve not updated it since 2018. &#40;There are way more releases though, with 140 compared with Julia; some tweaking of formats would be necessary to show them all in the same format...&#41;</p>
+<p>Running through colorschemes at random is also fun. One of the ones I&#39;m trying out here is called <code>auerbach</code>. It&#39;s extracted from a painting by <a href="https://www.nationalgalleries.org/art-and-artists/94594/portrait-julia">Frank Auerbach</a>, the artist who spreads oil paint very thickly on his canvases &#40;which I suppose might contribute to their million pound price tags&#41;.</p>
+<p>It&#39;s useful to run the same analysis on different sets of data. <code>DatasetA</code> may look like it has every possible permutation and variety of data values, but <code>&#36;&#40;Somebody&#41;</code>&#39;s Law of Data Analysis decrees that as soon as you load <code>DatasetB</code>, you&#39;ll find lots of new problems in your methods that <code>DatasetA</code> didn&#39;t uncover. &#40;That law needs someone to claim it and name it&#33;&#41;</p>
+<p>Since an image for any given dataset at any instant can be produced, it&#39;s not too difficult to imagine making a video consisting of snapshots of the data at a series of moments in time, showing how various trends evolve. The problem though is that the design was originally intended for PDF, and it&#39;s always easier if you can target a design at a specific format &#40;ask any harassed web designer&#41;. Also, the resolution of videos is usually worse than the resolution of PDFs, so the details would be much less easy to read. Even working through the incantations in the <em><a href="https://ffmpeg.org/ffmpeg.html#Video-Options">Sacred Book of ffmpeg</a></em> isn&#39;t going to make a PDF work well as a video. So only an idiot would try to make a video out of PDFs, and you can view <a href="https://www.youtube.com/channel/UCfd52kTA5JpzOEItSqXLQxg">my attempt <span class="inlinesvg"><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="14" viewBox="0 0 20 14">
+<path fill-rule="nonzero" fill="rgb(98.823529%, 0%, 1.960784%)" fill-opacity="1" d="M 20 7 L 19.988281 9.457031 L 19.949219 10.238281 L 19.886719 10.800781 L 19.800781 11.25 L 19.6875 11.628906 L 19.550781 11.957031 L 19.382812 12.246094 L 19.1875 12.496094 L 18.960938 12.722656 L 18.707031 12.917969 L 18.414062 13.09375 L 18.085938 13.246094 L 17.714844 13.378906 L 17.292969 13.492188 L 16.808594 13.589844 L 16.25 13.664062 L 15.589844 13.722656 L 14.761719 13.765625 L 13.613281 13.792969 L 10 13.800781 L 6.386719 13.792969 L 5.238281 13.765625 L 4.410156 13.722656 L 3.75 13.664062 L 3.191406 13.589844 L 2.707031 13.492188 L 2.285156 13.378906 L 1.914062 13.246094 L 1.585938 13.09375 L 1.292969 12.917969 L 1.039062 12.722656 L 0.8125 12.496094 L 0.617188 12.246094 L 0.449219 11.957031 L 0.3125 11.628906 L 0.199219 11.25 L 0.113281 10.800781 L 0.0507812 10.238281 L 0.0117188 9.457031 L 0 7 L 0.0117188 4.542969 L 0.0507812 3.761719 L 0.113281 3.199219 L 0.199219 2.75 L 0.3125 2.371094 L 0.449219 2.042969 L 0.617188 1.753906 L 0.8125 1.503906 L 1.039062 1.277344 L 1.292969 1.082031 L 1.585938 0.90625 L 1.914062 0.753906 L 2.285156 0.621094 L 2.707031 0.507812 L 3.191406 0.410156 L 3.75 0.335938 L 4.410156 0.277344 L 5.238281 0.234375 L 6.386719 0.207031 L 10 0.199219 L 13.613281 0.207031 L 14.761719 0.234375 L 15.589844 0.277344 L 16.25 0.335938 L 16.808594 0.410156 L 17.292969 0.507812 L 17.714844 0.621094 L 18.085938 0.753906 L 18.414062 0.90625 L 18.707031 1.082031 L 18.960938 1.277344 L 19.1875 1.503906 L 19.382812 1.753906 L 19.550781 2.042969 L 19.6875 2.371094 L 19.800781 2.75 L 19.886719 3.199219 L 19.949219 3.761719 L 19.988281 4.542969 Z M 20 7 "/>
+<path fill-rule="nonzero" fill="rgb(100%, 100%, 100%)" fill-opacity="1" d="M 8.5 9.597656 L 8.5 4.402344 L 13 7 Z M 8.5 9.597656 "/>
+</svg>
+</span></a>, which I haven&#39;t bothered updating since I made it back in 2018.</p>
+<h2 id="and_finally"><a href="#and_finally" class="header-anchor">And finally...</a></h2>
+<p>So here&#39;s a message from the name behind one small box on this chart to all the other names in all the other boxes and to all the other contributors who are working elsewhere in the Julia ecosystem: <em>thank you</em> for your efforts, for your refusal to settle for yesterday&#39;s state of the art, and for your continuing work towards building the new Julia language&#33;</p>
+<p>If you find any egregious errors or omissions that you&#39;d like me to fix, raise an issue on this page&#39;s <a href="https://github.com/cormullion/cormullion.github.io">github</a> and I&#39;ll look at, and possibly into, it.</p>
+<p>&#91;2023-06-25&#93;, updating the original from &#91;2018—08-01&#93;</p>
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?infographic" alt="cormullion signing off" /></div>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: September 13, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>

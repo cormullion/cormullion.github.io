@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>World</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><h1 id="world"><a href="#world" class="header-anchor">World</a></h1>
+<p>The videos from JuliaCon 2020 are <a href="https://www.youtube.com/playlist?list&#61;PLP8iPy9hna6Tl2UHTrm4jnIYrLkIcAROR">on YouTube <span class="inlinesvg"><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="14" viewBox="0 0 20 14">
+<path fill-rule="nonzero" fill="rgb(98.823529%, 0%, 1.960784%)" fill-opacity="1" d="M 20 7 L 19.988281 9.457031 L 19.949219 10.238281 L 19.886719 10.800781 L 19.800781 11.25 L 19.6875 11.628906 L 19.550781 11.957031 L 19.382812 12.246094 L 19.1875 12.496094 L 18.960938 12.722656 L 18.707031 12.917969 L 18.414062 13.09375 L 18.085938 13.246094 L 17.714844 13.378906 L 17.292969 13.492188 L 16.808594 13.589844 L 16.25 13.664062 L 15.589844 13.722656 L 14.761719 13.765625 L 13.613281 13.792969 L 10 13.800781 L 6.386719 13.792969 L 5.238281 13.765625 L 4.410156 13.722656 L 3.75 13.664062 L 3.191406 13.589844 L 2.707031 13.492188 L 2.285156 13.378906 L 1.914062 13.246094 L 1.585938 13.09375 L 1.292969 12.917969 L 1.039062 12.722656 L 0.8125 12.496094 L 0.617188 12.246094 L 0.449219 11.957031 L 0.3125 11.628906 L 0.199219 11.25 L 0.113281 10.800781 L 0.0507812 10.238281 L 0.0117188 9.457031 L 0 7 L 0.0117188 4.542969 L 0.0507812 3.761719 L 0.113281 3.199219 L 0.199219 2.75 L 0.3125 2.371094 L 0.449219 2.042969 L 0.617188 1.753906 L 0.8125 1.503906 L 1.039062 1.277344 L 1.292969 1.082031 L 1.585938 0.90625 L 1.914062 0.753906 L 2.285156 0.621094 L 2.707031 0.507812 L 3.191406 0.410156 L 3.75 0.335938 L 4.410156 0.277344 L 5.238281 0.234375 L 6.386719 0.207031 L 10 0.199219 L 13.613281 0.207031 L 14.761719 0.234375 L 15.589844 0.277344 L 16.25 0.335938 L 16.808594 0.410156 L 17.292969 0.507812 L 17.714844 0.621094 L 18.085938 0.753906 L 18.414062 0.90625 L 18.707031 1.082031 L 18.960938 1.277344 L 19.1875 1.503906 L 19.382812 1.753906 L 19.550781 2.042969 L 19.6875 2.371094 L 19.800781 2.75 L 19.886719 3.199219 L 19.949219 3.761719 L 19.988281 4.542969 Z M 20 7 "/>
+<path fill-rule="nonzero" fill="rgb(100%, 100%, 100%)" fill-opacity="1" d="M 8.5 9.597656 L 8.5 4.402344 L 13 7 Z M 8.5 9.597656 "/>
+</svg>
+</span></a>, over 150 of them, and I’ve been watching quite a few. Have you been tempted to start skipping the first 17 seconds of some of them? Well, here are a few paragraphs that might make sitting through the JuliaCon2020 “<a href="https://en.wikipedia.org/wiki/Station_identification">station ident</a>” a litle bit more interesting — for a while, at least.</p>
+<p><img src="/assets/images/world/ident-still-800.png" alt="station ident ff" /></p>
+<p>At first, I wanted to use the beautiful skyline illustration showing lots of world-famous buildings. This is another in the series of city skyline stock images that Avik &#40;one of the JuliaCon organizing team&#41; manages to find each year, whatever the location.</p>
+<p><img src="/assets/images/world/world-silhoutte-800.png" alt="world stock image " /></p>
+<p>I was tempted to animate it somehow, but I couldn’t think of a good way to do it without it looking like a terrible cartoon. Besides, the SVG file was an unstructured collection of 6000 polygons. And it was already getting a lot of usage.</p>
+<h2 id="first_attempt"><a href="#first_attempt" class="header-anchor">First attempt</a></h2>
+<p>It’s always a good idea to avoid graphical clichés, but it was difficult to resist using a world map or globe of some sort for a world-wide global event. I remembered I had some old shapefile-reading code, long since abandoned &#40;because it was more complicated than I thought&#41;, so I loaded up Shapefile.jl and trusty old Luxor.jl, and threw some shapes onto the canvas.</p>
+<pre><code class="language-julia">using Shapefile, Luxor
+
+include&#40;joinpath&#40;dirname&#40;pathof&#40;Luxor&#41;&#41;, &quot;readshapefiles.jl&quot;&#41;&#41;
+
+countries &#61; open&#40;worldshapefile&#41; do f
+    read&#40;f, Shapefile.Handle&#41;
+end
+
+...
+for shape in countries.shapes
+    randomhue&#40;&#41;
+    pgons, bbox &#61; convert&#40;Array&#123;Luxor.Point, 1&#125;, shape&#41;
+    for pgon in pgons
+        poly&#40;pgon, :fill&#41;
+    end
+end
+...</code></pre>
+<p><img src="/assets/images/world/world-map-800.png" alt="world map 2" /></p>
+<p>There are problems here. First, it&#39;s the old Mercator projection; it’s probably the most familiar view of the world, despite being a not-very accurate way to view it with any sense of proportion. And Antarctica just looks wrong, spread across the bottom like that...</p>
+<p>Second, it&#39;s a bit dull. I tried a few ways to make the map more interesting. To get the grid effect below I created a Tiler, then tested each cell to see whether it was inside a country polygon or not. And I added some wavy sine waves to avoid huge areas of empty ocean.</p>
+<p><img src="/assets/images/world/juliacon2020-map-800.png" alt=" " /></p>
+<p>&#40;The code for that circular logo itself is just:</p>
+<pre><code class="language-julia">...
+cols &#61; &#91;Luxor.julia_green, Luxor.julia_red,Luxor.julia_purple, Luxor.julia_blue&#93;
+for &#40;n, θ&#41; in enumerate&#40;range&#40;0, stop&#61;2π, length&#61;36&#41;&#41;
+    sethue&#40;cols&#91;mod1&#40;n, end&#41;&#93;&#41;
+    arrow&#40;O - polar&#40;230, θ&#41;, O &#43; polar&#40;230, θ&#41;, &#91;50, 50&#93;,
+        decoration &#61; 0.0,
+        decorate &#61; &#40;&#41; -&gt; circle&#40;O, 5, :fill&#41;,
+        linewidth &#61; 2&#41;
+end
+drawjuliaconlogo&#40;O, 0.5&#41;
+...</code></pre>
+<p>&#41;</p>
+<p>But it didn&#39;t click.</p>
+<h2 id="another_try"><a href="#another_try" class="header-anchor">Another try</a></h2>
+<p>However, a bigger problem for me is that the Mercator world map is a geographic, geocentric, ‘landmass-oriented’ view, with some political boundaries added. But a worldwide virtual online conference such as JuliaCon 2020 is about people; people reaching out and communicating with each other, forming communities and partnerships, and this doesn’t come across in a simple map view.</p>
+<p>I thought about plotting Julia contributors on a map, inspired by this nice post <a href="https://juliohm.github.io/dataviz/where-are-the-julians/">“Where are the Julians?”</a> by Dr Júlio Hoffimann. But the distribution is still, to be honest, a little sparse, and I wasn’t sure about targetting individuals so precisely.</p>
+<p>Browsing through some folders led me to a CSV file of about 3000 world airports, with latitude/longitude coordinates, and I tried plotting those instead of the countries’ outlines.</p>
+<p><img src="/assets/images/world/world-airport-map.png" alt="world airport map " /></p>
+<p>I thought this worked better &#40;if not perfectly&#41;. The graphic was now a bit more about human beings, and where they lived, or at least where some of them and their supplies got on and off aircraft. The squares indicate the population centres better. The use of unscaled symbols emphasized the communication links of smaller islands and communities, which would be lost if I’d drawn shapes proportional to population numbers, say. For example, the small islands in the Pacific ocean are at least as visible as the densely packed squares in Europe and the coasts of the Americas.</p>
+<p>There are still areas of emptiness — you can see the sparsely populated areas of Northern Africa, Russia, Namibia, the rain forests of South America, and the empty wilderness in the heart of Australia.</p>
+<h2 id="sparse"><a href="#sparse" class="header-anchor">Sparse</a></h2>
+<p>I’d converted the latitude and longitude values into rows and columns of 1s in a sparse matrix. I was intending to explore the idea of initially rendering the world as a coarse grid of large squares and then gradually refining it by taking smaller and smaller views. I didn&#39;t get round to it. &#40;Perhaps I&#39;ll use the upcoming <a href="https://github.com/Wikunia/Javis.jl">Javis.jl</a> to try this out one day.&#41;</p>
+<p>One nice feature about the forthcoming Julia 1.6 release is the improved display of sparse matrices in the REPL. Instead of this:</p>
+<p><img src="/assets/images/world/non-sparse.png" alt="sparse matrix  " /></p>
+<p>You’ll see this:</p>
+<p><img src="/assets/images/world/sparse.png" alt=" " /></p>
+<p>This uses characters with Unicode values <code>\U2800</code> to <code>\U28FF</code>. Make sure you’re using a monospaced font that includes them. There are a few floating around.</p>
+<p>But in the end I didn’t need to do much more to it, other than choose random Julia colors.</p>
+<pre><code class="language-julia">...
+tiles &#61; Tiler&#40;1200, 800, size&#40;matrix&#41;...&#41;
+juliacolors &#61; &#91;Luxor.julia_purple, Luxor.julia_blue, Luxor.julia_red, Luxor.julia_green&#93;
+for &#40;pos, n&#41; in tiles
+    if matrix&#91;n&#93; &#61;&#61; 1
+        sethue&#40;juliacolors&#91;rand&#40;1:end&#41;&#93;&#41;
+        box&#40;pos, 3, 3, :fill&#41;
+    end
+end
+...</code></pre>
+<p><img src="/assets/images/world/world-map-airport-color.png" alt="world map airport colored " /></p>
+<h2 id="off_the_map"><a href="#off_the_map" class="header-anchor">Off the map</a></h2>
+<p>I got sidetracked researching some of these dots. For example, I wondered what this particular dot was — the airport that gets quickly covered by the incoming JuliaCon2020 logo, halfway between South America and Africa. It’s called <a href="https://en.wikipedia.org/wiki/RAF_Ascension_Island">Wideawake Airfield</a>, named after a noisy colony of sooty terns nearby. This is Ascension Island, for historical reasons a strategically-placed military base for the UK and USA.</p>
+<p><img src="/assets/images/world/wideawake.png" alt="ascension island" /></p>
+<p>That cluster of dots in the Atlantic are the Azores, part of Portugal, due west of Lisbon... Perhaps we’ll all meet there next year.</p>
+<p>Two of the most northerly lights are Alert, Canada &#40;the northernmost permanently inhabited place in the world&#41;, and Svalbard &#40;Norway&#41;. Svalbard is the location of the <a href="https://archiveprogram.github.com/">GitHub Arctic Code Vault</a>, stored in a decommissioned coal mine. Lots of Julia code is stored there, frozen for posterity.</p>
+<p>It was also a useful reminder that data sources are often imperfect. Even if all the locations have valid latitude and longitude values, it would be quite a task to check every entry. For some countries, such as China and Namibia &#40;that empty area on the west coast of Southern Africa&#41;, I was puzzled and checked them out — there were fewer squares than I&#39;d expected to see. This is the worst sort of missing data, data that you didn’t realise was missing. There are also some entries that specify airports that I can’t find any references to.</p>
+<p>Which leads me to Mountweazels.</p>
+<h2 id="oops"><a href="#oops" class="header-anchor">Oops</a></h2>
+<p>It was only when I saw the first video on the first day of JuliaCon that I realised I’d made a mistake. Technically, this was a deliberate mistake that I’d made a few years ago, but which had now become an accidental mistake, because I’d forgotten to remove it.</p>
+<p>I’d been reading about Mountweazels. A Mountweazel is a fictitious or spurious entry in an otherwise trusty reference. A non-existent word in a dictionary, a fictitious place on a map. They’re not really “Easter eggs”, because I don’t think they’re supposed to be found. They might be inserted by someone with a sense of mischief, but, more usually, they’re put in deliberately by the creators as a way of preventing or proving unauthorized copying.</p>
+<p>I had added a fictitious airport to the CSV file, “just for testing purposes”, and I’d forgotten to remove it.</p>
+<p>If you want to find it: start at the right hand side of the swirly JuliaCon2020 logo, and travel due East, for about the width of the letter “n” in “juliacon”. That square isn’t Agatti Island or Diego Garcia Island. It’s the famous - or infamous - island that made its first appearance in 1977. I’ll leave the pleasure of &#40;re-&#41;discovering it to you&#33;</p>
+<p>&#91;2020-08-13&#93;</p>
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?world" alt="cormullion signing off" /></div>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: September 13, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>

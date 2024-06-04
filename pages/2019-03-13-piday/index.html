@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/libs/katex/katex.min.css">
+     
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>π day</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><p><em>In the UK we have started to celebrate π day &#40;the 3rd month&#39;s 14th day&#41; every year, even though we don&#39;t use the USA&#39;s date formatting convention of <em>monthnumber</em> followed by <em>daynumber</em>. But we can&#39;t really celebrate the 31st of April &#40;31/4&#41; or the 3rd of Quatember &#40;?&#41; &#40;3/14&#41;, so we&#39;ll happily celebrate π day on 14/3 along with everyone else&#33;</em></p>
+<p><em>I set myself a challenge at the beginning of March: make a π-related image using Julia and the Luxor.jl package every day until π day. Some days it worked out well, others didn&#39;t, but I&#39;ve gathered them all here anyway. This post has a fair few images, but not very much code or mathematical content.</em></p>
+<h1 id="π_day"><a href="#π_day" class="header-anchor">π day</a></h1>
+<p>The images here are in low-resolution: they should be available on my <a href="https://www.flickr.com/photos/153311384@N03/">Flickr page</a> at their full resolution if you want to download or re-use them.</p>
+<h3 id="day_1_circle_packing"><a href="#day_1_circle_packing" class="header-anchor">Day 1: Circle packing</a></h3>
+<p>Circle packing may be a well-trodden path, but it always looks neat, and it&#39;s a nice easy start. You maintain a list of circles &#40;center point and radius&#41;. Then you create a random circle, check it against all the other ones, draw it if it doesn&#39;t overlap, or reduce the radius and try again. It&#39;s not very efficient but you can set it going and go and make some coffee.</p>
+<p>To make the π shape appear, the code creates a path:</p>
+<pre><code class="language-julia">fontsize&#40;480&#41;
+textoutlines&#40;&quot;π&quot;, O, :path, halign&#61;:center, valign&#61;:middle&#41;
+πoutline &#61; first&#40;pathtopoly&#40;&#41;&#41;</code></pre>
+<p>then checks whether each circle&#39;s centerpoint is inside or outside the outline of the π shape:</p>
+<pre><code class="language-julia">isinside&#40;pt, πoutline&#41;</code></pre>
+<p>and colors it accordingly.</p>
+<p><img src="/assets/images/piday/t-800.png" alt="image label" /></p>
+<h3 id="day_2_dry_and_wet"><a href="#day_2_dry_and_wet" class="header-anchor">Day 2: Dry and wet</a></h3>
+<p>I repeated myself today, thinking I could develop the circles a bit more, and ended up with this glossier wet-look version. The apparently random-looking shapes in the background are Bézier splodges that are supposed to be splashes...</p>
+<p><img src="/assets/images/piday/pi-reds-balls-wet-800.png" alt="image label" /></p>
+<h3 id="day_3_π_packing"><a href="#day_3_π_packing" class="header-anchor">Day 3: π packing</a></h3>
+<p>This is π packing rather than circle packing, although the code is again quite similar in outline: choose a point at random, find the largest font size at which the π character fits without overlapping others in the list, and then place it and add it to the list. The colors are a bit murky though.</p>
+<p><img src="/assets/images/piday/pi-swarm-3-800.png" alt="image label" /></p>
+<h3 id="day_4_rainbow"><a href="#day_4_rainbow" class="header-anchor">Day 4: Rainbow</a></h3>
+<p>Combining concentric circles and rainbow colors, this image shows about 350 digits of π.</p>
+<p><img src="/assets/images/piday/digits-of-pi-avenir-800.png" alt="image label" /></p>
+<p>To generate the digits of π, I use this function:</p>
+<pre><code class="language-julia">function pidigits&#40;n&#41;
+    result &#61; BigInt&#91;&#93;
+    k, a, b, a1, b1 &#61; big.&#40;&#91;2, 4, 1, 12, 4&#93;&#41;
+    while n &gt; 0
+        p, q, k &#61; k^2, 2k &#43; 1, k &#43; 1
+        a, b, a1, b1 &#61; a1, b1, p * a  &#43;  q * a1, p * b  &#43;  q * b1
+        d, d1 &#61; a ÷ b, a1 ÷ b1
+        while d &#61;&#61; d1
+            push&#33;&#40;result, d&#41;
+            n -&#61; 1
+            a, a1 &#61; 10&#40;a &#37; b&#41;, 10&#40;a1 &#37; b1&#41;
+            d, d1 &#61; a ÷ b, a1 ÷ b1
+        end
+    end
+    return result
+end</code></pre>
+<p>It looks like witchcraft to me, but I understand that it&#39;s a &quot;spigot&quot; algorithm. I was hoping for a while that it was named after a Professor Spigot, but in fact it&#39;s describing the way the digits trickle out one by one like drops of water. It&#39;s quick enough for a thousand digits or so, but slows down a lot when you ask for 100_000 or more, probably due to the hard work that the big integer library has to do: even when you&#39;re just calculating the first 15 digits of π, the values of <code>a1</code> and <code>b1</code> are way over the limits of Int64s.</p>
+<pre><code class="language-julia">julia-1.1&gt; @time pidigits&#40;1000&#41;;
+ 0.014522 seconds &#40;44.90 k allocations: 9.425 MiB, 28.97&#37; gc time&#41;</code></pre>
+<p>The image might work better on white:</p>
+<p><img src="/assets/images/piday/digits-of-pi-avenir-on-white-800.png" alt="image label" /></p>
+<p>Sometimes I wanted to check where certain sequences of digits appeared. I couldn&#39;t find a built-in function that looked for a sequence of digits in an array, but this worked well enough for my purposes:</p>
+<pre><code class="language-julia">function findsubsequence&#40;needle, haystack&#41;
+    result &#61; Int64&#91;&#93;
+    for k in 1:length&#40;haystack&#41; - length&#40;needle&#41;
+        if needle &#61;&#61; view&#40;haystack, k:k &#43; length&#40;needle&#41; - 1&#41;
+            push&#33;&#40;result, k&#41;
+        end
+    end
+    return result
+end
+
+findsubsequence&#40;str::String, digits&#41; &#61;
+    findsubsequence&#40;map&#40;x -&gt; parse&#40;Int, x&#41;, split&#40;str, &quot;&quot;&#41;&#41;, digits&#41;
+
+findsubsequence&#40;&quot;999999&quot;, pidigits&#40;2000&#41;&#41; # &#61;&gt; &#91;763&#93;</code></pre>
+<h3 id="day_5_low-fat"><a href="#day_5_low-fat" class="header-anchor">Day 5: Low-fat</a></h3>
+<p>A chunky typeface like the Avenir Heavy I used yesterday is good for masking and clipping. But I wondered how the narrowest typeface would look. I found Briem Akademi, designed by Gunnlaugur Briem at the Royal Academy of Fine Arts in Copenhagen. Adobe&#39;s description says:</p>
+<blockquote>
+<p>The most compressed version works best where legibility is less important than dramatic visual effect.</p>
+</blockquote>
+<p>and I like the abstract look even though it&#39;s almost illegible... Would this make nice bathroom tiles?</p>
+<p><img src="/assets/images/piday/many-digits-of-pi-briem-800.png" alt="image label" /></p>
+<h3 id="day_6_breakfast_and_tiffany"><a href="#day_6_breakfast_and_tiffany" class="header-anchor">Day 6 Breakfast and Tiffany</a></h3>
+<p>I&#39;m still thinking about using typefaces. I&#39;m a fan of Ed Benguiat&#39;s ITC Tiffany font, his nostalgic look back from the 1970s to the age of Edwardian elegance.</p>
+<p><img src="/assets/images/piday/pi-digits-appearing-800.png" alt="image label" /></p>
+<p>It&#39;s easy to do this with tables. Like the circle packing, the code checks whether the coordinates of each table cell fall within a given perimeter, and changes the font accordingly.</p>
+<h3 id="day_7_distinguished"><a href="#day_7_distinguished" class="header-anchor">Day 7 Distinguished</a></h3>
+<p>The excellent Colors.jl package has a function called <code>distinguishable_colors&#40;&#41;</code> &#40;which fortunately tab-completes&#41;. The help text says:</p>
+<blockquote>
+<p>This uses a greedy brute-force approach to choose <code>n</code> colors that are maximally distinguishable. Given <code>seed</code> color&#40;s&#41;, and a set of possible hue, chroma, and lightness values &#40;in LCHab space&#41;, it repeatedly chooses the next color as the one that maximizes the minimum pairwise distance to any of the colors already in the palette.</p>
+</blockquote>
+<p>Much to do with color depends on the viewer&#39;s perception, but I think it works well here. It starts at the top left, and works from left to right. &#40;That pesky decimal point defaults to using the previous color...&#41; You can spot the Feynman point &#40;<code>999999</code>&#41; halfway down on the left &#40;look for the six consecutive sandy brown squares&#41;, or the four purple sevens on the bottom row.</p>
+<p><img src="/assets/images/piday/pi-distinguishable_colors-800.png" alt="image label" /></p>
+<p>I remembered to try to choose the color for the small labels &#40;probably unreadable in the low-resolution PNG you see here&#41; so that they&#39;re either light on dark, or dark on light.</p>
+<pre><code class="language-julia">... r, g, b &#61; color of square
+gamma &#61; 2.2
+luminance &#61; 0.2126 * r^gamma &#43; 0.7152 * g^gamma &#43; 0.0722 * b^gamma
+&#40;luminance &gt; 0.5^gamma&#41; ? sethue&#40;&quot;black&quot;&#41; : sethue&#40;&quot;white&quot;&#41;</code></pre>
+<h3 id="day_8_candy_crush_edition"><a href="#day_8_candy_crush_edition" class="header-anchor">Day 8 Candy crush edition</a></h3>
+<p><img src="/assets/images/piday/candy-crush.png" alt="image label" /></p>
+<p>I must have seen an advert for CandyCrush yesterday, or perhaps all that talk of gamma and LCHab spaces caused a reaction, but this sugar rush of an image was the result. The SVG version looks tasty but is too big for this web page.</p>
+<h3 id="day_9_like_a_circle_in_a_spiral_a_wheel_within_a_wheel"><a href="#day_9_like_a_circle_in_a_spiral_a_wheel_within_a_wheel" class="header-anchor">Day 9 Like a circle in a spiral, a wheel within a wheel</a></h3>
+<p>Arranging the sweets in a spiral looks tidy.</p>
+<p><img src="/assets/images/piday/pi-digits-in-spiral-balls-800.png" alt="image label" /></p>
+<h3 id="day_10_π_into_circumference"><a href="#day_10_π_into_circumference" class="header-anchor">Day 10 π into circumference</a></h3>
+<p>Luxor&#39;s <code>polysample&#40;&#41;</code> function takes a polygon and samples it at regular intervals. This allows the following idea, where each point on a shape &#40;here, the outline of the π character&#41; is slowly moved to a matching location on the circular shape around the outside.</p>
+<p><img src="/assets/images/piday/pi-to-circle-800.png" alt="image label" /></p>
+<p>For a point on the π border <code>p1</code>, and a matching point on the circumference polygon <code>p2</code>, the intermediate point is given by <code>between&#40;p1, p2, n&#41;</code>, where <code>n</code> is between 0 and 1.</p>
+<p>I like the almost 3D effect you get from this.</p>
+<h3 id="day_11_charcoal"><a href="#day_11_charcoal" class="header-anchor">Day 11 Charcoal</a></h3>
+<p>Time for a charcoal sketch:</p>
+<p><img src="/assets/images/piday/pi-charcoal-1-800.png" alt="image label" /></p>
+<p>The crinkly edges of the paper are made by the <code>polysample&#40;&#41;</code> function on a rectangle then applying simplex-<code>noise&#40;&#41;</code>-y nudges to the vertices. The paper is textured with <code>rule&#40;&#41;</code>d lines, and there&#39;s some very low values for <code>setopacity&#40;&#41;</code> smudges. Shifting the Bézier curve handles slightly for each iteration gives a brushy/sketchy feel. &#40;It&#39;s fortunate I can copy and paste some of this code from drawings I&#39;ve made before: I&#39;ve learnt the hard way that it&#39;s better keep things than throw them away...&#41;</p>
+<h3 id="day_12"><a href="#day_12" class="header-anchor">Day 12</a></h3>
+<p>I ran out of time on this one, and there are still some problems with the text spacing. The idea is to have the infinite digits of π spiral into some fiery star with some space-y stuff. Probably not the sort of image I should be attempting at all with simple vector-based 2D graphics tools, but it feels like a challenge. Those wispy trails are the same as yesterday&#39;s brush strokes, but using custom <code>setdash&#40;&#41;</code> dashing patterns.</p>
+<p><img src="/assets/images/piday/pi-cosmic-spiral-800.png" alt="image label" /></p>
+<h3 id="day_13"><a href="#day_13" class="header-anchor">Day 13</a></h3>
+<p>The idea here is to show which digit of π is the current leader, in terms of how many times that digit has appeared already. &#40;Yes, a stupid idea, I know&#33;&#41; Then I couldn&#39;t decide on how many digits to show, so it&#39;s going to be an animated GIF showing the first 1000 digits. At the 200 digit mark poor old &quot;7&quot; is struggling at the back of the field, but the glory days are ahead - after 1000 digits, it&#39;s overtaken 0, 4, and 6.</p>
+<p><img src="/assets/images/piday/200-digits-of-pi-800.png" alt="image label" /></p>
+<p>The animation turned into a video rather than a GIF, because I don&#39;t like the low resolution of GIFs today.</p>
+<p>And now of course I have to add a suitable audio soundtrack. Luckily I&#39;ve recently been playing with George Datseris&#39; <a href="https://github.com/JuliaMusic">MIDI interface for Julia</a>, so it was easy enough to make a musical version of the first 1000 digits of π, where the digits from 0 to 9 choose the appropriate note from a reasonably harmonious scale.</p>
+<pre><code class="language-julia">using MIDI
+
+function savetrack&#40;track, notes&#41;
+    file &#61; MIDIFile&#40;&#41;
+    addnotes&#33;&#40;track, notes&#41;
+    addtrackname&#33;&#40;track, &quot;a track&quot;&#41;
+    push&#33;&#40;file.tracks, track&#41;
+    writeMIDIFile&#40;&quot;/tmp/sound-of-pi.mid&quot;, file&#41;
+end
+
+scales &#61; &#91;46, 48, 51, 53, 55, 57, 58, 60, 62, 65, 67&#93;
+
+function generatetune&#33;&#40;notes&#41;
+    pos &#61; 1
+    dur &#61; 80
+    k &#61; 1
+    manypidigits &#61; pidigits&#40;1000&#41;
+    for i in manypidigits
+        dur &#61; k * 960
+        pos &#43;&#61; k * 960
+        n &#61; scales&#91;i &#43; 1&#93;
+        note &#61; Note&#40;n, 76, pos, dur&#41;
+        push&#33;&#40;notes, note&#41;
+    end
+end
+
+notes &#61; Notes&#40;&#41;
+track &#61; MIDITrack&#40;&#41;
+generatetune&#33;&#40;notes&#41;
+savetrack&#40;track, notes&#41;</code></pre>
+<p><img src="/assets/images/piday/music-credits.png" alt="image label" /></p>
+<p>This &quot;sonification&quot; &#40;or &quot;audification&quot;&#41; is just for fun. For a more convincing critique of these sonifications than I can provide, watch the always entertaining <a href="https://www.youtube.com/watch?v&#61;Ocq3NeudsVk">Tantacrul <span class="inlinesvg"><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="14" viewBox="0 0 20 14">
+<path fill-rule="nonzero" fill="rgb(98.823529%, 0%, 1.960784%)" fill-opacity="1" d="M 20 7 L 19.988281 9.457031 L 19.949219 10.238281 L 19.886719 10.800781 L 19.800781 11.25 L 19.6875 11.628906 L 19.550781 11.957031 L 19.382812 12.246094 L 19.1875 12.496094 L 18.960938 12.722656 L 18.707031 12.917969 L 18.414062 13.09375 L 18.085938 13.246094 L 17.714844 13.378906 L 17.292969 13.492188 L 16.808594 13.589844 L 16.25 13.664062 L 15.589844 13.722656 L 14.761719 13.765625 L 13.613281 13.792969 L 10 13.800781 L 6.386719 13.792969 L 5.238281 13.765625 L 4.410156 13.722656 L 3.75 13.664062 L 3.191406 13.589844 L 2.707031 13.492188 L 2.285156 13.378906 L 1.914062 13.246094 L 1.585938 13.09375 L 1.292969 12.917969 L 1.039062 12.722656 L 0.8125 12.496094 L 0.617188 12.246094 L 0.449219 11.957031 L 0.3125 11.628906 L 0.199219 11.25 L 0.113281 10.800781 L 0.0507812 10.238281 L 0.0117188 9.457031 L 0 7 L 0.0117188 4.542969 L 0.0507812 3.761719 L 0.113281 3.199219 L 0.199219 2.75 L 0.3125 2.371094 L 0.449219 2.042969 L 0.617188 1.753906 L 0.8125 1.503906 L 1.039062 1.277344 L 1.292969 1.082031 L 1.585938 0.90625 L 1.914062 0.753906 L 2.285156 0.621094 L 2.707031 0.507812 L 3.191406 0.410156 L 3.75 0.335938 L 4.410156 0.277344 L 5.238281 0.234375 L 6.386719 0.207031 L 10 0.199219 L 13.613281 0.207031 L 14.761719 0.234375 L 15.589844 0.277344 L 16.25 0.335938 L 16.808594 0.410156 L 17.292969 0.507812 L 17.714844 0.621094 L 18.085938 0.753906 L 18.414062 0.90625 L 18.707031 1.082031 L 18.960938 1.277344 L 19.1875 1.503906 L 19.382812 1.753906 L 19.550781 2.042969 L 19.6875 2.371094 L 19.800781 2.75 L 19.886719 3.199219 L 19.949219 3.761719 L 19.988281 4.542969 Z M 20 7 "/>
+<path fill-rule="nonzero" fill="rgb(100%, 100%, 100%)" fill-opacity="1" d="M 8.5 9.597656 L 8.5 4.402344 L 13 7 Z M 8.5 9.597656 "/>
+</svg>
+</span></a>&#39;s presentation on YouTube.</p>
+<p>And while you&#39;re on YouTube, the π video is on <a href="https://www.youtube.com/channel/UCfd52kTA5JpzOEItSqXLQxg">my YouTube channel</a>, and it&#39;s my entry for YouTube&#39;s Most Boring Video of 2019 competition, but I suspect it won&#39;t do very well—competition in this category is fierce, even if sometimes the contestants are unwilling participants.</p>
+<p>Happy π day&#33;</p>
+<p>&#91;2019-03-13&#93;</p>
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?piday" alt="cormullion signing off" /></div>
+<p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: September 13, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+        <script src="/libs/katex/katex.min.js"></script>
+<script src="/libs/katex/auto-render.min.js"></script>
+<script>renderMathInElement(document.body)</script>
+
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>

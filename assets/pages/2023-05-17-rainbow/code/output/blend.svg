@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800" height="400" viewBox="0 0 800 400">
+<defs>
+<radialGradient id="radial-pattern-0" gradientUnits="userSpaceOnUse" cx="0" cy="0" fx="0" fy="0" r="150" gradientTransform="matrix(1, 0, 0, 1, 400, 200)">
+<stop offset="0.333333" stop-color="rgb(100%, 0%, 0%)" stop-opacity="1"/>
+<stop offset="1" stop-color="rgb(0%, 0%, 100%)" stop-opacity="1"/>
+</radialGradient>
+</defs>
+<rect x="-80" y="-40" width="960" height="480" fill="rgb(0%, 0%, 0%)" fill-opacity="1"/>
+<path fill-rule="nonzero" fill="url(#radial-pattern-0)" d="M 450 200 L 550 200 C 550 282.84375 482.84375 350 400 350 C 317.15625 350 250 282.84375 250 200 C 250 117.15625 317.15625 50 400 50 C 482.84375 50 550 117.15625 550 200 L 450 200 C 450 172.386719 427.613281 150 400 150 C 372.386719 150 350 172.386719 350 200 C 350 227.613281 372.386719 250 400 250 C 427.613281 250 450 227.613281 450 200 Z M 450 200 "/>
+</svg>

@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>paths</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><h1 id="paths"><a href="#paths" class="header-anchor">Paths</a></h1>
+<p>An infrequently asked question from Luxor users is “How can I extract the paths from an SVG file?”. I’ll try to answer it here.</p>
+<h2 id="easy_svg"><a href="#easy_svg" class="header-anchor">Easy SVG</a></h2>
+<p>Luxor.jl lets you add SVG and PNG images to the current drawing. First you load the image with <code>readsvg&#40;&#41;</code>, then you place it with <code>placeimage&#40;&#41;</code>:</p>
+
+<pre><code class="language-julia"># using Luxor, Colors
+# @draw begin
+img &#61; readsvg&#40;&quot;&quot;&quot;&lt;svg
+xmlns&#61;&quot;http://www.w3.org/2000/svg&quot;
+viewBox&#61;&quot;0 0 512 512&quot;&gt;
+&lt;rect width&#61;&quot;512&quot; height&#61;&quot;512&quot; rx&#61;&quot;15&#37;&quot; fill&#61;&quot;#fff&quot;/&gt;
+&lt;circle fill&#61;&quot;#389826&quot; cx&#61;&quot;256&quot; cy&#61;&quot;137&quot; r&#61;&quot;83&quot;/&gt;
+&lt;circle fill&#61;&quot;#cb3c33&quot; cx&#61;&quot;145&quot; cy&#61;&quot;329&quot; r&#61;&quot;83&quot;/&gt;
+&lt;circle fill&#61;&quot;#9558b2&quot; cx&#61;&quot;367&quot; cy&#61;&quot;329&quot; r&#61;&quot;83&quot;/&gt;
+&lt;/svg&gt;
+&quot;&quot;&quot;&#41;
+placeimage&#40;img, centered&#61;true&#41;
+# end</code></pre>
+<img src="/assets/pages/2023-09-22-paths/code/output/image1.svg" alt="">
+<p>Don’t worry - in practice I think it’s more usual to supply the path name of an SVG file on disk, rather than the raw SVG code.</p>
+<p>I found this SVG image on <a href="https://freesvg.org">freesvg.org</a>, a site that has strong “1990s clip-art” vibes. It’s <code>Tribal-Kitten.svg</code>:</p>
+<pre><code class="language-julia">using Luxor, Colors
+img &#61; readsvg&#40;&quot;_assets/images/path/Tribal-Kitten.svg&quot;&#41;
+w, h &#61; img.width, img.height
+Drawing&#40;w, h, joinpath&#40;@OUTPUT, &quot;image2.svg&quot;&#41;&#41;
+origin&#40;&#41; 
+placeimage&#40;img, centered&#61;true&#41;
+finish&#40;&#41;</code></pre>
+<img src="/assets/pages/2023-09-22-paths/code/output/image2.svg" alt="">
+<h2 id="cat_boxes"><a href="#cat_boxes" class="header-anchor">Cat boxes</a></h2>
+<p>While placing SVG images is easy, you can&#39;t do much with them apart from that. You can place them using the current position, scale, and rotation:</p>
+<pre><code class="language-julia">img &#61; readsvg&#40;&quot;_assets/images/path/Tribal-Kitten.svg&quot;&#41;
+w, h &#61; img.width, img.height
+
+tiles &#61; Tiler&#40;w, h, 5, 5&#41;
+for &#40;pos, n&#41; in tiles
+    @layer begin
+        box&#40;tiles, n, :clip&#41;
+        sethue&#40;HSB&#40;rand&#40;0:360&#41;, .4, .8&#41;&#41;
+        paint&#40;&#41;
+        clipreset&#40;&#41;
+        translate&#40;pos&#41;
+        scale&#40;0.1 &#43; rand&#40;&#41;/10&#41;
+        rotate&#40;rand&#40;&#41; * 2pi&#41;
+        placeimage&#40;img, O, centered&#61;true&#41;
+    end 
+end</code></pre>
+<img src="/assets/pages/2023-09-22-paths/code/output/image3.svg" alt="">
+<p>but that&#39;s about it. It’s acting more or less like a PNG image - you can’t change the colors or opacity, and you can’t peek inside to access the coordinates of the paths without cracking open a text editor.</p>
+<p>The SVG import feature in Luxor.jl is provided by the <code>librsvg</code> library, via the <a href="https://github.com/lobingera/Rsvg.jl">Rsvg.jl</a> package. This library is good - it translates the SVG file’s contents from XML and converts these directly into Cairo functions and evaluates them. It’s not perfect. Parsing SVG files with 100&#37; accuracy isn&#39;t <code>librsvg</code>&#39;s  thing - it&#39;s only reasonably accurate. According to <a href="https://razrfalcon.github.io/resvg-test-suite/svg-support-table.html">these results</a> it scores about 70&#37;, somewhere between Safari and Inkscape.</p>
+<p>And, even if the SVG makes it through <code>librsvg</code> intact, you can’t access the coordinate data inside it anyway. Hence the question.</p>
+<p>There is, though, a kind of workround, using some of the less often used features of Luxor.  It might not be perfect, but it might help in some situations. There are a few steps:</p>
+<ul>
+<li><p>convert to an EPS file</p>
+</li>
+<li><p>place the EPS file on the Luxor drawing</p>
+</li>
+<li><p>copy the functions from the REPL/log, or</p>
+</li>
+<li><p>add a Dispatcher to collect the paths</p>
+</li>
+</ul>
+<h2 id="st-eps"><a href="#st-eps" class="header-anchor">St-eps</a></h2>
+<p>First, convert the SVG image to EPS. EPS is &quot;Encapsulated PostScript Format&quot;, an older sibling of the PDF and SVG file specifications, made by Adobe in the 1990s as a slightly constained version of PostScript, and it became the standard way of transporting vector data from program to program. These days it&#39;s been largely superseded by PDF and SVG, but Luxor &#40;thanks to Cairo&#41; can export drawings as EPS files:</p>
+<pre><code class="language-julia">img &#61; readsvg&#40;&quot;_assets/images/path/Tribal-Kitten.svg&quot;&#41;
+@eps placeimage&#40;img, centered&#61;true&#41; w h &quot;_assets/images/path/tribal-kitten.eps&quot;</code></pre>
+<p>The second step is to place this EPS file on a new drawing, using the highly experimental <code>placeeps&#40;&#41;</code> function:</p>
+<pre><code class="language-julia">using Luxor, Colors 
+
+img &#61; readsvg&#40;&quot;_assets/images/path/Tribal-Kitten.svg&quot;&#41; 
+w, h &#61; img.width, img.height 
+@eps placeimage&#40;img, centered&#61;true&#41; w h &quot;_assets/images/path/tribal-kitten.eps&quot;
+Drawing&#40;w, h, joinpath&#40;@OUTPUT, &quot;image4.svg&quot;&#41;&#41; 
+origin&#40;&#41; 
+translate&#40;boxtopleft&#40;&#41;&#41;
+placeeps&#40;&quot;_assets/images/path/tribal-kitten.eps&quot;&#41;
+finish&#40;&#41;</code></pre>
+<img src="/assets/pages/2023-09-22-paths/code/output/image4.svg" alt="">
+<p>This code reads the SVG file, exports it to an EPS file, places the EPS file on a new drawing, then saved the result back into a SVG file. Like a cat chasing its tail...</p>
+<p>But now, use a keyword for <code>placeeps&#40;&#41;</code> - the <code>log</code> keyword. Set this to <code>true</code>, and run the code again:</p>
+<pre><code class="language-julia">placeeps&#40;&quot;_assets/images/path/tribal-kitten.eps&quot;, log &#61; true&#41;</code></pre>
+<p>and some Julia code is sent to the REPL:</p>
+<pre><code class="language-julia"># start EPS import
+gsave&#40;&#41;
+gsave&#40;&#41;
+setgray&#40;1.0&#41;
+# rect&#40;Point&#40;0.0, 0.0&#41;, 1446.0, 1622.0, action&#61;:stroke&#41;
+setgray&#40;0.0&#41;
+move&#40;Point&#40;931.492, 1591.379&#41;&#41;
+curve&#40;Point&#40;835.254, 1519.324&#41;, Point&#40;726.898, 1475.922&#41;, Point&#40;611.664, 1447.504&#41;&#41;
+curve&#40;Point&#40;664.988, 1434.969&#41;, Point&#40;717.906, 1436.594&#41;, Point&#40;770.637, 1449.609&#41;&#41;
+curve&#40;Point&#40;823.273, 1462.602&#41;, Point&#40;871.434, 1485.355&#41;, Point&#40;915.457, 1517.121&#41;&#41;
+...
+grestore&#40;&#41;; clipreset&#40;&#41;
+# end EPS import</code></pre>
+<p>It&#39;s about 700 lines of Luxor code, the functions that draw the various paths in the EPS image. Now you can paste that into your own code and the graphics are ready to re-use.</p>
+<p>Well, this works, but scrolling through the REPL like this might be a bit tedious. You could always divert the output into a file:</p>
+<pre><code class="language-julia">redirect_stdio&#40;stdout &#61; &quot;/tmp/tribal-kitten-image.jl&quot;&#41; do
+    placeeps&#40;&quot;_assets/images/path/tribal-kitten.eps&quot;, log &#61; true&#41;
+end</code></pre>
+<p>and then copy it elsewhere, but that still feels like hard work.</p>
+<h2 id="dispatches"><a href="#dispatches" class="header-anchor">Dispatches</a></h2>
+<p>A solution to this lies in the Luxor Dispatcher feature.</p>
+<p>When you place marks on the drawing &#40;with <code>fill</code>, <code>stroke</code>, and so on&#41;, the drawing functions are sent to the <em>current Dispatcher</em> which in turn calls the default Luxor functions. So, by default, any <code>fill</code> operation calls the Dispatcher, which calls the <code>Luxor.fillpath&#40;&#41;</code> function, which calls the <code>Cairo.fill&#40;&#41;</code> function, which fills the path. </p>
+<p>This indirection is designed so that you can intercept the drawing functions and replace them with your own. You can create your own Dispatcher and your own <code>fill</code> and <code>stroke</code> functions, and these replace the default actions.</p>
+<p>Here’s a simple example that adds a “let’s print the color of each path to the REPL” feature to the <code>fill</code> and <code>stroke</code> operations:</p>
+<pre><code class="language-julia">struct MyDispatcher &lt;: Luxor.LDispatcher end
+
+function Luxor.fillpath&#40;::MyDispatcher&#41;
+    @info &quot;filling with: &quot; getcolor&#40;&#41;
+    return Luxor.fillpath&#40;Luxor.DefaultLuxor&#40;&#41;&#41;
+end
+
+function Luxor.strokepath&#40;::MyDispatcher&#41;
+    @info &quot;stroking with: &quot; getcolor&#40;&#41;
+    return Luxor.strokepath&#40;Luxor.DefaultLuxor&#40;&#41;&#41;
+end
+
+Luxor.DISPATCHER&#91;1&#93; &#61; MyDispatcher&#40;&#41; # there&#39;s only 1</code></pre>
+<p>Now the REPL will be filled with color information whenever you draw any graphics:</p>
+<pre><code class="language-julia">julia-1.9&gt; @draw julialogo&#40;&#41;
+┌ Info: filling with
+└   getcolor&#40;&#41; &#61; RGBA&#123;Float64&#125;&#40;0.0,0.0,0.0,1.0&#41;
+┌ Info: filling with
+└   getcolor&#40;&#41; &#61; RGBA&#123;Float64&#125;&#40;0.251,0.388,0.847,1.0&#41;
+┌ Info: filling with
+└   getcolor&#40;&#41; &#61; RGBA&#123;Float64&#125;&#40;0.22,0.596,0.149,1.0&#41;
+┌ Info: filling with
+└   getcolor&#40;&#41; &#61; RGBA&#123;Float64&#125;&#40;0.584,0.345,0.698,1.0&#41;
+┌ Info: filling 
+└   getcolor&#40;&#41; &#61; RGBA&#123;Float64&#125;&#40;0.796,0.235,0.2,1.0&#41;
+julia-1.9&gt;</code></pre>
+<p>The colors in the Julia logo are ddisplayed in the REPL.</p>
+<p>When you&#39;ve finished, remember to switch back to the default Dispatcher:</p>
+<pre><code class="language-julia">Luxor.DISPATCHER&#91;1&#93; &#61; Luxor.DefaultLuxor&#40;&#41;</code></pre>
+<p>Let&#39;s apply this technique to the kitten SVG:</p>
+<pre><code class="language-julia">using Luxor, Colors
+struct FillDispatcher &lt;: Luxor.LDispatcher end
+
+paths &#61; Path&#91;&#93;
+colors &#61; Colorant&#91;&#93;
+
+function Luxor.fillpath&#40;::FillDispatcher&#41;
+    push&#33;&#40;paths, storepath&#40;&#41;&#41;
+    sethue&#40;HSB&#40;rand&#40;0:360&#41;, 0.8, 0.9&#41;&#41;
+    push&#33;&#40;colors, getcolor&#40;&#41;&#41;
+    return Luxor.fillpath&#40;Luxor.DefaultLuxor&#40;&#41;&#41;
+end
+
+img &#61; readsvg&#40;&quot;_assets/images/path/Tribal-Kitten.svg&quot;&#41; 
+w, h &#61; img.width, img.height 
+Drawing&#40;w, h, joinpath&#40;@OUTPUT, &quot;image5.svg&quot;&#41;&#41; 
+origin&#40;&#41; 
+background&#40;&quot;grey10&quot;&#41;
+translate&#40;boxtopleft&#40;&#41;&#41;
+# switch to the new Dispatcher
+Luxor.DISPATCHER&#91;1&#93; &#61; FillDispatcher&#40;&#41; 
+placeeps&#40;&quot;_assets/images/path/tribal-kitten.eps&quot;&#41;
+# switch back to the default Dispatcher
+Luxor.DISPATCHER&#91;1&#93; &#61; Luxor.DefaultLuxor&#40;&#41;
+finish&#40;&#41;</code></pre>
+<img src="/assets/pages/2023-09-22-paths/code/output/image5.svg" alt="">
+<p>As well as drawing the psychedelic kitten, this code stores each path and color used - each path goes into the <code>paths</code> array, and each color in the <code>colors</code> array. It’s now possible to access the paths and colors again, sequentially or in parallel.</p>
+<p>If we flatten the <code>paths</code> array of multiple paths into a single path, it’s easy to iterate over it. Here’s a simple animation using <code>drawpath&#40;&#41;</code>, using mainly the <code>drawpath&#40;&#41;</code> function:</p>
+<pre><code class="language-julia">function frame&#40;scene, framenumber&#41;
+    translate&#40;boxtopleft&#40;&#41;&#41;
+    eased_n &#61; scene.easingfunction&#40;framenumber, 0, 1, scene.framerange.stop&#41;
+    background&#40;&quot;black&quot;&#41;
+    sethue&#40;&quot;white&quot;&#41;
+    pt &#61; drawpath&#40;allpaths, eased_n, action&#61;:stroke&#41;
+    sethue&#40;&quot;red&quot;&#41;
+    circle&#40;pt, 5, :fill&#41;
+end
+
+function make_the_kitten_move&#40;&#41;
+    amovie &#61; Movie&#40;w, h, &quot;kitten&quot;&#41;
+    animate&#40;amovie,
+        Scene&#40;amovie, frame, 1:120&#41;,
+        framerate&#61;10,
+        creategif&#61;true,
+        pathname&#61;&quot;_assets/images/path/tribal-kitten.gif&quot;&#41;
+end
+
+allpaths &#61; Path&#40;Iterators.flatten&#40;map&#40;i -&gt; i, paths&#41;&#41; |&gt; collect&#41;
+
+make_the_kitten_move&#40;&#41;</code></pre>
+<p><img src="/assets/images/path/tribal-kitten.gif" alt="animated tribal kitten" /></p>
+<p><code>drawpath&#40;&#41;</code> accepts a path and a number between 0 and 1: the start of the path is 0, the end is 1, and a number in between is a fraction of the path. So a value of 0.5 draws the first half of the path. <code>eased_n</code> converts the incoming <code>framenumber</code> into values from 0 to 1. The animation is as smooth as the number of frames required, here 120. In this image, there aren’t any straight lines, it’s all Bézier curves, but both straight lines and Bézier curves are “sampled” as required.</p>
+<p>When it’s just a single path with multiple loops &#40;subpaths&#41;, as here, it’s not possible to change the colors for each loop. It’s “one path - one fill color - one stroke color”. But iterating through the <code>paths</code> and <code>colors</code> arrays is possible:</p>
+<pre><code class="language-julia">function frame&#40;scene, framenumber&#41;
+    translate&#40;boxtopleft&#40;&#41;&#41;
+    eased_n &#61; scene.easingfunction&#40;framenumber, 0, 1, scene.framerange.stop - 5&#41;
+    background&#40;&quot;black&quot;&#41;
+    for &#40;n, path&#41; in enumerate&#40;paths&#41;
+        sethue&#40;colors&#91;n&#93;&#41;
+        pt &#61; drawpath&#40;path, eased_n, action&#61;:stroke&#41;
+        sethue&#40;&quot;red&quot;&#41;
+        circle&#40;pt, 5, :fill&#41;
+    end 
+end
+
+function make_the_kitten_move_again&#40;&#41;
+    amovie &#61; Movie&#40;w, h, &quot;kitten&quot;&#41;
+    animate&#40;amovie,
+        Scene&#40;amovie, frame, 1:60&#41;,
+        framerate&#61;10,
+        creategif&#61;true,
+        pathname&#61;&quot;_assets/images/path/tribal-kitten-1.gif&quot;&#41;
+end
+
+make_the_kitten_move_again&#40;&#41;</code></pre>
+<p><img src="/assets/images/path/tribal-kitten-1.gif" alt="another animated tribal kitten" /></p>
+<p>The kitten is drawn by - and drawn to? - the lights of dozens of laser pointers...</p>
+<h2 id="travel_plans"><a href="#travel_plans" class="header-anchor">Travel plans</a></h2>
+<p>If you use Pluto.jl and “walk along” the single path, using a Slider, you’ll notice that you’ll jump from one subpath to the next, and they’re in no particular order.</p>
+<p><img src="/assets/images/path/pluto-slider.png" alt="pluto slider" /></p>
+<p>This is probably fairly typical of many SVG illustrations, where non-overlapping paths on a single layer can be drawn in any order. </p>
+<p>You could always sort the paths:</p>
+<pre><code class="language-julia">sort&#33;&#40;paths, lt &#61; &#40;p1, p2&#41; -&gt; begin 
+    if first&#40;p1&#41; isa PathMove &amp;&amp; first&#40;p2&#41; isa PathMove
+        d1 &#61; distance&#40;bx, first&#40;p1&#41;.pt1&#41;
+        d2 &#61; distance&#40;bx, first&#40;p2&#41;.pt1&#41;
+        d1 &lt; d2
+        end 
+    end&#41;</code></pre>
+<p>But if controlling the order in which the subpaths are drawn is important to you, you could use something like Evan Field’s excellent <a href="https://github.com/evanfields/TravelingSalesmanHeuristics.jl">TravelingSalesmanHeuristics.jl</a> package. This provides functions that can take a list of points and provide a good solution to the well-known problem of finding an efficient, “low cost”, route that visits every location, like a cat with a routine. You provide a distance matrix <code>dm</code> of points and distances, and then use <code>solve_tsp&#40;dm&#41;</code> to obtain a solution.</p>
+<p>In the result &#40;left&#41; the purple path shows one solution to such a “Traveling Sales Kitten” problem, and this route has shorter jumps between the start locations of each subpath. In the earlier version &#40;right&#41;, the paths are drawn in some random order:</p>
+<div class="imagegridcontainer">
+<div class="imagegridcell" >
+    
+             <a href="/assets/images/path/traveling-saleskitten.gif" target = "_blank"> 
+             <img src="/assets/images/path/traveling-saleskitten.gif" alt="" 
+             />
+             </a>
+             
+
+             </div>
+<div class="imagegridcell" >
+    
+             <a href="/assets/images/path/tribal-kitten.gif" target = "_blank"> 
+             <img src="/assets/images/path/tribal-kitten.gif" alt="" 
+             />
+             </a>
+             
+
+             </div>
+</div>
+
+<p>The use of the <code>fillpath&#40;&#41;</code> instead of <code>strokepath&#40;&#41;</code> makes for an interesting effect.</p>
+<p>We could go further and try to find the shortest route including the paths themselves... But this kitten wants to go to sleep now.</p>
+<pre><code class="language-julia">@svg begin
+    background&#40;0.1, 0.05, 0.3&#41;
+    # starry night
+    @layer begin        
+        setopacity&#40;0.5&#41;
+        sethue&#40;&quot;white&quot;&#41;
+        for i in 1:200
+            star&#40;rand&#40;BoundingBox&#40;&#41;&#41;, rand&#40;1:3&#41;, 5, .7, 0, :fill&#41;
+        end
+    end
+    # sleepy kitten
+    @layer begin
+        translate&#40;boxtopleft&#40;&#41; &#43; &#40;200, 0&#41;&#41;
+        placeeps&#40;&quot;_assets/images/path/sleepingkitten.eps&quot;&#41;
+    end
+    # box    
+    sethue&#40;0.1, 0.1, 0.2&#41;
+    box&#40;Point&#40;-200, 0&#41;, Point&#40;200, 400&#41;, :fill&#41;
+    # julia logo
+    @layer begin
+        translate&#40;0, 200&#41;
+        juliacircles&#40;60&#41;
+    end
+    setopacity&#40;0.7&#41;
+    box&#40;Point&#40;-200, 0&#41;, Point&#40;200, 400&#41;, :fill&#41;
+end 800 700 &quot;_assets/images/path/sleepingkitten.svg&quot;</code></pre>
+<p><img src="/assets/images/path/sleepingkitten.svg" alt="sleepy kitten" /></p>
+<p>&#91;2023-09-22&#93;</p>
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?modern" alt="cormullion signing off" /></div>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: September 27, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>

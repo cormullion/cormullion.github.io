@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800" height="600" viewBox="0 0 800 600">
+<rect x="-80" y="-60" width="960" height="720" fill="rgb(52.941176%, 80.784314%, 92.156863%)" fill-opacity="1"/>
+<path fill="none" stroke-width="10" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(100%, 0%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M 210 300 C 210 195.066406 295.066406 110 400 110 C 504.933594 110 590 195.066406 590 300 "/>
+<path fill="none" stroke-width="10" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(100%, 64.705882%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M 220 300 C 220 200.589844 300.589844 120 400 120 C 499.410156 120 580 200.589844 580 300 "/>
+<path fill="none" stroke-width="10" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(100%, 100%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M 230 300 C 230 206.113281 306.113281 130 400 130 C 493.886719 130 570 206.113281 570 300 "/>
+<path fill="none" stroke-width="10" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 50.196078%, 0%)" stroke-opacity="1" stroke-miterlimit="10" d="M 240 300 C 240 211.632812 311.632812 140 400 140 C 488.367188 140 560 211.632812 560 300 "/>
+<path fill="none" stroke-width="10" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(0%, 0%, 100%)" stroke-opacity="1" stroke-miterlimit="10" d="M 250 300 C 250 217.15625 317.15625 150 400 150 C 482.84375 150 550 217.15625 550 300 "/>
+<path fill="none" stroke-width="10" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(29.411765%, 0%, 50.980392%)" stroke-opacity="1" stroke-miterlimit="10" d="M 260 300 C 260 222.679688 322.679688 160 400 160 C 477.320312 160 540 222.679688 540 300 "/>
+<path fill="none" stroke-width="10" stroke-linecap="butt" stroke-linejoin="miter" stroke="rgb(93.333333%, 50.980392%, 93.333333%)" stroke-opacity="1" stroke-miterlimit="10" d="M 270 300 C 270 228.203125 328.203125 170 400 170 C 471.796875 170 530 228.203125 530 300 "/>
+</svg>

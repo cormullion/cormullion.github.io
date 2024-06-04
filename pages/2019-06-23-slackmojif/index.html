@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/libs/katex/katex.min.css">
+     
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>Slackmojif</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><p><em>Warning: this frivolous post contains many animated GIFs. Don’t load it if you are concerned with bandwidth, or if you don’t want your device to overheat...&#33;</em></p>
+<h1 id="slackmojif"><a href="#slackmojif" class="header-anchor">Slackmojif</a></h1>
+<p><img src="/assets/images/slackmojif/slackanimation.gif" alt="image label" /></p>
+<blockquote>
+<p>If you use the chat app <a href="https://slack.com/">Slack</a> &#40;“where work happens”&#41;, you probably already have opinions about it. Is it: a waste of time, a vital tool, a distraction, an addiction, a flexible way to chat, an overcomplicated IRC alternative, a poorly-implemented CPU hog, “not worth the &#36;17 billion &#40;&#36;28/share&#41; it has reportedly been valued at over the past few months.”, worth way more than that? <sup id="fnref:1"><a href="#fndef:1" class="fnref">[1]</a></sup>, or is it just another application? &#40;Or all the above?&#41;</p>
+</blockquote>
+<p>One aspect of Slack that I like is the system of reactions &#40;adding small static or animated graphics in response to someone’s message&#41;. It’s a nice way of allowing people to contribute to a conversation without actually interrupting it. And over the last couple of years I’ve started adding a few custom reactions to the Julia Slack workspace. They might possibly be useful to others, which is great, but it’s also fun to make them, particularly the animated ones. I’m using <a href="https://github.com/julialang">Julia</a> &#40;and <a href="https://github.com/JuliaGraphics/Luxor.jl">Luxor.jl</a>&#41;, rather than something much easier &#40;AdobeSlackEmojiMakerProfessionalCreativeCloud or whatever&#41;. I like the puzzle-solving aspect of making them.</p>
+<p>These Slack/emoji/animated GIFs &#40;I’ll call them <em>Slackmojifs</em>, which temporarily solves the GIF pronounciation problem&#41; can be tricky to make. They have to be less than 128KB, and fit into a 128 by 128 pixel square. For the purposes of this post, I’m going to liberate a few slackmojifs from their current 128³ prison, and let them roam free over this page at a slighly higher resolution. These free-range versions can enjoy a brief moment in the foreground before scuttling back into the shadows and wasting CPU cycles in the background.</p>
+<h2 id="framed"><a href="#framed" class="header-anchor">Framed</a></h2>
+<p>Animations in Luxor.jl are usually built around the idea of a steadily increasing <em>frame number</em>. You write a function that specifies the graphics for frame number <code>n</code>, with <code>n</code> going from, say, 1 to 250, and saves them in a PNG file. Your system’s <code>ffmpeg</code> binary converts the PNGs to an animated GIF lasting in this case about 8 seconds, at the default frame rate of 30 per second. Here, the three Julia circles &#40;a function for which is built in to Luxor.jl&#41; are drawn with a radius specified by the incoming frame number.</p>
+<pre><code class="language-julia">using Luxor
+
+function frame&#40;scene, framenumber&#41;
+    background&#40;&quot;white&quot;&#41;
+    juliacircles&#40;framenumber&#41;
+    sethue&#40;&quot;black&quot;&#41;
+    fontsize&#40;50&#41;
+    text&#40;string&#40;framenumber&#41;, halign&#61;:center&#41;
+end
+
+simpleanimation &#61; Movie&#40;400, 400, &quot;animation&quot;&#41;
+
+animate&#40;simpleanimation, &#91;
+        Scene&#40;simpleanimation, frame&#41;
+    &#93;,
+    creategif&#61;true,
+    pathname&#61;&quot;../images/slackmojif/simple.gif&quot;&#41;</code></pre>
+<p><img src="/assets/images/slackmojif/simple.gif" alt="image label" /></p>
+<p>Each frame produced by <code>frame&#40;&#41;</code> will be a complete stand-alone PNG file, so you’ll have to do your drawing set-up &#40;eg backgrounds, font selections, scaling, color choices, and so on&#41; for each frame. If you have a lot of calculation and set-up to do for every frame, it’s definitely worth trying to do it all at once, and storing &#40;cacheing/memoizing&#41; it for easy and repeated access. Then, for frame 79, say, you just draw the graphics for the 79th image.</p>
+<h2 id="spot_the_difference"><a href="#spot_the_difference" class="header-anchor">Spot the difference</a></h2>
+<p>This approach is great for things like drawing the solutions generated by <a href="https://github.com/JuliaDiffEq/DifferentialEquations.jl">Differential Equations</a> solvers. Say you’ve set up your problem in the usual way:</p>
+<pre><code class="language-julia">using DifferentialEquations
+function f&#40;du, u, p, t&#41;
+  du&#91;1&#93; &#61; u&#91;2&#93;
+  du&#91;2&#93; &#61; -p
+end
+
+function condition&#40;u, t, integrator&#41;
+  u&#91;1&#93;
+end
+
+function affect&#33;&#40;integrator&#41;
+  integrator.u&#91;2&#93; &#61; -integrator.u&#91;2&#93;
+  integrator.u&#91;2&#93; *&#61; 0.86
+end
+cb        &#61; ContinuousCallback&#40;condition, affect&#33;&#41;
+tspan     &#61; &#40;0.0, 40.0&#41;
+p         &#61; 9.8
+u0        &#61; &#91;100.0, -6&#93;
+prob      &#61; ODEProblem&#40;f, u0, tspan, p&#41;
+ball_sol  &#61; solve&#40;prob, Tsit5&#40;&#41;, callback&#61;cb&#41;</code></pre>
+<p>Now <code>ball_sol</code> is the solution to the ODE problem, and it contains all the information you want &#40;it can provide samples, interpolate between steps, and so on&#41;. You can now extract the values for a moment in time and draw the result.</p>
+<p>In computer graphics, <code>y</code> values start at 0 at the top of the page, and positive values increase downwards, so you’ll have to flip the sign of y coordinates if you don’t want balls bouncing on the ceiling.&#41; Here’s a simple example:</p>
+<pre><code class="language-julia">using Luxor
+demomovie &#61; Movie&#40;400, 400, &quot;bouncing ball&quot;&#41;
+function frame&#40;scene::Scene, framenumber&#41;
+    ballradius &#61; scene.movie.width/8
+    ground &#61; scene.movie.height/2 * 0.95
+    height &#61; scene.movie.height/2
+    i &#61; rescale&#40;framenumber, 1,
+                scene.framerange.stop,
+                tspan&#91;1&#93;, tspan&#91;end&#93;&#41;
+    yval &#61; clamp&#40;ball_sol&#40;i&#41;&#91;1&#93;, 0.0, height&#41;
+    ypos &#61; rescale&#40;yval, 0, height/2,
+                   ground - ballradius, -height/2&#41;
+    xpos &#61; rescale&#40;framenumber, 1,
+                   scene.framerange.stop,
+                  -scene.movie.width/2 &#43; 100,
+                   scene.movie.width/2 - 100&#41;
+    sethue&#40;&quot;orange&quot;&#41;
+    circle&#40;Point&#40;xpos, ypos&#41;, ballradius, :fill&#41;
+    sethue&#40;&quot;black&quot;&#41;
+    setline&#40;5&#41;
+    rule&#40;Point&#40;0, ground&#41;&#41;
+end
+
+animate&#40;demomovie, &#91;
+    Scene&#40;demomovie, &#40;s, f&#41; -&gt; background&#40;&quot;white&quot;&#41;, 1:100&#41;,
+    Scene&#40;demomovie, frame, 1:100&#41;&#93;,
+    creategif&#61;true,
+    pathname&#61;&quot;simple-bouncing-ball.gif&quot;&#41;</code></pre>
+<p><img src="/assets/images/slackmojif/simple-bouncing-ball.gif" alt="image label" /></p>
+<p>Some animations will require information from more than a single instant. For example, to show the trace made by a chaotic double pendulum, you’ll want to access the generated data not just for each current instant, but for all the previous instants too. So each frame-generating function will do something like this:</p>
+<pre><code class="language-julia">function frame&#40;scene, framenumber&#41;
+    ...
+    for previousframe in 1:framenumber
+        # draw just the location
+        drawpositionofpendulum&#40;previousframe&#41;
+    end
+    # finally, draw the pendulum at its current position
+    ...</code></pre>
+<p><img src="/assets/images/slackmojif/pendulums.gif" alt="image label" /></p>
+<p>This can also be used to emulate the effect of the phosphor persistence on old cathode ray tube displays... It’s funny how much computer time these days is spent on reproducing analogue effects.</p>
+<p><img src="/assets/images/slackmojif/radar-animation.gif" alt="image label" /></p>
+<h2 id="is_this_normal"><a href="#is_this_normal" class="header-anchor">Is this normal?</a></h2>
+<p>It’s often useful or necessary to normalize &#40;rescale to between 0 and 1&#41; the incoming frame number. A simple way to do this is:</p>
+<pre><code class="language-julia">nfn &#61; rescale&#40;framenumber,
+              scene.framerange.start, scene.framerange.stop&#41;</code></pre>
+<p>which rescales<sup id="fnref:2"><a href="#fndef:2" class="fnref">[2]</a></sup> the frame number so as to return 0.0 at the start of the scene, and 1.0 at the end. If you want a continuous animation with a circular motion, for example, normalize the frame numbers to run between 0 and 2π.</p>
+<pre><code class="language-julia">function frame&#40;scene, framenumber&#41;
+    background&#40;&quot;white&quot;&#41;
+    nfn &#61; rescale&#40;framenumber, scene.framerange.start, scene.framerange.stop&#41;
+    rotate&#40;nfn * 2π&#41;
+    juliacircles&#40;100&#41;
+end
+
+mymovie &#61; Movie&#40;400, 400, &quot;mymovie&quot;&#41;
+animate&#40;mymovie, &#91;Scene&#40;mymovie, frame, 1:60&#41;&#93;,
+    creategif&#61;true,
+    pathname&#61;&quot;juliaspinner.gif&quot;&#41;</code></pre>
+<p><img src="/assets/images/slackmojif/juliaspinner.gif" alt="image label" /></p>
+<p>And you can produce a back and forth rocking motion if you use <code>sin&#40;nfn * 2π&#41;</code>:</p>
+<pre><code class="language-julia">function frame&#40;scene, framenumber&#41;
+    background&#40;&quot;white&quot;&#41;
+    nfn &#61; rescale&#40;framenumber,
+                  scene.framerange.start, scene.framerange.stop&#41;
+    rotate&#40;sin&#40;nfn * 2π&#41;&#41;
+    juliacircles&#40;100&#41;
+end
+
+mymovie &#61; Movie&#40;400, 400, &quot;mymovie&quot;&#41;
+animate&#40;mymovie, &#91;Scene&#40;mymovie, frame, 1:60&#41;&#93;,
+    creategif&#61;true,
+    pathname&#61;&quot;juliarocker.gif&quot;&#41;</code></pre>
+<p><img src="/assets/images/slackmojif/juliarocker.gif" alt="image label" /></p>
+<p>Simple linear motion is also easy if you use the frame number. The answer when anyone asks how to do interactive graphics in Julia is - &#91;drum roll please&#93;:</p>
+<p><img src="/assets/images/slackmojif/makie.gif" alt="image label" /></p>
+<h2 id="easy_does_it"><a href="#easy_does_it" class="header-anchor">Easy does it</a></h2>
+<p>Another reason for using normalized frame numbers is that you can apply <em>easing functions</em>. These modify the values to make more natural-looking movements, with gentler accelerations and decelerations, without having to calculate the physics involved. There are many ways to get from 0.0 to 1.0, and only one of them is the shortest. Most easing functions take a while to move away from 0.0, compared to the plain linear one, but they soon speed through, before they start slowing down in time to stop at 1.0.</p>
+<p>You can get an eased value for the current frame number by accessing the scene’s easing function, which by default is <code>easingflat&#40;&#41;</code>.</p>
+<pre><code class="language-julia">...
+    enfn &#61; scene.easingfunction&#40;&#40;framenumber - scene.framerange.start&#41;,
+              0, 1, &#40;scene.framerange.stop - scene.framerange.start&#41;&#41;
+    rotate&#40;enfn * 2π&#41;
+    juliacircles&#40;100&#41;
+    ...</code></pre>
+<p>Remember to pass a suitable easing function when you run the <code>animate&#40;&#41;</code> function.:</p>
+<pre><code class="language-julia">animate&#40;mymovie, &#91;Scene&#40;mymovie, frame, 1:60,
+          easingfunction&#61;easeinoutexpo&#41;&#93;,
+    creategif&#61;true,
+    pathname&#61;&quot;juliaeasing.gif&quot;&#41;</code></pre>
+<p>For more “exciting” accelerations, you can work your way up through <code>easeinoutcirc</code>, <code>easeinoutsine</code>, <code>easeinoutquad</code>, <code>easeinoutcubic</code>, <code>easeinoutquart</code>, <code>easeinoutquint</code>, to <code>easeinoutexpo</code>.</p>
+<p>In this comparison, the linear <code>easingflat</code> starts well, but is quickly overhauled by the quadratic and quintic easing functions, and the exponential is, for a brief moment, faster than all of them.</p>
+<p><img src="/assets/images/slackmojif/juliacomposite.gif" alt="image label" /></p>
+<p>Each animation takes the same time, but speeds up and slows down differently as it travels from the beginning to the end.</p>
+<p>You can also do Bézier easing, using a Bézier curve to control the flow from 0.0 to 1.0. The steepness of the curve determines the speed of the transition.</p>
+<p><img src="/assets/images/slackmojif/juliabezierrocker.gif" alt="image label" /></p>
+<p>Here the rotation accelerations follow this Bézier curve:</p>
+<p><img src="/assets/images/slackmojif/plot-bezier.svg" alt="image label" /></p>
+<p>defined by the points <code>&#91;O, Point&#40;0.01, .99&#41;, Point&#40;0.99, -1.5&#41;, Point&#40;1.0, 1.0&#41;&#93;</code>. It’s fascinating to tangle with the way the human brain perceives motion.</p>
+<h2 id="passing_information"><a href="#passing_information" class="header-anchor">Passing information</a></h2>
+<p>It’s often useful to be able to pass information around from function to function, and there are a couple of ways of doing this. In this simple pool &#40;what we used to call “snooker” or “billiards”&#41; animation, the array of three balls can be defined in a main function and passed to the animation functions.</p>
+<p><img src="/assets/images/slackmojif/julia-billiard-pool.gif" alt="image label" /></p>
+<p>It would be nice to run the animation for longer, but &#40;as a slackmojif&#41; it quickly reaches the 128KB limit.</p>
+<p>Both ways are shown in the next fragment. The <code>initial&#40;&#41;</code> function takes an additional argument. The <code>update&#40;&#41;</code> function receives the array in a keyword argument <code>optarg</code>, which is accessed via <code>scene.opts</code>.</p>
+<pre><code class="language-julia">...  make an array of balls, then:
+
+animate&#40;juliaballmovie, &#91;
+    Scene&#40;juliaballmovie, backdrop,                       1:200&#41;,
+    Scene&#40;juliaballmovie, &#40;s, f&#41; -&gt; initial&#40;s, f, balls&#41;, 1:15&#41;,
+    Scene&#40;juliaballmovie, update, optarg&#61;balls,          15:200&#41;,
+    &#93;, creategif&#61;true, pathname&#61;&quot;juliapool.gif&quot;&#41;</code></pre>
+<p>The <code>update&#40;&#41;</code> function starts like this:</p>
+<pre><code class="language-julia">function update&#40;scene, framenumber&#41;
+     balls &#61; scene.opts
+     ...</code></pre>
+<p>&#40;The rest of the code for this animation is simply some basic collision checking &#40;is a ball’s x coordinate greater than the right hand side of the box, etc.&#41;, and of little interest... :&#41;</p>
+<p>Sometimes, if the task is very simple, it&#39;s just easier to define everything in a single <code>main&#40;&#41;</code> function. This version of Life uses the <a href="https://github.com/JuliaDSP/DSP.jl">DSP.jl</a> package for its <code>conv2&#40;&#41;</code> function.</p>
+<pre><code class="language-julia">using Luxor, DSP
+function nextgeneration&#33;&#40;LifeWorld, m&#41;
+    convLifeWorld &#61; conv2&#40;LifeWorld, m&#41;
+    lives2 &#61; convLifeWorld .&#61;&#61; 2
+    lives3 &#61; convLifeWorld .&#61;&#61; 3
+    twoneighbours   &#61;     LifeWorld  .&amp; lives2&#91;2:end-1, 2:end-1&#93;
+    threeneighbours &#61;     LifeWorld  .&amp; lives3&#91;2:end-1, 2:end-1&#93;
+    newlife         &#61;  .~&#40;LifeWorld&#41; .&amp; lives3&#91;2:end-1, 2:end-1&#93;
+    LifeWorld&#91;:&#93;    &#61; twoneighbours .| threeneighbours .| newlife
+end
+
+function generation&#40;LifeWorld, n&#61;1&#41;
+    matrix &#61; &#91;1 1 1; 1 0 1; 1 1 1&#93;
+    for i in 1:n
+        nextgeneration&#33;&#40;LifeWorld, matrix&#41;
+    end
+end
+
+function draw&#40;width, height, LifeWorld&#41;
+    g &#61; Tiler&#40;width, height, size&#40;LifeWorld&#41;&#91;1:2&#93;..., margin&#61;10&#41;
+    w &#61; g.tilewidth/2.0
+    h &#61; g.tileheight/2.0
+    for &#40;pos, n&#41; in g
+        LifeWorld&#91;n&#93; &#61;&#61; 1 &amp;&amp; begin
+            setcolor&quot;yellow&quot;
+            circle&#40;pos, w, :fill&#41;
+        end
+    end
+end
+
+function main&#40;&#41;
+    lifemovie &#61; Movie&#40;400, 400, &quot;lifemovie&quot;&#41;
+    LifeWorld &#61; rand&#40;0:1, 50, 50&#41;
+    function frame&#40;scene, framenumber&#41;
+        background&#40;&quot;seagreen&quot;&#41;
+        generation&#40;LifeWorld&#41;
+        draw&#40;400, 400, LifeWorld&#41;
+    end
+    animate&#40;lifemovie, &#91;
+            Scene&#40;lifemovie, frame, 1:200&#41;
+            &#93;,
+        creategif&#61;true,
+        pathname&#61;&quot;/tmp/luxor-life.gif&quot;&#41;
+end
+
+main&#40;&#41;</code></pre>
+<p><img src="/assets/images/slackmojif/luxor-life.gif" alt="image label" /></p>
+<h2 id="using_and_abusing_frame_numbers"><a href="#using_and_abusing_frame_numbers" class="header-anchor">Using and abusing frame numbers</a></h2>
+<p>The frame number in this little homage to Julia’s supercool broadcasting facilities is used for a couple of things.</p>
+<p>First, a 2π-normalized version drives the rotation of the whatever-it-is at the top of the mast. Second, the waves are drawn by circles whose radius is controlled by a multiple of the frame number &#40;and they fade out as they get larger&#41;:</p>
+<pre><code class="language-julia">sethue&#40;&quot;orange&quot;&#41;
+setline&#40;10&#41;
+k &#61; 6
+for i in 1:k
+    setopacity&#40;0.75 - i/k&#41;
+    circle&#40;c, i * framenumber, :stroke&#41;
+end</code></pre>
+<p><img src="/assets/images/slackmojif/broadcast.gif" alt="image label" /></p>
+<h2 id="go_for_a_loop"><a href="#go_for_a_loop" class="header-anchor">Go for a loop</a></h2>
+<p>GIF animations usually repeat in an infinite loop. It makes sense, I suppose, because if they played once only and then stopped, you’d often miss them. Perhaps web browsers are smart enough to animate GIFs only when they’re visible &#40;like a light inside a fridge, it’s hard to check&#41;. Animations look better when you can’t spot where the last frame stops and the first frame starts. To make an animation look seamless, all you have to do is make the first frame follow logically from the last frame.</p>
+<p>This is not always easy to do. But sometimes you don’t need to worry about it.</p>
+<p>The eclipse GIF &#40;made in anticipation of the Great Solar Eclipse of 2017, and useful very occasionally for other things&#41; isn’t continuous: the horizontal translation of the three circles jumps from &#43;600 at the end to -600 at the beginning, but they’re off the screen so the start and the end frames are <em>visually</em> identical.</p>
+<p><img src="/assets/images/slackmojif/julia-eclipse.gif" alt="image label" /></p>
+<p>It’s trickier when you want to have something seamless. This GIF looks like continuous snow falling. Can you spot where the last frame jumps to the first?</p>
+<p><img src="/assets/images/slackmojif/snow-animation.gif" alt="snowfall" /></p>
+<p>You can’t really spot it, but there are three copies of each snowflake, and you see only one at a time. Here’s a version which shows what’s happening more clearly with just four snowflakes:</p>
+<p><img src="/assets/images/slackmojif/simpler-snow-animation.gif" alt="simpler snowfall" /></p>
+<p>and, as with the eclipse, you don’t notice the change between the last and first frames, because it happens off-stage, “in the wings”.</p>
+<h2 id="low_framerates"><a href="#low_framerates" class="header-anchor">Low framerates</a></h2>
+<p>The default framerate of animations in Luxor.jl is 30 frames per second. I don’t know why it’s that high; the framerate for movies is typically 24, and for TV it’s 25 or almost 30. &#40;YouTuber <a href="https://youtu.be/DyqjTZHRdRs">Captain Disillusion <span class="inlinesvg"><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="14" viewBox="0 0 20 14">
+<path fill-rule="nonzero" fill="rgb(98.823529%, 0%, 1.960784%)" fill-opacity="1" d="M 20 7 L 19.988281 9.457031 L 19.949219 10.238281 L 19.886719 10.800781 L 19.800781 11.25 L 19.6875 11.628906 L 19.550781 11.957031 L 19.382812 12.246094 L 19.1875 12.496094 L 18.960938 12.722656 L 18.707031 12.917969 L 18.414062 13.09375 L 18.085938 13.246094 L 17.714844 13.378906 L 17.292969 13.492188 L 16.808594 13.589844 L 16.25 13.664062 L 15.589844 13.722656 L 14.761719 13.765625 L 13.613281 13.792969 L 10 13.800781 L 6.386719 13.792969 L 5.238281 13.765625 L 4.410156 13.722656 L 3.75 13.664062 L 3.191406 13.589844 L 2.707031 13.492188 L 2.285156 13.378906 L 1.914062 13.246094 L 1.585938 13.09375 L 1.292969 12.917969 L 1.039062 12.722656 L 0.8125 12.496094 L 0.617188 12.246094 L 0.449219 11.957031 L 0.3125 11.628906 L 0.199219 11.25 L 0.113281 10.800781 L 0.0507812 10.238281 L 0.0117188 9.457031 L 0 7 L 0.0117188 4.542969 L 0.0507812 3.761719 L 0.113281 3.199219 L 0.199219 2.75 L 0.3125 2.371094 L 0.449219 2.042969 L 0.617188 1.753906 L 0.8125 1.503906 L 1.039062 1.277344 L 1.292969 1.082031 L 1.585938 0.90625 L 1.914062 0.753906 L 2.285156 0.621094 L 2.707031 0.507812 L 3.191406 0.410156 L 3.75 0.335938 L 4.410156 0.277344 L 5.238281 0.234375 L 6.386719 0.207031 L 10 0.199219 L 13.613281 0.207031 L 14.761719 0.234375 L 15.589844 0.277344 L 16.25 0.335938 L 16.808594 0.410156 L 17.292969 0.507812 L 17.714844 0.621094 L 18.085938 0.753906 L 18.414062 0.90625 L 18.707031 1.082031 L 18.960938 1.277344 L 19.1875 1.503906 L 19.382812 1.753906 L 19.550781 2.042969 L 19.6875 2.371094 L 19.800781 2.75 L 19.886719 3.199219 L 19.949219 3.761719 L 19.988281 4.542969 Z M 20 7 "/>
+<path fill-rule="nonzero" fill="rgb(100%, 100%, 100%)" fill-opacity="1" d="M 8.5 9.597656 L 8.5 4.402344 L 13 7 Z M 8.5 9.597656 "/>
+</svg>
+</span></a> explains it well.&#41;</p>
+<p>I can’t tell which of the following three animations is which.</p>
+<pre><code class="language-julia">function framespinner&#40;scene, framenumber&#41;
+    background&#40;&quot;white&quot;&#41;
+    nfn &#61; rescale&#40;framenumber, scene.framerange.start,
+                  scene.framerange.stop&#41;
+    rotate&#40;sin&#40;nfn * 2π&#41;&#41;
+    juliacircles&#40;50&#41;
+end
+
+animation &#61; Movie&#40;200, 200, &quot;animation&quot;&#41;
+
+for framerate in &#91;24, 28, 30&#93;
+    animate&#40;animation, &#91;Scene&#40;animation,
+                 framespinner, 1:2framerate&#41;&#93;,
+        framerate&#61;framerate,
+        creategif&#61;true, pathname&#61;&quot;/tmp/juliaspinner-&#36;framerate.gif&quot;&#41;
+end</code></pre>
+<p><img src="/assets/images/slackmojif/juliaspinner-24.gif" alt="24 fps" /> <img src="/assets/images/slackmojif/juliaspinner-28.gif" alt="28 fps" /> <img src="/assets/images/slackmojif/juliaspinner-30.gif" alt="30 fps" /></p>
+<p>Of course, your computer may be sampling the GIFs at different rates, trying to maintain an approximate correspondence between the display’s refresh rate &#40;typically 50 or 60 times a second&#41; and the GIF rate. Or your browser may be trying to be clever. Or perhaps it’s time for a new computer?</p>
+<p>You don’t always need high framerates, though. Sometimes an animation works well with low framerates, even down to just one per second. The Julia bikeshed comes in 30 different colors, one every second.</p>
+<p><img src="/assets/images/slackmojif/juliabikeshed.gif" alt="bikeshed" /></p>
+<h2 id="less_is_less"><a href="#less_is_less" class="header-anchor">Less is less</a></h2>
+<p>Sometimes you want high framerates, or at least smooth motion, but don’t need many frames. This Illuminati animation has 16 frames, and the yellow lines rotate through just π/8 radians. So although the movement looks circular and continuous, it’s just restarting after half a second and a small rotation.</p>
+<p><img src="/assets/images/slackmojif/julia-illuminati-animation.gif" alt="image label" /></p>
+<p>&#40;After seeing this little GIF animation, the Illuminati &#40;UK&#41; reached out and commissioned a more discreet version, with less conspicuous colors, “in order to communicate our core brand values and strategic vision more clearly - in black and white - to investors”. I agreed, as long as I could retain some of the Julia iconography<sup id="fnref:3"><a href="#fndef:3" class="fnref">[3]</a></sup>.&#41;</p>
+<p>When Julia maestro Valentin Churavy announced debugging tool <a href="https://github.com/JuliaDebug/Cthulhu.jl">Cthulhu.jl</a> I suddenly felt a strange compulsion to render some graphical offering:</p>
+<blockquote>
+<p>This thing, which seemed instinct with a fearsome and unnatural malignancy, was of a somewhat bloated corpulence, and squatted evilly on a rectangular block or pedestal covered with undecipherable characters.  &#40;The Call of Cthulhu, H. P. Lovecraft, 1928&#41;</p>
+</blockquote>
+<p>&#40;Harsh words for the output of <code>@code_warntype</code>?&#41;. There are only 10 frames, with some sine and cosine functions generating slimy oscillations, and the Julia logo was pressed into service to provide some blinking eyeballs. It’s a dozen frames.</p>
+<p><img src="/assets/images/slackmojif/cthulhu.gif" alt="image label" /></p>
+<p>Rhythmic pulsing or blinking is easy enough to do. I was tempted to record my own heart rate and blinking patterns, but it was quicker to define a simple function:</p>
+<pre><code class="language-julia">function eyeblink&#40;n;
+        start&#61;0.45,
+        finish&#61;0.55&#41;
+    if start &lt; n &lt; finish
+        return 1 - sin&#40;rescale&#40;n, start, finish, 0, π&#41;&#41;
+    else
+        return 1
+    end
+end</code></pre>
+<p><img src="/assets/images/slackmojif/plot.svg" alt="image label" /></p>
+<p><img src="/assets/images/slackmojif/blinking.gif" alt="image label" /></p>
+<p>This function can also be used to generate a heartbeat. Not a realistic one, but alive enough for its purpose.</p>
+<p><img src="/assets/images/slackmojif/juliaheartpulse.gif" alt="image label" /></p>
+<h2 id="multiple_scenes"><a href="#multiple_scenes" class="header-anchor">Multiple scenes</a></h2>
+<p>There’s a feature that lets you build an animation from a number of separate scenes. This is occasionally useful. For example, in the following animation of the DifferentialEquations logo &#40;a nice design by Paweł Biernat&#41;, there are multiple overlapping scenes. A filled version fades in at frame 100, as the route-following &#40;done using <code>polyportion&#40;&#41;</code> is finishing.</p>
+<pre><code class="language-julia">animate&#40;demomovie, &#91;
+    Scene&#40;demomovie, backdrop,    1:140&#41;,
+    Scene&#40;demomovie, animatepoly, 1:120,
+           easingfunction &#61; easeinoutsine&#41;,
+    Scene&#40;demomovie, fillpoly,  100:120&#41;,
+    Scene&#40;demomovie, endscene,  121:140&#41;,
+    ...</code></pre>
+<p><img src="/assets/images/slackmojif/diffeq-darklogo.gif" alt="image label" /></p>
+<p>It’s an easy way to have a restful finishing scene, before the looping animation restarts. A pause on the last image helps to make the point better.</p>
+<pre><code class="language-julia">function framemove&#40;scene, framenumber&#41;
+    delta &#61; rescale&#40;framenumber, 0, scene.framerange.stop, 0, 120&#41;
+    background&#40;&quot;white&quot;&#41;
+    fontsize&#40;80&#41;
+    fontface&#40;&quot;ChunkFive&quot;&#41;
+    sethue&#40;&quot;black&quot;&#41;
+    text&#40;&quot;1&quot;, Point&#40;0, delta - 100&#41;, halign&#61;:center, valign&#61;:middle&#41;
+    text&#40;&quot;&#91;  &#93;&quot;, halign&#61;:center, valign&#61;:middle&#41;
+    sethue&#40;&quot;grey50&quot;&#41;
+    text&#40;&quot;0&quot;, Point&#40;0, delta&#41;, halign&#61;:center, valign&#61;:middle&#41;
+    if framenumber &gt; 4
+       fontsize&#40;60&#41;
+       setopacity&#40;0.6&#41;
+       sethue&#40;&quot;red&quot;&#41;
+       text&#40;&quot;X&quot;, Point&#40;0, delta&#41;, halign&#61;:center, valign&#61;:middle&#41;
+    end
+end
+
+function framestop&#40;scene, framenumber&#41;
+    background&#40;&quot;white&quot;&#41;
+    fontsize&#40;80&#41;
+    fontface&#40;&quot;ChunkFive&quot;&#41;
+    sethue&#40;&quot;black&quot;&#41;
+    text&#40;&quot;&#91;  &#93;&quot;, halign&#61;:center, valign&#61;:middle&#41;
+    text&#40;&quot;1&quot;,    halign&#61;:center, valign&#61;:middle&#41;
+end
+
+julia_one_index &#61; Movie&#40;128, 128, &quot;julia_one_index&quot;&#41;
+
+animate&#40;julia_one_index, &#91;
+    Scene&#40;julia_one_index, framemove, 0:30&#41;,
+    Scene&#40;julia_one_index, framestop, 25:60&#41;
+    &#93;, creategif&#61;true, framerate&#61;20,
+    pathname&#61;&quot;/tmp/julia-one-index-animation-1.gif&quot;&#41;</code></pre>
+<p><img src="/assets/images/slackmojif/julia-one-index-animation-1.gif" alt="image label" /></p>
+<h2 id="random_acts_of_whatever"><a href="#random_acts_of_whatever" class="header-anchor">Random acts of whatever</a></h2>
+<p>Sometimes you want to use random numbers. If your frame-generating function calls <code>rand&#40;&#41;</code>, though, you’ll get different random numbers in each frame. This might not be what you want. What you probably want is to have the same random numbers used for each frame. Do this by calling <code>Random.seed&#33;&#40;n&#41;</code> with the same <code>n</code> each frame.</p>
+<pre><code class="language-julia">using Luxor, Random
+
+function frame&#40;scene, framenumber&#41;
+    background&#40;&quot;white&quot;&#41;
+    Random.seed&#33;&#40;42&#41;</code></pre>
+<p>I can’t remember what encouraged me to make this next animation. I think there was a period of a few weeks leading up to the release of Julia version 0.7 when useful packages broke seemingly every day. Each paint splodge &#40;or is it blood?&#41; generated for a frame has to be reproduced again on all subsequent frames. You could store them, of course. But it was easier to use seeded random numbers.</p>
+<p><img src="/assets/images/slackmojif/julia-bleeding-edge.gif" alt="image label" /></p>
+<h2 id="diversion_a_png_in_the_net"><a href="#diversion_a_png_in_the_net" class="header-anchor">Diversion: A_PNG in the net</a></h2>
+<p>The animated GIF format is a grizzled veteran of the internet. There are many younger and more able formats for animated images that would do a better job. Most are faster, smaller, better in other ways, etc. But trying to dethrone the reigning champion is proving difficult. Apple and Google probably want you to use video formats. Google, this week at least, also want you to use WebM &#40;or WebP&#41;, until they announce something new. Adobe would probably prefer you to use SVG, or Flash, or something. But there is an obvious competing format that is at first glance better than animated GIFs: the Animated PNG.</p>
+<p>Most browsers support Animated PNGs. Here’s one, and if it moves, yours does too:</p>
+<p><img src="/assets/images/slackmojif/apngb-animated.png" alt="image label" /></p>
+<pre><code class="language-julia">using Luxor
+
+function frame&#40;scene, framenumber&#41;
+    enfn &#61; scene.easingfunction&#40;&#40;framenumber - scene.framerange.start&#41;,
+    0, 1, &#40;scene.framerange.stop - scene.framerange.start&#41;&#41;
+    shape &#61; ngon&#40;O, scene.movie.height/4, 5, -π/10, vertices&#61;true&#41;
+    path &#61; bezierpathtopoly&#40;makebezierpath&#40;shape,
+             smoothing&#61;-1.5&#41;, steps&#61;40&#41;
+    paths &#61; &#91;polyportion&#40;path, mod1&#40;enfn &#43; k, 1.0&#41;&#41;&#91;end&#93;
+            for k in 0:.25:0.8&#93;
+    cols &#61; &#91;Luxor.julia_red, Luxor.julia_green,
+            Luxor.julia_purple,  Luxor.julia_blue&#93;
+    for &#40;k, p&#41; in enumerate&#40;paths&#41;
+        sethue&#40;cols&#91;k&#93;&#41;
+        circle&#40;p, 15, :fill&#41;
+    end
+end
+
+animated_png_test &#61; Movie&#40;200, 200, &quot;animated_png&quot;&#41;
+
+tempdirectory &#61; &quot;/tmp/&quot;
+
+animate&#40;animated_png_test, &#91;
+        Scene&#40;animated_png_test, frame, 0:80&#41;
+    &#93;, creategif&#61;true, framerate&#61;30,
+    tempdirectory&#61;tempdirectory,
+    pathname&#61;&quot;/tmp/julia-animated-png-test.gif&quot;&#41;
+
+run&#40;&#96;ffmpeg -r 30 -f image2 -i &#36;&#40;tempdirectory&#41;/&#37;10d.png -y /tmp/animated-png.apng&#96;&#41;</code></pre>
+<p>Animated PNGs &#40;APNGs&#41; are better quality than animated GIFs because GIFs are restricted to 256 indexed colors, and they don’t do transparency very well. APNGs aren’t always bigger than equivalent GIFs, and have generally better color handling, although this better color handling can sometimes lead to bigger file sizes.</p>
+<p>The example code above produces both a GIF and an APNG and I think it requires a relatively recent version of the behemoth that is <code>ffmpeg</code>. Also, it doesn’t produce a continuously looping APNG, and you’ll have to preview it in a browser that supports APNGs because - at least on macOS - they don’t animate when viewed in the Finder.</p>
+<p>If you want more control over the looping and compression of the APNG, use the tools listed <a href="http://apngasm.sourceforge.net">here</a>. I used a macOS app from <a href="https://github.com/shgodoroja/APNGb">here</a>.</p>
+<p>All this is a bit moot, though, because on Slack, you’ll find that animated PNGs are supported on desktop clients but <em>not</em> on mobile clients. &#40;Compare this with Dark Mode, which is available on mobile clients but <em>not</em> desktop clients...&#41; So APNGs are not yet ready to loosen GIF’s stranglehold in the world of Slack.</p>
+<h2 id="diversion_dark_mode"><a href="#diversion_dark_mode" class="header-anchor">Diversion: Dark mode</a></h2>
+<p>Talking of Dark Mode, it’s a good idea to consider that an animated GIF will be displayed on either a white or a dark background. With the increasing popularity of Dark Mode, you shouldn’t assume &#40;as I mistakenly have for ages&#41; that your white backgrounds will blend seamlessly into a white page. You should, ideally, create your GIFs with a transparent background, and design them so that they can appear on either a white or dark background with no problems. Unfortunately this isn’t easy. Transparent animated GIF backgrounds have proved elusive on the few occasions I’ve tried to make them. Compare the GIF with the APNG made with the same code:</p>
+<p><img src="/assets/images/slackmojif/julia-animated-png-test.gif" alt="image label" /></p>
+<p>The problem appears to be low quality anti-aliasing. So far, this is the best quality transparent-background GIF I’ve been able to obtain from <code>ffmpeg</code>.</p>
+<h2 id="image_theres_no_heaven"><a href="#image_theres_no_heaven" class="header-anchor">Image there’s no heaven</a></h2>
+<p>Occasionally small images can be a welcome addition to a slackmojif. With the 128³ restrictions, though, the image has to be reasonably iconic to be useful at low resolutions.</p>
+<p>For example, this image of 2001’s HAL-9000 computer &#40;primitive machine learning in action&#41; just about worked with the Julia colors.</p>
+<p><img src="/assets/images/slackmojif/hal-animation.gif" alt="image label" /></p>
+<p>The translucent color blends are drawn over the top of the image. &#40;Would the use of Slack have helped avoid the problems on the 2001 ship Discovery One? Probably not, but HAL could have at least added Dark Mode and support for APNGs.&#41;</p>
+<h2 id="people_powered"><a href="#people_powered" class="header-anchor">People powered</a></h2>
+<p>A Slack workspace is all about the people. Your Slack colleagues are often represented by unique small images &#40;avatars&#41; and these are an irresistible source for reactions and slackmojifs. I occasionally like to add simple animations of people’s avatars by way of saying “thank you” visually for their help and encouragement. Acknowledging the helpful contributions of others seems to be a legitimate justification for these...</p>
+<p>One welcome sight in any Slack channel is the appearance of the Viking-themed avatar of Stefan Karpinski, co-creator of Julia, which always heralds a vital or useful contribution to the discussion, for which every Julia user old and new is grateful. Stefan hasn’t <em>yet</em> complained about me using his exceptionally iconic avatar...</p>
+<p>I was disappointed that I failed to make this “Stefan Multitasking” animation small enough to fit into a Slack cell.</p>
+<p><img src="/assets/images/slackmojif/kaleidoscope.gif" alt="image label" /></p>
+<p>Chris Rackauckas named this riff on the Sierpinski Triangle the Skarpinski TriHeart, and it just made it into the 128KB &amp; Below club.</p>
+<p><img src="/assets/images/slackmojif/skarpinski-triheart-animation.gif" alt="image label" /></p>
+<p>The last two animations in this post &#40;yes, the end is in sight&#33;&#41; split an image into pixels, and each pixel is represented by an instance of a Julia type that has position and velocity. Some rudimentary physics &#40;where is a physicist when you need one?&#41; moves the pixels around in a pseudo-Newtonian way. The pixels don’t interact with each other, of course.</p>
+<p>And this does look as if Thanos from Marvel’s Infinity War has snapped his fingers. This animation was made in 2017, so this may well be where Thanos got the idea from.</p>
+<p><img src="/assets/images/slackmojif/dissolvinghead.mp4" alt="dissolving head mp4 version to save space" /></p>
+<p>Fortunately for all of us, the compiler quickly restores the original.</p>
+<p><img src="/assets/images/slackmojif/unexplodinghead.gif" alt="undissolving head" /></p>
+<h2 id="get_slacking"><a href="#get_slacking" class="header-anchor">Get Slacking</a></h2>
+<p>Feel free to copy or re-use anything you see here. And if you want something else made, ask me, I might be able to help. Sometimes inspiration from new directions is very welcome&#33;</p>
+<p>The Slack logo animation at the top of this post was made with this code:</p>
+<pre><code class="language-julia">using Luxor, Colors</code></pre>
+<pre><code class="language-julia">function frame&#40;scene, framenumber&#41;
+    background&#40;&quot;white&quot;&#41;
+    nfn_2π &#61; 2π * rescale&#40;framenumber,
+                  scene.framerange.start, scene.framerange.stop&#41;
+    w &#61; 40; Δw &#61; 8
+    setline&#40;w&#41;
+    setlinecap&#40;&quot;round&quot;&#41;
+    col&#61;&#91;Lab&#40;76, 14, 70&#41;,  Lab&#40;49, 72, 19&#41;,
+    Lab&#40;74, -28, -32&#41;, Lab&#40;66, -48, 19&#41;, Lab&#40;50, -33, 85&#41;&#93;
+    for &#40;n, θ&#41; in enumerate&#40;range&#40;0, step&#61;2π/4, length&#61;4&#41;&#41;
+        t &#61; Table&#40;2, 2, 2w &#43; Δw, w &#43; Δw, Point&#40;w &#43; Δw, w &#43; Δw&#41;&#41;
+        @layer begin
+             rotate&#40;θ &#43; nfn_2π&#41;
+             translate&#40;30 &#43; 20sin&#40;nfn_2π&#41;, 0&#41;
+             setcolor&#40;col&#91;mod1&#40;n, end&#41;&#93;&#41;
+             line&#40;sin&#40;nfn_2π&#41; * t&#91;1&#93;, sin&#40;nfn_2π&#41; * t&#91;2&#93;, :stroke&#41;
+             circle&#40;t&#91;3&#93;, w/2, :fill&#41;
+             rect&#40;t&#91;3&#93; - &#40;w/2, w/2&#41;, w/2, w/2, :fill&#41;
+        end
+    end
+end
+
+slackanimation &#61; Movie&#40;400, 400, &quot;slackanimation&quot;&#41;
+animate&#40;slackanimation, &#91;
+    Scene&#40;slackanimation, frame, 1:60&#41;,
+    &#93;,
+    creategif&#61;true,
+    pathname&#61;&quot;/tmp/slackanimation.gif&quot;&#41;</code></pre>
+<h2 id="footnotes"><a href="#footnotes" class="header-anchor">Footnotes</a></h2>
+<p><table class="fndef" id="fndef:1">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:1">[1]</a></td>
+        <td class="fndef-content">“not worth the &#36;17 billion” <a href="https://www.forbes.com/sites/greatspeculations/2019/06/07/how-much-should-investors-pay-for-slack-work/#3310fbf64264">Forbes.com</a>,  written on June 7, 2019 two weeks before the actual launch of Slack. Later, on June 22, Forbes reports: “On its first day of trading, Slack shares opened at &#36;38.50, 48&#37; higher than its expected price, giving it a market cap of about &#36;20 billion.”</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:2">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:2">[2]</a></td>
+        <td class="fndef-content"><code>rescale&#40;&#41;</code> is a simple <a href="https://en.wikipedia.org/wiki/Linear_interpolation#Programming_language_support">lerp function</a>, but I find it so useful I added it to Luxor.jl. It’s a simple one-line definition, but I got tired of typing it all the time. I once tried to add it to base Julia, but it was considered to be better defined in a separate package.</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:3">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:3">[3]</a></td>
+        <td class="fndef-content"><a href="https://shop.spreadshirt.com/julialang">You can spend money on Illuminati.jl-themed swag here</a>. A small portion of each sale goes to NumFocus and thereby helps the future development of Julia.</td>
+    </tr>
+</table>
+ &#91;2019-06-23&#93;</p>
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?slackmojif" alt="cormullion signing off" /></div>
+<p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: June 04, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+        <script src="/libs/katex/katex.min.js"></script>
+<script src="/libs/katex/auto-render.min.js"></script>
+<script>renderMathInElement(document.body)</script>
+
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>

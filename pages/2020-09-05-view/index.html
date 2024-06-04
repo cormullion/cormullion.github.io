@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>View</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><h1 id="view"><a href="#view" class="header-anchor">View</a></h1>
+<p>MIT are running a <a href="https://mitmath.github.io/18S191/Fall20/">new introductory course on Computational Thinking</a>:</p>
+<blockquote>
+<p>We use the Julia programming language to approach real-world problems in varied areas applying data analysis and computational and mathematical modeling. In this class you will learn computer science, software, algorithms, applications, and mathematics as an integrated whole.1</p>
+</blockquote>
+<p>Teachers include Alan Edelman &#40;co-creator of Julia&#41;, well-known Julia educator David Sanders, Grant Sanderson, and James Schloss.</p>
+<p>And Grant Sanderson turns out to be the voice behind the famous <a href="https://www.youtube.com/c/3blue1brown">3blue1brown <span class="inlinesvg"><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="14" viewBox="0 0 20 14">
+<path fill-rule="nonzero" fill="rgb(98.823529%, 0%, 1.960784%)" fill-opacity="1" d="M 20 7 L 19.988281 9.457031 L 19.949219 10.238281 L 19.886719 10.800781 L 19.800781 11.25 L 19.6875 11.628906 L 19.550781 11.957031 L 19.382812 12.246094 L 19.1875 12.496094 L 18.960938 12.722656 L 18.707031 12.917969 L 18.414062 13.09375 L 18.085938 13.246094 L 17.714844 13.378906 L 17.292969 13.492188 L 16.808594 13.589844 L 16.25 13.664062 L 15.589844 13.722656 L 14.761719 13.765625 L 13.613281 13.792969 L 10 13.800781 L 6.386719 13.792969 L 5.238281 13.765625 L 4.410156 13.722656 L 3.75 13.664062 L 3.191406 13.589844 L 2.707031 13.492188 L 2.285156 13.378906 L 1.914062 13.246094 L 1.585938 13.09375 L 1.292969 12.917969 L 1.039062 12.722656 L 0.8125 12.496094 L 0.617188 12.246094 L 0.449219 11.957031 L 0.3125 11.628906 L 0.199219 11.25 L 0.113281 10.800781 L 0.0507812 10.238281 L 0.0117188 9.457031 L 0 7 L 0.0117188 4.542969 L 0.0507812 3.761719 L 0.113281 3.199219 L 0.199219 2.75 L 0.3125 2.371094 L 0.449219 2.042969 L 0.617188 1.753906 L 0.8125 1.503906 L 1.039062 1.277344 L 1.292969 1.082031 L 1.585938 0.90625 L 1.914062 0.753906 L 2.285156 0.621094 L 2.707031 0.507812 L 3.191406 0.410156 L 3.75 0.335938 L 4.410156 0.277344 L 5.238281 0.234375 L 6.386719 0.207031 L 10 0.199219 L 13.613281 0.207031 L 14.761719 0.234375 L 15.589844 0.277344 L 16.25 0.335938 L 16.808594 0.410156 L 17.292969 0.507812 L 17.714844 0.621094 L 18.085938 0.753906 L 18.414062 0.90625 L 18.707031 1.082031 L 18.960938 1.277344 L 19.1875 1.503906 L 19.382812 1.753906 L 19.550781 2.042969 L 19.6875 2.371094 L 19.800781 2.75 L 19.886719 3.199219 L 19.949219 3.761719 L 19.988281 4.542969 Z M 20 7 "/>
+<path fill-rule="nonzero" fill="rgb(100%, 100%, 100%)" fill-opacity="1" d="M 8.5 9.597656 L 8.5 4.402344 L 13 7 Z M 8.5 9.597656 "/>
+</svg>
+</span></a> YouTube channel, with over three million subscribers. As you might imagine, I’m very keen on the visual approach he uses. I don’t always understand the maths, but the graphics are cool, and his relaxed and friendly tone makes learning as easy as it could be.</p>
+<p>While browsing his <a href="https://www.3blue1brown.com/">web site</a> I was intrigued by his logo, and the story behind it.</p>
+<p>Out of interest, and as a sort of “Welcome to Julia&#33;”, I thought I’d have a go at interpreting his logo in Julia. It’s a great design. After sampling the colors, the code was straightforward.</p>
+<pre><code class="language-julia">using Luxor, Colors
+
+function drawstars&#40;colors&#41;
+    sethue&#40;colors&#91;1&#93;&#41;
+    circle&#40;O, 200, :fill&#41;
+    sethue&#40;&quot;white&quot;&#41;
+    radii &#61; &#91;180, 200, 150&#93;
+    rotations &#61; &#91;π/28, 0, 0&#93;
+    for &#40;n, r&#41; in enumerate&#40;radii&#41;
+        sethue&#40;colors&#91;n &#43; 1&#93;&#41;
+        star&#40;O, r, 28, 0.7, rotations&#91;n&#93;, :fill&#41;
+    end
+    sethue&#40;&quot;black&quot;&#41;
+    star&#40;O, 120, 28, 0.7, 0, :fill&#41;
+end
+
+blues &#61;  &#91;
+    RGB&#40;0.455,0.753,0.89&#41;, # main
+    RGB&#40;0.322,0.557,0.639&#41;,
+    RGB&#40;0.243,0.396,0.463&#41;,
+    RGB&#40;0.133,0.298,0.357&#41;&#93;
+browns &#61; &#91;
+    RGB&#40;0.549,0.384,0.224&#41;, # main
+    RGB&#40;0.459,0.298,0.141&#41;,
+    RGB&#40;0.376,0.22,0.075&#41;,
+    RGB&#40;0.259,0.129,0.043&#41;&#93;
+
+@draw begin
+    background&#40;&quot;black&quot;&#41;
+
+    sector&#40;O, 100, 200, π, 3π/2&#41;
+    clip&#40;&#41;
+    drawstars&#40;browns&#41;
+    clipreset&#40;&#41;
+
+    sector&#40;O, 100, 200, 3π/2, π&#41;
+    clip&#40;&#41;
+    drawstars&#40;blues&#41;
+    clipreset&#40;&#41;
+end</code></pre>
+<p>giving</p>
+<p><img src="/assets/images/view/3b1b.png" alt="3b1b logo" /></p>
+<p>which is a reasonable likeness for a first attempt.</p>
+<h2 id="new_horizons"><a href="#new_horizons" class="header-anchor">New horizons</a></h2>
+<p>The MIT course is using <a href="https://github.com/fonsp/Pluto.jl">Pluto.jl</a> for exploring ideas. I like Pluto.jl a lot as well, because I share the developers’ belief that simplicity is worth striving for:</p>
+<blockquote>
+<p>We believe that scientific computing can be a lot simpler and more accessible.</p>
+</blockquote>
+<p>With Pluto.jl you can quickly explore the parameter space even of simple little logos like this. Here for example is a way to investigate different numbers of points for the stars:</p>
+<p><img src="/assets/images/view/plutoeye.gif" alt="pluto parameter" /></p>
+<p>&#91;2020-09-05&#93;</p>
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?view" alt="cormullion signing off" /></div>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: September 13, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>

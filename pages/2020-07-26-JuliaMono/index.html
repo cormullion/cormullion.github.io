@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/libs/katex/katex.min.css">
+     
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>JuliaMono</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><p><em>This page first appeared as a website to accompany the first release of JuliaMono, and it’s now been incorporated here as a blog post. But it&#39;s no longer up to date; see <a href="https://juliamono.netlify.com">this site</a></em></p>
+<h1 id="juliamono_-_a_monospaced_font_for_scientific_and_technical_computing"><a href="#juliamono_-_a_monospaced_font_for_scientific_and_technical_computing" class="header-anchor">JuliaMono - a monospaced font for scientific and technical computing</a></h1>
+<p>JuliaMono is a monospaced typeface designed for use in text editing environments that require a wide range of specialist and technical Unicode characters. It was intended as a fun experiment to be presented at the 2020 JuliaCon conference in Lisbon, Portugal &#40;which of course didn’t physically happen in Lisbon, but online&#41;.</p>
+
+<img src="/assets/images/juliamono/specimen_1.png" alt="a splash screen">
+
+<p>JuliaMono is:</p>
+<ul>
+<li><p>free</p>
+</li>
+<li><p>distributed with a liberal licence <sup id="fnref:licence"><a href="#fndef:licence" class="fnref">[1]</a></sup></p>
+</li>
+<li><p>suitable for scientific and technical programming as well as for general purpose hacking</p>
+</li>
+<li><p>full of Unicode goodness</p>
+</li>
+<li><p>easy to use, simple, unquirky, friendly, and approachable</p>
+</li>
+<li><p>available for MacOS, Unix, and Windows <sup id="fnref:windows"><a href="#fndef:windows" class="fnref">[2]</a></sup></p>
+</li>
+</ul>
+
+<img src="/assets/images/juliamono/specimen_2.png" alt="a specimen">
+
+<p>To download and install JuliaMono, see the instructions <a href="#download_and_install">here</a>.</p>
+<div class="jm_p"><p>The original temporary website used JuliaMono everywhere, so let&#39;s try to make the rest of this page do the same.</p>
+<div class="jm_h1"><h1 id="contents"><a href="#contents" class="header-anchor">Contents</a></h1></div>
+<div class="jm_franklin-toc"><div class="franklin-toc"><ol><li><a href="#juliamono_-_a_monospaced_font_for_scientific_and_technical_computing">JuliaMono - a monospaced font for scientific and technical computing</a></li><li><a href="#contents">Contents</a></li><li><a href="#screenshots">Screenshots</a></li><li><a href="#examples">Examples</a></li><li><a href="#languages">Languages</a></li><li><a href="#unicode_coverage">Unicode coverage</a></li><li><a href="#contextual_and_stylistic_alternates_and_ligatures">Contextual and stylistic alternates &#40;and ‘ligatures’&#41;</a><ol><li><a href="#if_you_really_dont_like_any_ligatures">If you really don&#39;t like any ligatures</a></li></ol></li><li><a href="#private_use_areas_puas">Private Use Areas &#40;PUAs&#41;</a></li><li><a href="#accessing_pua_characters_in_the_julia_repl">Accessing PUA characters in the Julia REPL</a></li><li><a href="#download_and_install">Download and install</a><ol><li><a href="#download">Download</a></li><li><a href="#installation">Installation</a><ol><li><a href="#mac">Mac</a><ol><li><a href="#homebrew">Homebrew</a></li></ol></li></ol></li><li><a href="#windows">Windows</a></li><li><a href="#linux_-_using_font_manager">Linux - using Font Manager</a></li><li><a href="#linux_-_on_the_command_line">Linux - on the command line</a></li></ol></li><li><a href="#frequently_asked_questions">Frequently asked questions</a><ol><li><a href="#why">‘Why⁉’</a></li><li><a href="#is_it_just_for_julia_coding_how_does_it_work_well_with_julia">‘Is it just for Julia coding? How does it “work well with” Julia?’</a></li><li><a href="#where_can_i_see_it_in_action">‘Where can I see it in action?’</a></li><li><a href="#i_dont_like_it_as_much_as_myfavouritefont">‘I don’t like it as much as &#36;&#40;myfavouritefont&#41;’</a></li><li><a href="#how_can_i_use_the_web_fonts_for_my_blog">‘How can I use the web fonts for my blog?’</a></li><li><a href="#how_do_i_control_features_in_css_in_atomjuno_or_vs_code">‘How do I control features in CSS, in Atom/Juno, or VS Code?’</a><ol><li><a href="#vs-code">VS-Code</a></li></ol></li><li><a href="#atomjuno">Atom/Juno</a></li><li><a href="#can_i_use_this_font_in_a_notebook_and_how_do_i_do_it">‘Can I use this font in a notebook? And how do I do it?’</a></li><li><a href="#how_do_i_use_the_font_for_plotting_such_as_in_plotsjl">‘How do I use the font for plotting, such as in Plots.jl?’</a></li><li><a href="#can_i_use_it_in_a_latex_document">‘Can I use it in a \( \LaTeX \) document?’</a></li><li><a href="#there_are_problems_with_rendering_and_alignment">‘There are problems with rendering and alignment’</a></li><li><a href="#arent_these_font_files_too_big">‘Aren’t these font files too big?’</a></li><li><a href="#how_is_this_different_from_any_other_unicode_font">‘How is this different from any other Unicode font?’</a></li><li><a href="#is_it_a_package_was_it_written_in_julia_how_will_this_contribute_to_the_ecosystem_of_julia_language">‘Is it a package? Was it written in Julia? How will this contribute to the ecosystem of Julia language?’</a></li><li><a href="#is_it_finished">‘Is it finished?’</a></li><li><a href="#why_dont_these_accentsmarks_work_properly">‘Why don’t these accents/marks work properly?’</a></li><li><a href="#does_it_work_on_macos">‘Does it work on macOS?’</a></li><li><a href="#does_it_work_on_linux">‘Does it work on Linux?’</a></li><li><a href="#does_it_work_on_windows">‘Does it work on Windows?’</a></li><li><a href="#any_love_for_nerdfonts">‘Any love for nerdfonts?’</a></li><li><a href="#but_i_prefer_the_glyphs_in_this_other_font">‘But I prefer the glyphs in this other font?’</a></li><li><a href="#what_about_italics_how_about_juliasans">‘What about italics? How about JuliaSans?’</a></li><li><a href="#is_this_page_finished_yet">‘Is this page finished yet?’</a></li></ol></li><li><a href="#footnotes">Footnotes</a></li><li><a href="#thanks">Thanks&#33;</a></li></ol></div></div>
+<div class="jm_h1"><h1 id="screenshots"><a href="#screenshots" class="header-anchor">Screenshots</a></h1></div>
+<p>Editing code in <a href="https://github.com/JunoLab/Juno.jl">Juno</a>.</p>
+
+<img src="/assets/images/juliamono/juno-example.png" alt="screenshot of Juno editor">
+
+<p>And in <a href="https://www.julia-vscode.org">VS Code</a>.</p>
+
+<img src="/assets/images/juliamono/vscode-example.png" alt="screenshot of VS code editor">
+
+<p>And in <a href="https://www.vim.org">Vim</a>:</p>
+
+<img src="/assets/images/juliamono/vim-example.png" alt="screenshot of VIM editor">
+
+<p>And in <a href="https://www.gnu.org/software/emacs/">Emacs</a>:</p>
+
+<img src="/assets/images/juliamono/emacs-example.png" alt="screenshot of emacs editor">
+
+<div class="jm_h1"><h1 id="examples"><a href="#examples" class="header-anchor">Examples</a></h1></div>
+<pre><code class="language-julia">using Zygote: @adjoint
+function ignore&#40;f&#41;
+  try return f&#40;&#41;
+        catch e; return 0; end
+end
+@adjoint function ignore&#40;f&#41;
+  try Zygote._pullback&#40;__context__, f&#41;
+  catch e
+    0, ȳ -&gt; nothing
+  end
+end</code></pre>
+<p>There are different weights of JuliaMono, so you can control the amount of contrast you have in your highlighted code, including: <span style="font-family: JuliaMono-Light;">JuliaMono-Light</span>, JuliaMono-Regular, <span style="font-family: JuliaMono-Medium;">JuliaMono-Medium</span>, <span style="font-family: JuliaMono-Bold;">JuliaMono-Bold</span>, <span style="font-family: JuliaMono-ExtraBold;">JuliaMono-ExtraBold</span>, and <span style="font-family: JuliaMono-Black;">JuliaMono-Black</span>. <sup id="fnref:masters"><a href="#fndef:masters" class="fnref">[3]</a></sup></p>
+<p>&#40;There are also versions of two of the fonts with “Latin” in the name: these are stripped down versions supporting just the basic MacRoman/Windows1252 “Latin” character sets, intended for use as place-holders, which are of interest only if you want to have more control over font loading times in web browser-based applications.&#41;</p>
+<p>In the hands of a virtuoso &#40;such as Dr Zygmunt Szpak, the author of the following Julia code fragment<sup id="fnref:zscode"><a href="#fndef:zscode" class="fnref">[4]</a></sup>&#41;, the range of available Unicode characters can be quite expressive:</p>
+<pre><code class="language-julia">function T&#40;𝛉::AbstractArray,
+           𝒞::Tuple&#123;AbstractArray,
+           Vararg&#123;AbstractArray&#125;&#125;,
+           𝒟::Tuple&#123;AbstractArray, Vararg&#123;AbstractArray&#125;&#125;&#41;
+    ⊗ &#61; kron
+    l &#61; length&#40;𝛉&#41;
+    𝐈ₗ &#61; SMatrix&#123;l,l&#125;&#40;1.0I&#41;
+    𝐈ₘ &#61; SMatrix&#123;1,1&#125;&#40;1.0I&#41;
+    𝐓 &#61; @SMatrix zeros&#40;l,l&#41;
+    N &#61; length&#40;𝒟&#91;1&#93;&#41;
+    ℳ, ℳʹ &#61; 𝒟
+    Λ₁, Λ₂ &#61; 𝒞
+    𝚲ₙ &#61; @MMatrix zeros&#40;4,4&#41;
+    𝐞₁ &#61; @SMatrix &#91;1.0; 0.0; 0.0&#93;
+    𝐞₂ &#61; @SMatrix &#91;0.0; 1.0; 0.0&#93;
+    for n &#61; 1:N
+        index &#61; SVector&#40;1,2&#41;
+        𝚲ₙ&#91;1:2,1:2&#93; .&#61;  Λ₁&#91;n&#93;&#91;index,index&#93;
+        𝚲ₙ&#91;3:4,3:4&#93; .&#61;  Λ₂&#91;n&#93;&#91;index,index&#93;
+        𝐦    &#61; hom&#40;ℳ&#91;n&#93;&#41;
+        𝐦ʹ   &#61; hom&#40;ℳʹ&#91;n&#93;&#41;
+        𝐔ₙ   &#61; &#40;𝐦 ⊗ 𝐦ʹ&#41;
+        ∂ₓ𝐮ₙ &#61; &#91;&#40;𝐞₁ ⊗ 𝐦ʹ&#41; &#40;𝐞₂ ⊗ 𝐦ʹ&#41; &#40;𝐦 ⊗ 𝐞₁&#41; &#40;𝐦 ⊗ 𝐞₂&#41;&#93;
+        𝐁ₙ   &#61; ∂ₓ𝐮ₙ * 𝚲ₙ * ∂ₓ𝐮ₙ&#39;
+        𝚺ₙ   &#61; 𝛉&#39; * 𝐁ₙ * 𝛉
+        𝚺ₙ⁻¹ &#61; inv&#40;𝚺ₙ&#41;
+        𝐓₁   &#61; @SMatrix zeros&#40;Float64,l,l&#41;
+        for k &#61; 1:l
+            𝐞ₖ &#61; 𝐈ₗ&#91;:,k&#93;
+            ∂𝐞ₖ𝚺ₙ &#61; &#40;𝐈ₘ ⊗ 𝐞ₖ&#39;&#41; * 𝐁ₙ * &#40;𝐈ₘ ⊗ 𝛉&#41; &#43; &#40;𝐈ₘ ⊗ 𝛉&#39;&#41; * 𝐁ₙ * &#40;𝐈ₘ ⊗ 𝐞ₖ&#41;
+            # Accumulating the result in 𝐓₁ allocates memory,
+            # even though the two terms in the
+            # summation are both SArrays.
+            𝐓₁ &#61; 𝐓₁ &#43; 𝐔ₙ * 𝚺ₙ⁻¹ * &#40;∂𝐞ₖ𝚺ₙ&#41; * 𝚺ₙ⁻¹ * 𝐔ₙ&#39; * 𝛉 * 𝐞ₖ&#39;
+        end
+        𝐓 &#61; 𝐓 &#43; 𝐓₁
+    end
+    𝐓
+end</code></pre>
+<div class="jm_h1"><h1 id="languages"><a href="#languages" class="header-anchor">Languages</a></h1></div>
+<p>Here are some samples of various languages<sup id="fnref:languages"><a href="#fndef:languages" class="fnref">[5]</a></sup> :</p>
+
+<table class="jm_language">
+	<tr>
+		<td>Ancient Greek</td>
+		<td>Ἄδμηθ’, ὁρᾷς γὰρ τἀμὰ πράγμαθ’ ὡς ἔχει, λέξαι θέλω σοι πρὶν θανεῖν ἃ βούλομαι.</td>
+	</tr>
+	<tr>
+		<td>Bulgarian</td>
+		<td>Я, пазачът Вальо уж бди, а скришом хапва кюфтенца зад щайгите.</td>
+	</tr>
+	<tr>
+		<td>Catalan</td>
+		<td>«Dóna amor que seràs feliç!». Això, il·lús company geniüt, ja és un lluït rètol blavís d’onze kWh.</td>
+	</tr>
+	<tr>
+		<td>Czech</td>
+		<td>Zvlášť zákeřný učeň s ďolíčky běží podél zóny úlů</td>
+	</tr>
+	<tr>
+		<td>Danish</td>
+		<td>Quizdeltagerne spiste jordbær med fløde, mens cirkusklovnen Walther spillede på xylofon.</td>
+	</tr>
+	<tr>
+		<td>English</td>
+		<td>Sphinx of black quartz, judge my vow.</td>
+	</tr>
+	<tr>
+		<td>Estonian</td>
+		<td>Põdur Zagrebi tšellomängija-följetonist Ciqo külmetas kehvas garaažis</td>
+	</tr>
+	<tr>
+		<td>Finnish</td>
+		<td>Charles Darwin jammaili Åken hevixylofonilla Qatarin yöpub Zeligissä.</td>
+	</tr>
+	<tr>
+		<td>French</td>
+		<td>Voix ambiguë d’un cœur qui au zéphyr préfère les jattes de kiwi.</td>
+	</tr>
+	<tr>
+		<td>Georgian</td>
+		<td>სწრაფი ყავისფერი მელა ახტება ზარმაც ძაღლს.</td>
+	</tr>
+	<tr>
+		<td>German</td>
+		<td>Victor jagt zwölf Boxkämpfer quer über den großen Sylter Deich.</td>
+	</tr>
+	<tr>
+		<td>Greek</td>
+		<td>Ταχίστη αλώπηξ βαφής ψημένη γη, δρασκελίζει υπέρ νωθρού κυνός.</td>
+	</tr>
+	<tr>
+		<td>Guarani</td>
+		<td>Hĩlandiagua kuñanguéra oho peteĩ saʼyju ypaʼũme Gavõme omboʼe hag̃ua ingyleñeʼẽ mitãnguérare neʼẽndyʼỹ.</td>
+	</tr>
+	<tr>
+		<td>Hungarian</td>
+		<td>Jó foxim és don Quijote húszwattos lámpánál ülve egy pár bűvös cipőt készít.</td>
+	</tr>
+	<tr>
+		<td>IPA</td>
+		<td>[ɢʷɯʔ.nas.doːŋ.kʰlja] [ŋan.ȵʑi̯wo.ɕi̯uĕn.ɣwa]</td>
+	</tr>
+	<tr>
+		<td>Icelandic</td>
+		<td>Kæmi ný öxi hér, ykist þjófum nú bæði víl og ádrepa.</td>
+	</tr>
+	<tr>
+		<td>Irish</td>
+		<td>Ċuaiġ bé ṁórṡáċ le dlúṫspád fíorḟinn trí hata mo ḋea-ṗorcáin ḃig.</td>
+	</tr>
+	<tr>
+		<td>Latvian</td>
+		<td>Muļķa hipiji mēģina brīvi nogaršot celofāna žņaudzējčūsku.</td>
+	</tr>
+	<tr>
+		<td>Lithuanian</td>
+		<td>Įlinkdama fechtuotojo špaga sublykčiojusi pragręžė apvalų arbūzą.</td>
+	</tr>
+	<tr>
+		<td>Macedonian</td>
+		<td>Ѕидарски пејзаж: шугав билмез со чудење џвака ќофте и кељ на туѓ цех.</td>
+	</tr>
+	<tr>
+		<td>Norwegian</td>
+		<td>Jeg begynte å fortære en sandwich mens jeg kjørte taxi på vei til quiz</td>
+	</tr>
+	<tr>
+		<td>Polish</td>
+		<td>Pchnąć w tę łódź jeża lub ośm skrzyń fig.</td>
+	</tr>
+	<tr>
+		<td>Portuguese</td>
+		<td>Luís argüia à Júlia que «brações, fé, chá, óxido, pôr, zângão» eram palavras do português.</td>
+	</tr>
+	<tr>
+		<td>Romanian</td>
+		<td>Înjurând pițigăiat, zoofobul comandă vexat whisky și tequila.</td>
+	</tr>
+	<tr>
+		<td>Russian</td>
+		<td>Широкая электрификация южных губерний даст мощный толчок подъёму сельского хозяйства.</td>
+	</tr>
+	<tr>
+		<td>Scottish</td>
+		<td>Mus d’fhàg Cèit-Ùna ròp Ì le ob.</td>
+	</tr>
+	<tr>
+		<td>Serbian</td>
+		<td>Ајшо, лепото и чежњо, за љубав срца мога дођи у Хаџиће на кафу.</td>
+	</tr>
+	<tr>
+		<td>Spanish</td>
+		<td>Benjamín pidió una bebida de kiwi y fresa; Noé, sin vergüenza, la más champaña del menú.</td>
+	</tr>
+	<tr>
+		<td>Swedish</td>
+		<td>Flygande bäckasiner söka hwila på mjuka tuvor.</td>
+	</tr>
+	<tr>
+		<td>Turkish</td>
+		<td>Pijamalı hasta yağız şoföre çabucak güvendi.</td>
+	</tr>
+	<tr>
+		<td>Ukrainian</td>
+		<td>Чуєш їх, доцю, га? Кумедна ж ти, прощайся без ґольфів!</td>
+	</tr>
+</table>
+
+<div class="jm_h1"><h1 id="unicode_coverage"><a href="#unicode_coverage" class="header-anchor">Unicode coverage</a></h1></div>
+<p>One of the goals of JuliaMono is to include most of the characters that a typical programmer or monospaced-font user would reasonably expect to find. &#40;Except for all those emojis - they are best handled by the operating system.&#41;</p>
+
+<img src="/assets/images/juliamono/specimen_6.png" alt="some unicode characters">
+
+<p>Here’s a thousand or so chosen at random:</p>
+<img src="/assets/images/juliamono/unicode-sample.svg" width="100%" alt="Unicode sampler"> 
+<p>In JuliaMono, every character is the same width, because this is a <a href="https://en.wikipedia.org/wiki/Monospaced_font">monospaced</a> typeface. Usually, typefaces with a lot of Unicode mathematical symbols are not monospaced, because they’re intended for use in prose and \( \LaTeX \) applications, rather than in programming code.</p>
+<p>From a design perspective, forcing every character into the same size box is a problem. It’s like fitting every human being of whatever shape or size into identical airplane seats - some characters are bound to look uncomfortable. There’s never quite enough room for a nice-looking “m” or “w”.</p>
+<p><a href="https://github.com/Evizero/UnicodePlots.jl">UnicodePlots.jl</a> uses various Unicode characters to plot figures directly in a terminal window. <sup id="fnref:linespacing"><a href="#fndef:linespacing" class="fnref">[6]</a></sup></p>
+
+<img src="/assets/images/juliamono/unicodeplots.png" alt="UnicodePlots in action">
+
+<p><a href="https://github.com/JuliaImages/ImageInTerminal.jl">ImageInTerminal.jl</a> is similarly awesome, conjuring images from Unicode characters:</p>
+
+<img src="/assets/images/juliamono/imageinterminal.png" alt="ImageInTerminal">
+
+<p>It’s also a good idea to support box-drawing characters and DataFrames.jl output &#40;terminal permitting&#41;:</p>
+<pre><code class="language-julia">julia&gt; df &#61; DataFrame&#40;A&#61;samples, B&#61;glyphs&#41;
+df &#61; 10×2 DataFrame
+│ Row │ A              │ B                   │
+│     │ String         │ String              │
+├─────┼────────────────┼─────────────────────┤
+│ 1   │ sample 1       │ ▁▂▁▁▂▄▅▁▄▁▁▅▆▂▇▅▂▇  │
+│ 2   │ sample 2       │ ▁▂▄▁▁▃▁▆▂▆▃▁▂▃▂▇▄   │
+│ 3   │ sample 3       │ ▁▆▇▁▃▇▇▆▅▅▄▇▇▅▅▇▄▂  │
+│ 4   │ sample 4       │ ▅▁▄▁▆▃▁▃▇▂▂▇▅▇▃▆▃▁  │
+│ 5   │ sample 5       │ ▆▂▁▂▇▆▃▅▅▄▆▇▄▇▆▁▇   │
+│ 6   │ sample 6       │ ▁▁▇▂▂▇▃▅▂▂▆▂▄▄▁▄▂▇▆ │
+│ 7   │ sample 7       │ ▂▃▂▁▁▇▁▂▆▂▁▇▁▄▃▂▁▄  │
+│ 8   │ sample 8       │ ▄▄▁▂▄▁▅▁▅▁▂▂▇▂▁▃▄▄  │
+│ 9   │ sample 9       │ ▁▁▁▂▁▆▃▄▄▁▂▂▃▂▁▅▁▆▃ │
+│ 10  │ sample 10      │ ▁▇▄▂▅▃▇▁▇▇▆▄▇▅▄▂▄▅▄ │</code></pre>
+<p>&#40;Can you spot the little used and sadly mathematically-unsupported “times” &#40;×&#41; character?&#41;</p>
+<p>For a comparison of JuliaMono with other math-capable monospaced fonts, visit <a href="https://mono-math.netlify.app">mono-math.netlify.app</a>, which shows how Unicode math symbols look.</p>
+<p>JuliaMono is quite greedy<sup id="fnref:greedy"><a href="#fndef:greedy" class="fnref">[7]</a></sup>, and contains quite a few Unicode glyphs.</p>
+<img src="/assets/images/juliamono/barchart.svg" width="100%" alt="silly barchart"> 
+<p>&#40;Of course, size isn’t everything - quality can beat quantity, and other fonts will offer different experiences<sup id="fnref:otherfonts"><a href="#fndef:otherfonts" class="fnref">[8]</a></sup>&#41;.</p>
+<p>If you want to know whether you can use a Unicode character as an identifier in your Julia code, use the undocumented function <code>Base.isidentifier&#40;&#41;</code>. So, for example, if you have the urge to use a dingbat &#40;one of the classic <a href="https://en.wikipedia.org/wiki/Zapf_Dingbats">Herman Zapf dingbat</a> designs&#41; as a variable name, you could look for something suitable in the output of this:</p>
+<pre><code class="language-julia">julia&gt; for n in 0x2700:0x27bf
+			Base.isidentifier&#40;string&#40;Char&#40;n&#41;&#41;&#41; &amp;&amp; print&#40;Char&#40;n&#41;&#41;
+	   end
+✀✁✂✃✄✅✆✇✈✉✊✋✌✍✎✏✐✑✒✓✔✕✖✗✘✙✚✛✜✝✞✟✠✡✢✣✤✥✦✧✨✩✪✫✬✭✮✯✰✱✲✳✴✵✶✷✸✹✺
+✻✼✽✾✿❀❁❂❃❄❅❆❇❈❉❊❋❌❍❎❏❐❑❒❓❔❕❖❗❘❙❚❛❜❝❞❟❠❡❢❣❤❥❦❧➔➕➖➗➘➙➚➛➜➝➞➟➠➡
+➢➣➤➥➦➧➨➩➪➫➬➭➮➯➰➱➲➳➴➵➶➷➸➹➺➻➼➽➾➿
+
+julia&gt; ❤&#40;s&#41; &#61; println&#40;&quot;I ❤ &#36;&#40;s&#41;&quot;&#41;
+❤ &#40;generic function with 1 method&#41;
+
+julia&gt; ❤&#40;&quot;Julia&quot;&#41;
+I ❤ Julia</code></pre>
+<p>An easy way to include Unicode characters at the Julia REPL is to use the clipboard:</p>
+<pre><code class="language-julia">julia&gt; clipboard&#40;Char&#40;0x2764&#41;&#41;
+
+# then paste
+
+julia&gt; ❤&#40;&quot;Unicode&quot;&#41;
+I ❤ Unicode</code></pre>
+<div class="jm_h1"><h1 id="contextual_and_stylistic_alternates_and_ligatures"><a href="#contextual_and_stylistic_alternates_and_ligatures" class="header-anchor">Contextual and stylistic alternates &#40;and ‘ligatures’&#41;</a></h1></div>
+
+<img src="/assets/images/juliamono/specimen_7.png" alt="conntextual alternates">
+
+<p>JuliaMono is an <a href="https://en.wikipedia.org/wiki/OpenType">OpenType</a> typeface. OpenType technology provides powerful text positioning, pattern matching, and glyph substitution features, which are essential for languages such as Arabic and Urdu. In English, OpenType features are often seen when letter pairs such as <span style="font-size: 1.5em;font-family: Georgia;font-variant-ligatures: no-common-ligatures; ">fi</span> in certain fonts are replaced by a single glyph such as <span style="font-size: 1.5em; font-family: Georgia;">ﬁ</span>. These <a href="https://en.wikipedia.org/wiki/Orthographic_ligature">ligatures</a> have been used ever since printing with moveable type was invented, replacing the occasional awkward character combination with a better-looking alternative.</p>
+<p>To be honest, I’m not a big fan of their use in coding fonts &#40;and I’m not the only one<sup id="fnref:nottheonlyone"><a href="#fndef:nottheonlyone" class="fnref">[9]</a></sup>&#41;. I like to see exactly what I’ve typed, rather than what the font has decided to replace it with. But, there are a few places in Julia where suitable Unicode alternatives are not accepted by the language, and where I feel that the ASCII-art confections currently used can be gently enhanced by the judicious use of alternate glyphs. There are also a few places where some subtle tweaks can enhance the readability of the language without introducing ambiguity.</p>
+<p>In JuliaMono, the following substitutions are applied when the <strong>contextual alternates</strong> feature is active:</p>
+
+<table class="jm_sstable">
+    <tr>
+    <th><p>typed</p></th>
+    <th><p>displayed</p></th>
+    </tr>
+    <tr>
+    <td class="jm_code_ss_off">-></td>
+    <td class="jm_code_calt_on">-></td>
+    </tr>
+
+    <tr>
+    <td class="jm_code_ss_off">=></td>
+    <td class="jm_code_calt_on">=></td>
+    </tr>
+    <tr>
+    <td class="jm_code_ss_off">|></td>
+    <td class="jm_code_calt_on">|></td>
+    </tr>
+    <tr>
+    <td class="jm_code_ss_off"><|</td>
+    <td class="jm_code_calt_on"><|</td>
+    </tr>
+    <tr>
+    <td class="jm_code_ss_off">::</td>
+    <td class="jm_code_calt_on">::</td>
+    </tr>
+
+    <tr>
+    <td class="jm_code_ss_off"><--</td>
+    <td class="jm_code_calt_on"><--</td>
+    </tr>
+
+    <tr>
+    <td class="jm_code_ss_off">--></td>
+    <td class="jm_code_calt_on">--></td>
+    </tr>
+
+	<tr>
+    <td class="jm_code_ss_off"><--></td>
+    <td class="jm_code_calt_on"><--></td>
+    </tr>
+
+</table>
+
+<p>You can see these in action in the following code fragment:<sup id="fnref:width"><a href="#fndef:width" class="fnref">[10]</a></sup></p>
+<pre><code class="language-julia">julialang &#61; true # &#40;&#33;&#61; 0&#41;
+&#40;x, y&#41; -&gt; &#40;x &#43; y&#41;
+f&#40;p::Int&#41; &#61; p * p
+@inbounds if f in &#40;Base.:&#43;, Base.:-&#41;
+    if any&#40;x -&gt; x &lt;: AbstractArray&#123;&lt;:Number&#125;&#41;
+         nouns &#61; Dict&#40;
+            Base.:&#43; &#61;&gt; &quot;addition&quot;,
+            Base.:- &#61;&gt; &quot;subtraction&quot;,
+        &#41;
+    end
+end
+df2 &#61; df |&gt;
+    @groupby&#40;_.a&#41; |&gt;
+    @map&#40;&#123;a &#61; key&#40;_&#41;, b &#61; mean&#40;_.b&#41;&#125;&#41; |&gt;
+    DataFrame # &lt;|</code></pre>
+<p>OpenType fonts also offer you the ability to choose different designs for certain characters. These are stored as a ‘stylistic set’.</p>
+<p>All the options are stored in the font, and are often referred to by their internal four letter code &#40;not the best user-oriented design, really&#41;. For example, the contextual alternates listed above are collectively stored in the <strong>calt</strong> feature.</p>
+<p>Sometimes, an application will show the options more visually in a Typography panel<sup id="fnref:typographypanel"><a href="#fndef:typographypanel" class="fnref">[11]</a></sup>, usually tucked away somewhere on a Font chooser dialog.</p>
+<p>Here’s a list of the stylistic sets currently available in JuliaMono.</p>
+
+<table class="jm_sstable">
+    <tr>
+    <th><p>feature code</p></th>
+    <th><p>off</p></th>
+    <th><p>on</p></th>
+    <th><p>description</p></th>
+    </tr>
+
+    <tr>
+    <td>zero</td>
+    <td class="jm_code_ss_off">0</td>
+    <td class="jm_code_zero_on">0</td>
+    <td><p>slashed zero</p></td>
+    </tr>
+
+    <tr>
+    <td>ss01</td>
+    <td class="jm_code_ss_off">g</td>
+    <td class="jm_code_ss_on">g</td>
+    <td><p>alternate g</p></td>
+    </tr>
+
+    <tr>
+    <td>ss02</td>
+    <td class="jm_code_ss_off">@</td>
+    <td class="jm_code_ss_on">@</td>
+    <td><p>alternate @</p></td>
+    </tr>
+
+    <tr>
+    <td>ss03</td>
+    <td class="jm_code_ss_off">j</td>
+    <td class="jm_code_ss_on">j</td>
+    <td><p>alternate j</p></td>
+    </tr>
+
+    <tr>
+    <td>ss04</td>
+    <td class="jm_code_ss_off">0</td>
+    <td class="jm_code_alt_zero">0</td>
+    <td><p>alternate 0</p></td>
+    </tr>
+
+    <tr>
+    <td>ss05</td>
+    <td class="jm_code_ss_off">*</td>
+    <td class="jm_code_ss_on">*</td>
+    <td><p>lighter asterisk</p></td>
+    </tr>
+
+    <tr>
+    <td>ss06</td>
+    <td class="jm_code_ss_off">a</td>
+    <td class="jm_code_ss_on">a</td>
+    <td><p>simple a</p></td>
+    </tr>
+
+    <tr>
+    <td>ss07</td>
+    <td class="jm_code_ss_off">`</td>
+    <td class="jm_code_ss_on">`</td>
+    <td><p>smaller grave</p></td>
+    </tr>
+    <tr>
+    <td>ss08</td>
+    <td class="jm_code_ss_off">-></td>
+    <td class="jm_code_ss_on_dl">-></td>
+    <td><p>distinct ligatures</p></td>
+    </tr>
+    <tr>
+    <td>ss09</td>
+    <td class="jm_code_ss_off">f</td>
+    <td class="jm_code_ss_on">f</td>
+    <td><p>alternate f</p></td>
+    </tr>
+    <tr>
+    <td>ss10</td>
+    <td class="jm_code_ss_off">r</td>
+    <td class="jm_code_ss_on">r</td>
+    <td><p>alternate r</p></td>
+    </tr>
+    <tr>
+    <td>ss11</td>
+    <td class="jm_code_ss_off">`</td>
+    <td class="jm_code_ss_thinnergrave">`</td>
+    <td><p>thinner grave</p></td>
+	</tr>
+	<tr>
+	<td>ss12</td>
+    <td class="jm_code_ss_off">====</td>
+    <td class="jm_code_ss_on">====</td>
+    <td><p>joining equals</p></td>
+    </tr>
+
+</table>
+
+<p>All this fancy technology is under the control of the application and the operating system you’re using. Ideally, they will provide an easy way for you to switch the various OpenType features on and off.</p>
+<p>Browser-based editors such as Juno and VS Code support many OpenType features in their editor windows, but not in the terminal/console windows. They provide a settings area where you can type CSS or JSON selectors to control the appearance of features, and you’ll have to know the feature codes. Some features are opt in, others are opt out; this too can vary from application to application.</p>
+<p>Terminal/console applications also vary a lot; on MacOS the <strong>Terminal</strong> and <strong>iTerm</strong> applications try to offer controls for OpenType features, with varying degrees of success. On Linux, some terminal applications such as <a href="https://konsole.kde.org">Konsole</a> and <a href="https://sw.kovidgoyal.net/kitty/#font-control">Kitty</a> offer quite good support, but others such as <a href="https://github.com/alacritty/alacritty">Alacritty</a> offer little or none, as yet. <sup id="fnref:terminal"><a href="#fndef:terminal" class="fnref">[12]</a></sup></p>
+<p>If the application allows, you should be able to switch the <code>calt</code> contextual ligatures off, particularly since quite a few people won’t like any of them in their code. For the following listing, I switch the <strong>calt</strong> set off using CSS &#40;see <a href="#how_do_i_control_features_in_css_in_atomjuno_or_vs_code">here</a>&#41;, and then enable some of the alternative stylistic sets: compare characters such as the <strong>0</strong>, <strong>g</strong>, <strong>a</strong>, <strong>j</strong>, and <strong>@</strong> with the previous listing:</p>
+<div class="jm_code_ss_on"><pre><code class="language-julia">julialang &#61; true # &#40;&#33;&#61; 0&#41;
+&#40;x, y&#41; -&gt; &#40;x &#43; y&#41;
+f&#40;p::Int&#41; &#61; p * p
+@inbounds if f in &#40;Base.:&#43;, Base.:-&#41;
+    if any&#40;x -&gt; x &lt;: AbstractArray&#123;&lt;:Number&#125;&#41;
+         nouns &#61; Dict&#40;
+            Base.:&#43; &#61;&gt; &quot;addition&quot;,
+            Base.:- &#61;&gt; &quot;subtraction&quot;,
+        &#41;
+    end
+end
+df2 &#61; df |&gt;
+    @groupby&#40;_.a&#41; |&gt;
+    @map&#40;&#123;a &#61; key&#40;_&#41;, b &#61; mean&#40;_.b&#41;&#125;&#41; |&gt;
+    DataFrame # &lt;|</code></pre></div>
+<p>&#40;I originally liked the idea of a more circular <code>@</code> sign, but in practice it doesn’t work at small point sizes, as the details disappear. But I’ve kept it anyway.&#41;</p>
+<div class="jm_h2"><h2 id="if_you_really_dont_like_any_ligatures"><a href="#if_you_really_dont_like_any_ligatures" class="header-anchor">If you really don&#39;t like any ligatures</a></h2></div>
+<p>It&#39;s possible that you don&#39;t like even the few ligatures and alternate characters provided in JuliaMono. If switching them off isn&#39;t possible, or not drastic enough, you can strip them out of the font with the following terminal magic &#40;courtesy of @fredrikekre&#41;:</p>
+<pre><code class="language-julia">&#36; cat Dockerfile
+FROM python
+RUN pip install fonttools
+COPY run.sh /scripts/
+ENTRYPOINT &#91;&quot;/scripts/run.sh&quot;&#93;
+
+&#36; cat run.sh
+#&#33;/bin/bash
+set -euo pipefail
+
+VERSION&#61;&quot;&#36;&#123;1-&#125;&quot;
+
+mkdir -p /juliamono-source
+mkdir -p /juliamono-output
+mkdir -p /juliamono
+
+# Download release version
+curl -L &quot;https://github.com/cormullion/juliamono/releases/download/v&#36;&#123;VERSION&#125;/JuliaMono.tar.gz&quot; | tar -xzvC /juliamono-source
+
+# Strip glyphs
+for f in /juliamono-source/*.ttf
+do
+    pyftsubset &quot;&#36;f&quot; &#39;*&#39; --output-file&#61;/juliamono-output/&#36;&#40;basename &quot;&#36;f&quot;&#41;  --layout-features-&#61;calt,liga
+done
+
+# Pack it up
+tar -C /juliamono-output -czvf /juliamono/JuliaMono-&#36;&#123;VERSION&#125;.tar.gz &#36;&#40;ls /juliamono-output&#41;
+
+&#36; cat Makefile
+.PHONY: image strip
+VERSION :&#61; 0.021
+image:
+        docker build -t juliamono-strip:latest .
+
+strip:
+        docker run --rm -v &#36;&#123;PWD&#125;:/juliamono juliamono-strip:latest &quot;&#36;&#123;VERSION&#125;&quot;</code></pre>
+<div class="jm_h1"><h1 id="private_use_areas_puas"><a href="#private_use_areas_puas" class="header-anchor">Private Use Areas &#40;PUAs&#41;</a></h1></div>
+
+<img src="/assets/images/juliamono/specimen_8.png" alt="private use area">
+
+<p>There are a few areas of the Unicode system that have been officially kept empty and are thus available to store characters that are not part of the standard. These are called the <strong>Private Use Areas</strong>, and there are three: <code>\ue000</code> to <code>\uf8ff</code>, <code>\UF0000</code> to <code>\UFFFFD</code>, and <code>U100000</code> to <code>U&#43;10FFFD</code>.</p>
+<p>Each typeface can do its own thing in these areas. In JuliaMono, for example, if you look around <code>\ue800</code> you’ll find a few familiar shapes:</p>
+<pre><code class="language-julia">julia&gt; foreach&#40;println, &#39;\ue800&#39;:&#39;\ue802&#39;&#41;
+
+
+</code></pre>
+<p>The obvious drawback to using characters in a Private Use Area is that you have to have installed the font wherever you want to see them rendered correctly, unless they’ve been converted to outlines or bitmaps. If the font isn’t installed &#40;eg on github&#41;, you have no idea what glyph - if any - will be displayed.</p>
+<div class="jm_h2"><h1 id="accessing_pua_characters_in_the_julia_repl"><a href="#accessing_pua_characters_in_the_julia_repl" class="header-anchor">Accessing PUA characters in the Julia REPL</a></h1></div>
+<p>You can define these to be available at the Julia REPL. For example, say you want the Julia circles to be available in the terminal when you type <code>\julialogo</code><span style="font-size: 1.5em;"></span> in a Julia session with the JuliaMono font active. Run this:</p>
+<pre><code class="language-julia">using REPL
+REPL.REPLCompletions.latex_symbols&#91;&quot;\\julialogo&quot;&#93; &#61; &quot;\ue800&quot;</code></pre>
+<p>Now you can insert the logo in strings by typing <code>\julialogo</code><span style="font-size: 1.5em;"></span>:</p>
+<pre><code class="language-julia">julia&gt; println&#40;&quot;Welcome to &quot;&#41;
+Welcome to </code></pre>
+<p>It’s usually possible to type Unicode values directly into text. This is a useful skill to have when you’re not using the Julia REPL... On MacOS you hold the Option &#40;⌥&#41; key down while typing the four hex digits &#40;make sure you’re using the Unicode Hex Input keyboard&#41;. On Windows I think you type the four hex digits followed by <code>ALT</code> then <code>X</code>. On Linux it might be <code>ctrl</code>-<code>shift</code>-<code>u</code> followed by the hex digits.</p>
+<div class="jm_h1"><h1 id="download_and_install"><a href="#download_and_install" class="header-anchor">Download and install</a></h1></div>
+<div class="jm_h2"><h2 id="download"><a href="#download" class="header-anchor">Download</a></h2></div>
+<p>You can find the font files at <a href="https://github.com/cormullion/juliamono">https://github.com/cormullion/juliamono</a>.</p>
+<div class="jm_h2"><h2 id="installation"><a href="#installation" class="header-anchor">Installation</a></h2></div>
+<h3 id="mac"><a href="#mac" class="header-anchor">Mac</a></h3>
+<p>To install and activate a font, launch Font Book from your Applications folder, and drag the font files into the middle pane labelled Font. If you&#39;re using a different font manager, you already know what to do. :&#41;</p>
+<h4 id="homebrew"><a href="#homebrew" class="header-anchor">Homebrew</a></h4>
+<p>On the latest version of Homebrew, you can install the fonts with:</p>
+<pre><code class="language-julia">&#36; brew tap homebrew/cask-fonts
+&#36; brew install --cask font-juliamono</code></pre>
+<h3 id="windows"><a href="#windows" class="header-anchor">Windows</a></h3>
+<p>You can install a font for a single user or for all users. &#40;Some applications &#40;such as Java&#41; don&#39;t see fonts unless they have been installed for all users.&#41;</p>
+<p>To install and activate a font on Windows, go to Computer |&gt; Local Disk &#40;C:&#41; |&gt; Windows |&gt; Fonts. Locate the expanded .zip file folder, and drag the font files from there into the Fonts folder.</p>
+<p>To install for all users, just right-click the font file&#40;s&#41; and choose Install for All Users. Administrator privileges are required.</p>
+<h3 id="linux_-_using_font_manager"><a href="#linux_-_using_font_manager" class="header-anchor">Linux - using Font Manager</a></h3>
+<p>Install Font Manager:</p>
+<pre><code class="language-julia">sudo apt install font-manager</code></pre>
+<p>Then double-click on the font files and click Install on each one.</p>
+<h3 id="linux_-_on_the_command_line"><a href="#linux_-_on_the_command_line" class="header-anchor">Linux - on the command line</a></h3>
+<p>For Arch Linux, there is a <a href="https://aur.archlinux.org/packages/ttf-juliamono/">package in the AUR</a>.</p>
+<p>Locate your font folder. Might be one of:</p>
+<pre><code class="language-julia">~/.fonts
+/usr/share/fonts/truetype/newfonts/
+~/.local/fonts/
+~/.local/share/fonts/</code></pre>
+<p>and copy the files there. You might want to &#40;or have to&#41; regenerate the font cache:</p>
+<pre><code class="language-julia">&#36; fc-cache -f -v</code></pre>
+<p>And verify installation:</p>
+<pre><code class="language-julia">&#36; fc-list | grep &quot;JuliaMono&quot;</code></pre>
+<div class="jm_h1"><h1 id="frequently_asked_questions"><a href="#frequently_asked_questions" class="header-anchor">Frequently asked questions</a></h1></div>
+<div class="jm_h2"><h2 id="why"><a href="#why" class="header-anchor">‘Why⁉’</a></h2></div>
+<p>The typeface was introduced at the 2020 Julia Programming Language conference, JuliaCon, in Lisbon, Portugal, and it was &#40;going to be&#41; my contribution to the festivities. It was an experiment to see whether a font could be designed with a specific programming language in mind.</p>
+<div class="jm_h2"><h2 id="is_it_just_for_julia_coding_how_does_it_work_well_with_julia"><a href="#is_it_just_for_julia_coding_how_does_it_work_well_with_julia" class="header-anchor">‘Is it just for Julia coding? How does it “work well with” Julia?’</a></h2></div>
+<ul>
+<li><p>it has all the glyphs used in the Unicode Input chapter of the Julia documentation &#40;except for the emojis&#41;</p>
+</li>
+<li><p>a few of the glyphs and ligatures were designed with the Julia programming language in mind</p>
+</li>
+<li><p>the font contains special features such as contextual alternates, stylistic sets, and “ligatures” that complement Julia syntax</p>
+</li>
+</ul>
+<p>But in general it can be used for any purpose.</p>
+<div class="jm_h2"><h2 id="where_can_i_see_it_in_action"><a href="#where_can_i_see_it_in_action" class="header-anchor">‘Where can I see it in action?’</a></h2></div>
+<p>You can visit <a href="https://julialangblogmirror.netlify.app/blog/">this mirror of the Julia blog</a>. It hasn’t been updated for a while &#40;it was useful during the development of <a href="https://franklinjl.org">Franklin.jl</a>&#41;, but all the code examples use JuliaMono.</p>
+<p>You can browse through <a href="/assets/images/juliamono/juliamanual/index.html">this local copy</a> of an old Julia manual. The default Roboto-Mono font has been replaced with JuliaMono-Regular.</p>
+<p>As an example of using JuliaMono with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a>-generated documents, see the documentation for <a href="https://github.com/JuliaGraphics/Luxor.jl">Luxor.jl</a>.</p>
+<p>Feel free to compare it with other fonts at <a href="https://devfonts.gafi.dev/">dev fonts</a> <a href="https://www.programmingfonts.org/#julia-mono">www.programmingfonts.org</a>.</p>
+<div class="jm_h2"><h2 id="i_dont_like_it_as_much_as_myfavouritefont"><a href="#i_dont_like_it_as_much_as_myfavouritefont" class="header-anchor">‘I don’t like it as much as &#36;&#40;myfavouritefont&#41;’</a></h2></div>
+<p><strong>That’s not a question&#33;</strong> But I know what you mean. Choice of work environment &#40;editor, font, colour scheme, background music, preferred beverage, etc.&#41; is very much a personal thing, and over the hours, days, and weeks that you work with your particular setup, you’ll grow accustomed to it, and unfamiliar work environments will look unappealing or even ugly. You’d probably need to try any alternatives for a while before you get more accustomed to them. Fortunately, you don’t have to try <a href="https://www.myfonts.com/fonts/tabular-type-foundry/comic-code/">Comic Code</a>, the <a href="http://kakoune.org">Kakoune editor</a>, the music of <a href="http://autechre.ws/">Autechre</a>, <a href="https://www.tealeaves.com/products/durian">Durian tea</a>, or anything else that’s new and unfamiliar; just stick to your current favourites&#33;</p>
+<div class="jm_h2"><h2 id="how_can_i_use_the_web_fonts_for_my_blog"><a href="#how_can_i_use_the_web_fonts_for_my_blog" class="header-anchor">‘How can I use the web fonts for my blog?’</a></h2></div>
+<p>Find the relevant CSS file, and add a link to the WOFF2 stored on the server.</p>
+<p>Option 1 &#40;using the jsdelivr content delivery network&#41;:</p>
+<pre><code class="language-julia">@font-face &#123;
+	font-family: JuliaMono-Regular;
+	src: url&#40;&quot;https://cdn.jsdelivr.net/gh/cormullion/juliamono/webfonts/JuliaMono-Regular.woff2&quot;&#41;;
+&#125;</code></pre>
+<p>Option 2 &#40;using the <a href="https://cdnjs.com/libraries/juliamono">cdnjs</a> content delivery network&#41;:</p>
+<pre><code class="language-julia">@font-face &#123;
+	font-family: JuliaMono-Regular;
+	src: url&#40;&quot;https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.037/JuliaMono-Regular.woff2&quot;&#41;;
+&#125;</code></pre>
+<p>Then, in the area of the CSS where you control the appearance of monospaced text:</p>
+<pre><code class="language-css">pre &#123;
+	font-family: JuliaMono-Regular;
+&#125;
+code &#123;
+	font-family: JuliaMono-Regular;
+	&#125;</code></pre>
+<p>Notice that the CDNJS version points to a specific version &#40;e.g. v0.037 here&#41;, whereas the JSDELIVR version always retrieves the current master version.</p>
+<p>You may prefer to serve the WOFF/2 fonts from your own server. One problem you might encounter is related to <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">Cross-origin resource sharing</a>, which on some browsers prevents one web page from downloading fonts from another.</p>
+<p>There are some other options for the <code>@font-face</code> directive, which determine things like the behaviour of web pages while the fonts are still downloading, the range of characters you want to download, and so on.</p>
+<div class="jm_h2"><h2 id="how_do_i_control_features_in_css_in_atomjuno_or_vs_code"><a href="#how_do_i_control_features_in_css_in_atomjuno_or_vs_code" class="header-anchor">‘How do I control features in CSS, in Atom/Juno, or VS Code?’</a></h2></div>
+<h3 id="vs-code"><a href="#vs-code" class="header-anchor">VS-Code</a></h3>
+<p>In VS-Code you’ll find the font settings somewhere in the labyrinthine &#40;but thankfully searchable&#41; Settings department.</p>
+<p><img src="/assets/images/juliamono/vscode-settings-1-800.png" alt="VS Code settings" /></p>
+<p>To control the display of contextual and stylistic alternates, click on the Edit Settings in JSON, and look for <code>editor.fontLigatures</code>:</p>
+<p><img src="/assets/images/juliamono/vscode-settings-2-800.png" alt="VS Code settings" /></p>
+<p>This uses the feature codes &#40;<a href="/#contextual_and_stylistic_alternates">listed here</a>&#41;. These should all be switched on or off in a single line.</p>
+<p>For example, if you want all the currently available stylistic sets, use:</p>
+<pre><code class="language-css">&quot;editor.fontLigatures&quot;: &quot;&#39;zero&#39;, &#39;ss01&#39;, &#39;ss02&#39;, &#39;ss03&#39;, &#39;ss04&#39;,
+    &#39;ss05&#39;, &#39;ss06&#39;,  &#39;ss07&#39;, &#39;ss08&#39;, &#39;ss09&#39;, &#39;ss10&#39;, &#39;ss11&#39;, &#39;ss12&#39;&quot;,</code></pre>
+<p>Or if you just don’t like the contextual alternates, but quite like the slashed zero, simpler g, and lighter asterisk, use this:</p>
+<pre><code class="language-css">&quot;editor.fontLigatures&quot;: &quot;&#39;calt&#39; off, &#39;zero&#39;, &#39;ss01&#39;, &#39;ss05&#39;&quot;,</code></pre>
+<h3 id="atomjuno"><a href="#atomjuno" class="header-anchor">Atom/Juno</a></h3>
+<p>In the Atom/Juno stylesheet, you can specify the font with the required CSS selectors:</p>
+<pre><code class="language-css">font-family: &quot;JuliaMono&quot;;</code></pre>
+<p>which defaults to the Regular weight, or</p>
+<pre><code class="language-css">font-family: &quot;JuliaMono-Medium&quot;;</code></pre>
+<p>You can switch off the contextual alternates &#40;such as <code>-&gt;</code> and <code>&#61;&gt;</code>&#41; with:</p>
+<pre><code class="language-css">font-variant-ligatures: no-contextual;</code></pre>
+<p>Or on &#40;if it’s not enabled by default&#41; with:</p>
+<pre><code class="language-css">font-variant-ligatures: contextual;</code></pre>
+<p>Select any stylistic sets in a single line. For example:</p>
+<pre><code class="language-css">font-feature-settings: &quot;zero&quot;, &quot;ss02&quot;;</code></pre>
+<div class="code_ss_on">enables the slashed zero (<span class="jm_code_zero_on">0</span>) and the simpler "g" (<span class="jm_code_ss_on">g</span>).</div>
+<p>In Atom/Juno, you’d put these in the stylesheet, perhaps like this:</p>
+<pre><code class="language-css">atom-text-editor &#123;
+    font-variant-ligatures: no-contextual;
+	font-feature-settings: &quot;ss01&quot;, &quot;ss02&quot;, &quot;ss03&quot;,
+	    &quot;ss04&quot;, &quot;ss05&quot;, &quot;ss06&quot;;
+&#125;</code></pre>
+<div class="jm_h2"><h2 id="can_i_use_this_font_in_a_notebook_and_how_do_i_do_it"><a href="#can_i_use_this_font_in_a_notebook_and_how_do_i_do_it" class="header-anchor">‘Can I use this font in a notebook? And how do I do it?’</a></h2></div>
+<p>It’s a good question. Some browsers these days are reluctant to give even you access to things on your own local disk, “for security reasons”. But a local copy of the font may be available and accessible on your particular set-up.</p>
+<p>If not, you could try using web fonts, as above. For example, if there’s a Jupyter CSS file here:</p>
+<pre><code class="language-julia">~/.jupyter/custom/custom.css</code></pre>
+<p>you could add definitions like this:</p>
+<pre><code class="language-css">@font-face &#123;
+	font-family: JuliaMono-Regular;
+	src: url&#40;&quot;https://cdn.jsdelivr.net/gh/cormullion/juliamono/webfonts/JuliaMono-Regular.woff2&quot;&#41;;
+&#125;
+
+.rendered_html table&#123;
+    font-size: 16px &#33;important;
+&#125;
+
+div.input_area &#123;
+    background: #def &#33;important;
+    font-size: 16px &#33;important;
+&#125;
+
+.CodeMirror &#123;
+    font-size: 16px &#33;important;
+    font-family: &quot;JuliaMono-Regular&quot; &#33;important;
+    font-feature-settings: &quot;zero&quot;, &quot;ss01&quot;;
+    font-variant-ligatures: contextual;
+&#125;</code></pre>
+<p>which downloads the font once and is then available to applications.</p>
+
+<img src="/assets/images/juliamono/jupyter-example.png" alt="screenshot of jupyter editor">
+
+<div class="jm_h2"><h2 id="how_do_i_use_the_font_for_plotting_such_as_in_plotsjl"><a href="#how_do_i_use_the_font_for_plotting_such_as_in_plotsjl" class="header-anchor">‘How do I use the font for plotting, such as in Plots.jl?’</a></h2></div>
+<p>Another great question. Are you sure you want a monospaced font on your plot? If you do, it should be easy enough to ask for the font when you plot. But it’s never as simple as you want it to be, as is usual in the world of fonts.</p>
+<p>I know very little about plotting in Julia, but some investigations suggest that:</p>
+<ul>
+<li><p><code>pyplot&#40;&#41;</code> works well, mostly</p>
+</li>
+<li><p>some backends do their own thing with fonts. For example, I couldn’t persuade the GR backend to use JuliaMono at all.</p>
+</li>
+</ul>
+<p>Here’s some code that uses JuliaMono for a plot. The plot shows the frequency of occurrence of every Unicode character used in the Julia git repository, and uses the characters as plot markers. I went through every text file and totalled all the characters - there are 956044 letter “e”s, and so on. I’m using <code>pyplot&#40;&#41;</code>; the <code>freqs</code> DataFrame holds the characters and the counts. I’ve created a few font objects using <code>Plots.font&#40;&#41;</code>, which makes it easier to use different text styles in the <code>plot&#40;&#41;</code> function. I haven’t yet worked out how to use the different weights of a font family.</p>
+<pre><code class="language-julia">using Plots, Plots.PlotMeasures
+pyplot&#40;&#41;
+theme&#40;:dark&#41;
+
+juliamonofont8 &#61; Plots.font&#40;family&#61;&quot;JuliaMono&quot;, 8,
+    halign&#61;:center, colorant&quot;white&quot;&#41;
+juliamonofont12 &#61; Plots.font&#40;family&#61;&quot;JuliaMono&quot;, 12,
+    halign&#61;:center, colorant&quot;white&quot;&#41;
+juliamonofont80 &#61; Plots.font&#40;family&#61;&quot;JuliaMono&quot;, 80,
+    halign&#61;:center, colorant&quot;grey30&quot;&#41;
+
+annotation &#61; &quot;counting character frequencies\nin Julia source files &quot;
+
+p &#61; plot&#40;1:100,
+    freqs&#91;1:100, 2&#93;,
+    fontfamily         &#61; &quot;JuliaMono&quot;,
+    margin             &#61; 20mm,
+    yaxis              &#61; :log10,
+    annotation         &#61; &#91;
+        &#40;50, 1000, Plots.text&#40;annotation, juliamonofont12&#41;&#41;,
+        &#40;80, 1_000_000, Plots.text&#40;&quot;&quot;, juliamonofont80&#41;&#41;
+        &#93;,
+    linewidth          &#61; 0.25,
+    series_annotations &#61; Plots.text.&#40;freqs&#91;1:100, 1&#93;, Ref&#40;juliamonofont8&#41;&#41;,
+    xlabel             &#61; &quot;← more frequent | less frequent → &quot;,
+    ylabel             &#61; &quot;occurrences &#40;log scale&#41; &quot;,
+    labelfontsize      &#61; 6,
+    titlefontsize      &#61; 14,
+    formatter          &#61; :plain,
+    size               &#61; &#40;800, 500&#41;,
+	title              &#61; &quot;Top 100 characters\nin the Julia github repo &quot;,
+    legend             &#61; false,
+    &#41;
+
+display&#40;p&#41;</code></pre>
+<p><img src="/assets/images/juliamono/julia-frequencies.svg" alt="frequency counts" /></p>
+<p>The top 9 characters - “etanirsol” - are a good match for the typical English frequency count e.g. “etarionsh”. It’s to be expected that parentheses make a very good showing, here.</p>
+<p>Although over 3600 unique characters occur in the Julia documentation, about 3000 of them appear just once. All of them, except the emojis which aren’t in JuliaMono, could be plotted, but the long tail isn’t very interesting visually.</p>
+<p>For plotting emoji characters, you’ll have to dive into the internals of the plots system...</p>
+<p>Notice that the y-axis labels are in DejaVu Sans, provided with matplotlib. That’s because the <code>:log10</code> scaling code does its own \( \LaTeX \)-y business, ignoring the current font. However, at least I was able to insert the Julia logo successfully, since it’s part of the JuliaMono font.</p>
+<div class="jm_h2"><h2 id="can_i_use_it_in_a_latex_document"><a href="#can_i_use_it_in_a_latex_document" class="header-anchor">‘Can I use it in a \( \LaTeX \) document?’</a></h2></div>
+<p>In a \( \LaTeX \) document, you should be able to define and use local fonts.</p>
+<p>Robert Moss put together an excellent package to help negotiate the various font issues that you might encounter when using Unicode and \( \LaTeX \):</p>
+<p><a href="https://github.com/mossr/julia-mono-listings">A custom Julia language style for the LaTeX listings package, and Unicode support for the JuliaMono font in a <code>lstlisting</code> environment.</a>.</p>
+<p>An earlier approach that worked for me is as follows:</p>
+<p>In your \( \LaTeX \) source file, define the font, using the local pathname:</p>
+<pre><code class="language-julia">\newfontfamily \JuliaMono &#123;JuliaMono-Regular.otf&#125;&#91;
+    Path      &#61; /Users/me/Library/Fonts/,
+    Extension &#61; .otf
+    &#93;
+\newfontface \JuliaMonoMedium&#123;JuliaMono-Regular&#125;
+\setmonofont&#123;JuliaMonoMedium&#125;&#91;
+	Contextuals&#61;Alternate
+&#93;</code></pre>
+<p>Then you can use something like <code>minted</code> to format the code.</p>
+
+<img src="/assets/images/juliamono/latex-example.png" alt="screenshot of latex ">
+
+<p>&#40;I used the lualatex engine.&#41;</p>
+<div class="jm_h2"><h2 id="there_are_problems_with_rendering_and_alignment"><a href="#there_are_problems_with_rendering_and_alignment" class="header-anchor">‘There are problems with rendering and alignment’</a></h2></div>
+<p>It’s well-known that there are basically two different styles of font rendering - the Apple way, and the Microsoft way. Apple and Microsoft have always disagreed in how to display fonts on screens. The argument has been going on for over a decade, now. For example, see <a href="https://damieng.com/blog/2007/06/13/font-rendering-philosophies-of-windows-and-mac-os-x">this blog post</a>.</p>
+<p>In brief: Windows stretches and distorts the glyph shapes to better hit the pixel boundaries, but at the expense of distorting the forms. Apple renders the glyph shapes precisely, but uses antialiasing to smooth the outlines, making the type a bit fuzzy on lower-resolution displays.</p>
+<div class="jm_h2"><h2 id="arent_these_font_files_too_big"><a href="#arent_these_font_files_too_big" class="header-anchor">‘Aren’t these font files too big?’</a></h2></div>
+<p>It depends if you mean the web fonts or the ‘desktop’ fonts. Web fonts come in two flavours, <code>.WOFF</code> and <code>.WOFF2</code>, where the <code>2</code> indicates a more recent and slightly more compact format. <code>JuliaMono-Regular.woff</code> is 674KB, <code>JuliaMono-Regular.woff2</code> is 619KB - the size of a PNG image, perhaps.</p>
+<p>The <code>.TTF</code> versions are getting on for 1.8MB each.</p>
+<p>For comparison, the Themes folder of <code>.CSS</code> files for the Julia manual &#40;and for every manual built with Documenter.jl since v0.21&#41; is about 700KB. So in that light the WOFF2 fonts aren’t that bad. Of course, the two Google fonts downloaded by every Julia document &#40;Lato and Roboto&#41; are tiny, at 14KB and 11KB, with 221 glyphs in each.</p>
+<p>So, if you’re building a website, or designing for mobile applications, the size of the WOFF2 file&#40;s&#41; will be an important factor to weigh against the advantages of having predictable character sets. Note that you can specify font subsets in the CSS using the <strong>unicode-range</strong> feature, which defines a restricted set of characters which you know are going to be used, so that users don’t download any that they won’t need.</p>
+<p>You could consider using the ‘-Latin’ variants to obviate the initial loading time.</p>
+<div class="jm_h2"><h2 id="how_is_this_different_from_any_other_unicode_font"><a href="#how_is_this_different_from_any_other_unicode_font" class="header-anchor">‘How is this different from any other Unicode font?’</a></h2></div>
+<p>You’re right, of course, there are many coding fonts, all perfectly adequate for the task of programming in Julia and most other languages. Comparing two different fonts is a matter of how important small similarities and differences are. Perhaps with one font you’ll see the occasional empty box or odd replacement rather than the character you were hoping for. Or perhaps sometimes you won’t like a particular glyph.</p>
+<p>More likely, though, the overall ‘feel’ of a new and unfamiliar font - too narrow, too wide, too dense, too light, too quirky, too dull, too consistent, too variable - is a matter of personal taste, immune to objective measurement. The design goals of JuliaMono - readable, easy to use, unquirky, simple - mean that the shapes aren’t compressed or condensed. It’s not fashionably thin. It might feel quite “airy” because of the generously-spaced shapes. The punctuation is quite solid, which might not be to your taste; it’s much more important in code than in ordinary prose, and my eyesight is probably poorer than yours&#33;</p>
+<p>Most people probably can’t tell the difference between Helvetica and Arial, and certainly aren’t going to be bothered about minor differences between JuliaMono and other coding fonts. But that’s fine. Just stick to your current favourites&#33;</p>
+<div class="jm_h2"><h2 id="is_it_a_package_was_it_written_in_julia_how_will_this_contribute_to_the_ecosystem_of_julia_language"><a href="#is_it_a_package_was_it_written_in_julia_how_will_this_contribute_to_the_ecosystem_of_julia_language" class="header-anchor">‘Is it a package? Was it written in Julia? How will this contribute to the ecosystem of Julia language?’</a></h2></div>
+<p>In the world of typographical software, one programming language is currently ubiquitous &#40;hint: one of the leading programmers in the typography realm is <strong>Just van Rossum</strong>, one of the van Rossum brothers&#41; and it’s not Julia.</p>
+<p>The typeface isn’t a Julia package. It might be, soon&#33; But although Julia wasn’t used to build the typeface, I did use Julia quite a lot while designing it; sometimes to generate glyphs, there being plenty of symmetrical designs that lend themselves to programmatic construction with a simple graphics program &#40;e.g. <a href="https://github.com/JuliaGraphics/Luxor.jl">Luxor.jl</a>&#41;. And also for producing glyph lists, charts, test output, and build scripts. And the various graphics you see here and in the specimen PDF were also made with Julia. So in that sense at least the font is a bit Julian.</p>
+<p>And how will JuliaMono contribute? It’s often in the nature of an experiment that the outcome is uncertain until it’s been carried out.</p>
+<div class="jm_h2"><h2 id="is_it_finished"><a href="#is_it_finished" class="header-anchor">‘Is it finished?’</a></h2></div>
+<p>The first β release, version 0.001, was released on July 27, 2020. The most recent β release, version 0.037, was released in April 2021. Always download the latest version if you want the typeface to perform at its best.</p>
+<div class="jm_h2"><h2 id="why_dont_these_accentsmarks_work_properly"><a href="#why_dont_these_accentsmarks_work_properly" class="header-anchor">‘Why don’t these accents/marks work properly?’</a></h2></div>
+<p>Unicode &#40;and Julia&#41; allows you to combine characters. In the Julia REPL, you can type a character and then modify it by adding a mark or diacritic. For example:</p>
+<pre><code class="language-julia">e\vec</code></pre>
+<p>displays as</p>
+<pre><code class="language-julia">e⃗</code></pre>
+<p>and the arrow mark is displayed above the character. These <strong>combining marks</strong> are listed in the Unicode Input section of the Julia documentation. It’s sometimes possible to add more than one:</p>
+<pre><code class="language-julia">e\vec\dot</code></pre>
+<p>which JuliaMono renders like this:</p>
+<pre><code class="language-julia">e⃗̇</code></pre>
+<p>However, this doesn’t work in all text environments, such as the terminals in Atom/Juno, VS Code, or Jupyter:</p>
+
+<img src="/assets/images/juliamono/font-terminal-comparison.png" alt="screenshots terminal emulators">
+
+<p>For Atom/Juno and VSCode, it’s because they&#39;re using a JavaScript terminal emulator &#40;xterm.js&#41; rather than a full terminal. But there may be improvements in the future. Other terminal applications choose not to implement all OpenType features, for performance reasons, perhaps.</p>
+<p>If it does work for you, this is fun:</p>
+<pre><code class="language-julia">jul\iota\ddot\dota</code></pre>
+<p>giving:</p>
+<pre><code class="language-julia">julϊ̇a</code></pre>
+<div class="jm_h2"><h2 id="does_it_work_on_macos"><a href="#does_it_work_on_macos" class="header-anchor">‘Does it work on macOS?’</a></h2></div>
+<p>Yes. JuliaMono works well, with most modern MacOS text editors, such as Atom/Juno, Visual Studio Code, Sublime Text, the excellent free CotEditor, Panic&#39;s new Nova editor, and TextEdit, among others. If these editors support OpenType features such as stylistic alternatives and ligatures &#40;not all do&#41;, these features of JuliaMono should work well.</p>
+<p>With older applications, such as the old-school BBEdit text editor, you may experience a few glitches when using fonts such as FiraCode, IBMPlex Mono, JetBrains Mono, JuliaMono, Operator Mono, and Source Code Pro &#40;to name just the ones I checked&#41;. BBEdit doesn&#39;t support OpenType ligatures either. But apart from that, you can still use it.</p>
+<div class="jm_h2"><h2 id="does_it_work_on_linux"><a href="#does_it_work_on_linux" class="header-anchor">‘Does it work on Linux?’</a></h2></div>
+<p>Yes.</p>
+<p>Font management in Linux may require you to become familiar with the <code>fontconfig</code> program. And it may be necessary to provide an additional configuration file &#40;in <code>/etc/fonts/local.conf</code> for example&#41;, that contains instructions like the following:</p>
+<pre><code class="language-html">&lt;alias&gt;
+    &lt;family&gt;monospace&lt;/family&gt;
+    &lt;prefer&gt;
+		    &lt;family&gt;JuliaMono&lt;/family&gt;
+		&lt;/prefer&gt;
+&lt;/alias&gt;</code></pre>
+<p>With some older terminal software, the ligatures and alternate characters may cause problems, or not work at all. Not all terminals choose to display ligatures, others are just confused by fonts that have them.</p>
+<div class="jm_h2"><h2 id="does_it_work_on_windows"><a href="#does_it_work_on_windows" class="header-anchor">‘Does it work on Windows?’</a></h2></div>
+<p>The font works well on a good quality display, but will struggle to maintain quality when displayed on low-resolution displays.</p>
+<p>On Windows, the shapes of letters are distorted in order to place the important features of letters on pixels, rather than ‘between’ pixels &#40;which could make features disappear&#41;. On high-resolution displays, as found on Apple devices, it isn&#39;t necesary to distort letter shapes in this way. The distortion is controlled by a process called ‘hinting’. On Windows displays, you may find that there is unevenness and variations in thickness and alignments, particularly at smaller sizes. This is due to the hinting generating distorted shapes to target pixels.</p>
+<p>JuliaMono is an OTF/TTF-flavoured font that contains hinting instructions. Hinted fonts are larger than OTF/CFF &#40;PostScript-flavour&#41; as a consequence.</p>
+<div class="jm_h2"><h2 id="any_love_for_nerdfonts"><a href="#any_love_for_nerdfonts" class="header-anchor">‘Any love for nerdfonts?’</a></h2></div>
+<p><a href="https://www.nerdfonts.com">nerdfonts</a> can add about four thousand extra glyphs to a font. It does this by creating a new font that combines an existing font’s glyphs with a bunch of new ones, using a FontForge Python script. This is quite cool, in a way.</p>
+<p>JuliaMono concentrates on the Unicode standard glyphs, as used for Julia code, whereas Nerdfonts adds many non-standard glyphs such as product and brand logos, trade names, icons for dozens of file extensions, programming languages, commercial applications, and a fair number of not-so-relevant characters. It’s aimed at a much wider audience. Nerdfonts doesn’t overlap much with JuliaMono.</p>
+<p>The nerdfonts project is a bit of a hack - glyphs are pushed into areas that are outside the Private Use Area, and there’s some unnecessary duplication of icons and other Unicode characters. And, if you <em>do</em> build a nerdfont version of JuliaMono, it will be quite large.</p>
+<p>Perhaps the companies could contribute money to the Julia project in exchange for having their logos stored in the font...</p>
+<div class="jm_h2"><h2 id="but_i_prefer_the_glyphs_in_this_other_font"><a href="#but_i_prefer_the_glyphs_in_this_other_font" class="header-anchor">‘But I prefer the glyphs in this other font?’</a></h2></div>
+<p>Good to know&#33;</p>
+<div class="jm_h2"><h2 id="what_about_italics_how_about_juliasans"><a href="#what_about_italics_how_about_juliasans" class="header-anchor">‘What about italics? How about JuliaSans?’</a></h2></div>
+<p>One day perhaps.</p>
+<div class="jm_h2"><h2 id="is_this_page_finished_yet"><a href="#is_this_page_finished_yet" class="header-anchor">‘Is this page finished yet?’</a></h2></div>
+<p>Well, here are a few images to show JuliaMono in some less practical situations:</p>
+
+<img src="/assets/images/juliamono/specimen_9.png" alt="misc image">
+
+
+<img src="/assets/images/juliamono/specimen_10.png" alt="misc image">
+
+
+<img src="/assets/images/juliamono/specimen_11.png" alt="misc image">
+
+
+<img src="/assets/images/juliamono/specimen_12.png" alt="misc image">
+
+
+<img src="/assets/images/juliamono/specimen_13.png" alt="misc image">
+
+
+<img src="/assets/images/juliamono/specimen_14.png" alt="misc image">
+
+
+<img src="/assets/images/juliamono/specimen_15.png" alt="misc image">
+
+<div class="jm_h1"><h1 id="footnotes"><a href="#footnotes" class="header-anchor">Footnotes</a></h1></div>
+<div class="jm_fndef"><table class="fndef" id="fndef:licence">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:licence">[1]</a></td>
+        <td class="fndef-content">&nbsp; “licence” Although not MIT-licensed like Julia, JuliaMono is licensed using the <a href="https://scripts.sil.org/OFL">SIL Open Font licence</a>, which allows the fonts to be used, studied, modified, freely redistributed, and even sold, without affecting anything they’re bundled with.</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:windows">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:windows">[2]</a></td>
+        <td class="fndef-content">&nbsp; “Windows” For more information about if and how it works on Windows, read <a href="#does_it_work_on_windows">this</a>, but I currently don&#39;t know enough about Windows font technology and how it differs from MacOS and Unix. Early reports said that the font didn&#39;t look good on Windows. This was because the format was CFF/PostScript OTF, which isn&#39;t hinted on Windows. A switch to TTF/TrueType OTF, which is hinted, was considered an improvement.</td>
+    </tr>
+</table>
+  <table class="fndef" id="fndef:masters">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:masters">[3]</a></td>
+        <td class="fndef-content">&nbsp; “masters” In fact there are four masters &#40;Light, Regular, Bold, and Black&#41;, and the other instances are interpolated between them.</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:zscode">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:zscode">[4]</a></td>
+        <td class="fndef-content">&nbsp; “maths in code” spotted <a href="https://github.com/JuliaArrays/StaticArrays.jl/issues/537#issuecomment-439863841">here</a></td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:languages">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:languages">[5]</a></td>
+        <td class="fndef-content">&nbsp; “languages” Apologies for errors - I don’t speak most of these languages.</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:linespacing">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:linespacing">[6]</a></td>
+        <td class="fndef-content">&nbsp; “terminals and line spacing” Terminal applications usually provide the option to vary the line spacing.  For perfectly smooth Unicode plots, you can adjust this until the shaded glyphs are in tune. But for coding purposes you might want the line spacing increased &#40;or decreased&#41; from the default, depending on the trade-off between reading speed, font size, and how many lines of code you can cram in.</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:greedy">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:greedy">[7]</a></td>
+        <td class="fndef-content">&nbsp; “greedy” referencing <a href="https://julialang.org/blog/2012/02/why-we-created-julia/">this classic Julia blog post</a></td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:otherfonts">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:otherfonts">[8]</a></td>
+        <td class="fndef-content">&nbsp; “better fonts...” Operator Mono and Fira are excellent typefaces... Try them&#33; Also try IBM Plex Mono, Iosevka, Recursive, and Victor Mono, to name a few of my favourites. Like programming languages, every typeface has its strengths and weaknesses. Perhaps keep JuliaMono for font fallback purposes... ;&#41;</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:nottheonlyone">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:nottheonlyone">[9]</a></td>
+        <td class="fndef-content">&nbsp; “not the only one” Matthew Butterick says <a href="https://practicaltypography.com/ligatures-in-programming-fonts-hell-no.html">“hell no”</a> to them. He also uses the phrase “well-intentioned amateur ligaturists” which isn’t a label I want to have. But more seriously, he says: “my main concern is typography that faces other human beings. So if you’re preparing your code for others to read — whether on screen or on paper — skip the ligatures.”</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:width">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:width">[10]</a></td>
+        <td class="fndef-content">&nbsp; “alternate glyphs” Note that the substitute glyphs occupy the same width as the source glyphs they&#39;re replacing. While you could in theory use one of the thousands of Unicode arrows, such as →, as a replacement for the ‘stabby lambda’ &#40;<span class="jm_code_ss_off">-></span>&#41;, these are the width of a single character, and so you&#39;d be changing the width of your string/line whenever you made the substitution.</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:typographypanel">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:typographypanel">[11]</a></td>
+        <td class="fndef-content">&nbsp; “Typography panel” These vary widely in their abilities and functions: the MacOS Terminal app’s Typography panel is comprehensive but I’m not convinced that all the buttons are wired up yet...</td>
+    </tr>
+</table>
+ <table class="fndef" id="fndef:terminal">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:terminal">[12]</a></td>
+        <td class="fndef-content">&nbsp; “terminals again” Writers of terminal apps usually have their own ideas about how fonts and type should be managed and displayed. I haven’t yet found one that did everything that I wanted it to and nothing I didn’t expect it to. In the world of fonts, nothing is 100&#37; correct, which can be frustrating. You can track some of the issues and discussions on github and elsewhere: here’s a <a href="https://github.com/microsoft/vscode/issues/34103">VS Code</a> issue; here are the <a href="https://github.com/alacritty/alacritty/issues/50">Alacritty terminal developers</a> working on it; here is the <a href="https://iterm2.com/documentation-fonts.html">iTerm documentation</a> talking about performance.</td>
+    </tr>
+</table>
+</div>
+<h1 id="thanks"><a href="#thanks" class="header-anchor">Thanks&#33;</a></h1>
+<p>Thanks to: Thibaut Lienart for his <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> website builder; to Jérémie Knüsel who provided invaluable suggestions and advice; to Dr Zygmunt Szpak for his cool maths code; to Simeon Schaub for the issues and PRs, and everyone else who&#39;s taken an interest and commented.</p>
+<p></p></div>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: June 22, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+        <script src="/libs/katex/katex.min.js"></script>
+<script src="/libs/katex/auto-render.min.js"></script>
+<script>renderMathInElement(document.body)</script>
+
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>

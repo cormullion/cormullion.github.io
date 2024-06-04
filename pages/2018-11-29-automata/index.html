@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/libs/katex/katex.min.css">
+     
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>Automata</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><p><em>To play along with this post, you&#39;ll be able to find the source on <a href="https://github.com/cormullion/cormullion.github.io">github</a>, and you&#39;ll need Julia &#40;version 1&#41;, and the packages Luxor, Colors, and ColorSchemes. This post was written using Fredrik Ekre&#39;s <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p>
+<p><em>I don&#39;t need to give you any references—you&#39;ll be spoilt for choice if you start googling.</em></p>
+<h1 id="automata"><a href="#automata" class="header-anchor">Automata</a></h1>
+<p>Here in the UK we&#39;re usually better at closing railway stations than opening new ones. Dr Beeching famously closed thousands of them &#40;more than 50&#37; of the total&#41; in the 1960s. Occasionally, though, new stations are built, and one recent addition to the rail network is the station at <a href="https://www.networkrail.co.uk/running-the-railway/our-routes/anglia/cambridge-north-station/">Cambridge North</a>, built mainly to serve the Cambridge Science Park. &#40;I used to walk along the railway tracks there at weekends before the old disused line was re-opened, but that&#39;s another story...&#41;</p>
+<p>When the station was opened, in 2017, there was a bit of chatter about the decorative panels used for the building.</p>
+<p><img src="/assets/images/automata/Cmglee_Cambridge_North_front_night.jpg" alt="image label" /></p>
+<p>&#40;Image by <a href="https://commons.wikimedia.org/wiki/File:Cmglee_Cambridge_North_front_night.jpg">cmglee at wikipedia</a>, licensed CC-SA&#41;</p>
+<p>Thsee patterns were described by the designers at Atkins &#40;the contractors&#41; like this:</p>
+<blockquote>
+<p>The station is wrapped in three equal bands of aluminium panels which have been perforated with a design derived from John Horton Conway’s “Game of Life” theories which he established while at Gonville and Caius College, Cambridge in 1970. These beautiful, delicate panels ensure passive security to ground floor glazed areas, assist with wayfinding while crossing the footbridge and allow the building to transform its appearance between day and night through sensitive backlighting.</p>
+</blockquote>
+<p>This quote is from the original article &#40;<a href="https://web.archive.org/web/20170219171551/https://www.atkinsglobal.com/en-GB/projects/cambridge-north-station">archived here</a>&#41;, but it&#39;s since been corrected, most probably in response to the anguished cries of thousands of Cambridge nerds who swiftly pointed out that, in fact, these patterns weren&#39;t <em>Life</em> as we know it, but were actually one-dimensional cellular automata, and so linked, not so much with Cambridge&#39;s John Horton Conway, as with noted Oxford/CalTech alumnus Stephen &quot;Mr Mathematica&quot; Wolfram.</p>
+<p>I think the designers did a great job using these simple graphics to &quot;create a harmonic relationship with the scientific research and industry of the Cambridge Colleges and nearby Science Park&quot;.</p>
+<h3 id="so_what_is_a_one-dimensional_cellular_automaton"><a href="#so_what_is_a_one-dimensional_cellular_automaton" class="header-anchor">So what is a one-dimensional cellular automaton?</a></h3>
+<p>A cellular automaton is a mathematical model that creates patterns automatically according to simple rules. In its simplest, one-dimensional form, it&#39;s a row of empty squares, each of which can be occupied or empty. The rules for the model determine how sensitive the occupants of each square are to their immediate left and right neighbours, and whether, after some unspecified time, they survive or die. Sometimes empty squares can miraculously become occupied. Because a square has just two immediate neighbours, there are 8 different cases to consider, ranging from all empty &#40;&quot;□□□&quot; or <code>000</code> in binary&#41; to all full &#40;&quot;■■■&quot; or <code>111</code>&#41;.</p>
+<p>The rule determines how one generation changes to the next by specifying the outcome for each of the 8 cases. So, for example, an empty square surrounded by empty neighbours can continue to be empty &#40;false, or 0&#41;, or it can produce a new occupant in the next generation, &#40;true, or 1&#41;. There are 256 different combinations, since each of the 8 cases can be either 0 or 1.</p>
+<p>The wikipedia has <a href="https://commons.wikimedia.org/wiki/File:One-d-cellular-automate-rule-30.gif">this nice animation</a> showing how the rule produces the next generation of squares.</p>
+<p><img src="/assets/images/automata/one-d-cellular-automaton-rule-110.gif" alt="image label" /></p>
+<p>&#40;Well, it has this nice animation now...&#41;</p>
+<h3 id="first_steps"><a href="#first_steps" class="header-anchor">First steps</a></h3>
+<p>To explore these simple automata, I started<sup id="fnref:1"><a href="#fndef:1" class="fnref">[1]</a></sup> by making a Julia structure:</p>
+<pre><code class="language-julia">mutable struct CA
+    rule::Int64
+    cells::BitArray&#123;1&#125;
+    colorstops::Array&#123;Float64, 1&#125;
+    ruleset::BitArray&#123;1&#125;
+    generation::Int64
+    function CA&#40;rule, ncells &#61; 100&#41;
+        cells                    &#61; falses&#40;ncells&#41;
+        colorstops               &#61; zeros&#40;Float64, ncells&#41;
+        ruleset                  &#61; binary_to_array&#40;rule&#41;
+        cells&#91;length&#40;cells&#41; ÷ 2&#93; &#61; true
+        generation               &#61; 1
+        new&#40;rule, cells, colorstops, ruleset, generation&#41;
+    end
+end</code></pre>
+<p>The <code>cells</code> array can hold trues or falses. The <code>colorstops</code> array is eventually going to hold some color information. The middle cell is seeded with a single starter value.</p>
+<p>The <code>binary_to_array&#40;&#41;</code> function just converts a binary number to a bit array &#40;I suspect there&#39;s a quicker way&#41;.</p>
+<pre><code class="language-julia">function binary_to_array&#40;n&#41;
+    a &#61; BitArray&#123;1&#125;&#40;&#41;
+    for c in 7:-1:0
+        k &#61; n &gt;&gt; c
+        push&#33;&#40;a, &#40;k &amp; 1 &#61;&#61; 1 ? true : false&#41;&#41;
+    end
+    return a
+end</code></pre>
+<p>The <code>rules&#40;&#41;</code> function takes the values of an individual and its neighbours and applies the rule that determines its state for the next generation:</p>
+<pre><code class="language-julia">function rules&#40;ca::CA, a, b, c&#41;
+    lng &#61; length&#40;ca.ruleset&#41;
+    return ca.ruleset&#91;mod1&#40;lng - &#40;4a &#43; 2b &#43; c&#41;, lng&#41;&#93;
+end</code></pre>
+<p>And a <code>nextgeneration&#40;&#41;</code> function applies the rule to all the cells. I decided to make it wrap around, so that the final cell considers the first cell as one of its neighbours.</p>
+<pre><code class="language-julia">function nextgeneration&#40;ca::CA&#41;
+    l &#61; length&#40;ca.cells&#41;
+    nextgen &#61; falses&#40;l&#41;
+    for i in 1:l
+        left   &#61; ca.cells&#91;mod1&#40;i - 1, l&#41;&#93;
+        me     &#61; ca.cells&#91;mod1&#40;i, l&#41;&#93;
+        right  &#61; ca.cells&#91;mod1&#40;i &#43; 1, l&#41;&#93;
+        nextgen&#91;i&#93; &#61; rules&#40;ca, left, me, right&#41;
+    end
+    ca.cells &#61; nextgen
+    ca.generation &#43;&#61; 1
+    return ca
+end</code></pre>
+<p>We&#39;ll also teach Julia how to show an automaton in the terminal:</p>
+<pre><code class="language-julia">Base.show&#40;io::IO, ::MIME&quot;text/plain&quot;, ca::CA&#41; &#61;
+    print&#40;io, join&#40;&#91;c ? &quot;■&quot; : &quot; &quot; for c in ca.cells&#93;&#41;&#41;</code></pre>
+<p>So now we can create a cellular automaton by providing a rule number &#40;using the default of 100 cells&#41;:</p>
+<pre><code class="language-julia">ca &#61; CA&#40;30&#41;</code></pre>
+<p>update the automaton like this:</p>
+<pre><code class="language-julia">nextgeneration&#40;ca&#41;</code></pre>
+<p>and show a historical diagram of its evolution:</p>
+<pre><code class="language-julia">for i in 1:30
+    display&#40;nextgeneration&#40;ca&#41;&#41;
+end</code></pre>
+<p><img src="/assets/images/automata/terminal-output.png" alt="image label" /></p>
+<h3 id="some_graphics"><a href="#some_graphics" class="header-anchor">Some graphics</a></h3>
+<p>The REPL display is more or less functional, but I want to play with the graphic output, so &#40;you guessed&#41;:</p>
+<pre><code class="language-julia">using Luxor, Colors
+
+function draw&#40;ca::CA, cellwidth&#61;10&#41;
+    lng &#61; length&#40;ca.cells&#41;
+    for i in 1:lng
+        if ca.cells&#91;i&#93; &#61;&#61; true
+            pt &#61; Point&#40;-&#40;lng ÷ 2&#41; * cellwidth &#43; i * cellwidth, 0&#41;
+            box&#40;pt, cellwidth, cellwidth, :fill&#41;
+        end
+    end
+end
+
+@png begin
+    ca &#61; CA&#40;30, 200&#41;
+    sidelength &#61; 4
+    # start at the top
+    translate&#40;boxtopcenter&#40;BoundingBox&#40;&#41;&#41; &#43; sidelength&#41;
+    for i in 1:200
+        draw&#40;ca, sidelength&#41;
+        nextgeneration&#40;ca&#41;
+        translate&#40;Point&#40;0, sidelength&#41;&#41;
+    end
+end 800 850 &quot;../images/automata/simple-ca.png&quot;</code></pre>
+<p><img src="/assets/images/automata/simple-ca.png" alt="image label" /></p>
+<p>You can call <code>nextgeneration&#40;&#41;</code> without displaying the results, of course. This lets you jump into the future history of an automaton at warp speed.</p>
+<pre><code class="language-julia">@png begin
+    ca &#61; CA&#40;110, 200&#41;
+    translate&#40;boxtopcenter&#40;BoundingBox&#40;&#41;&#41; &#43; sidelength&#41;
+    sidelength &#61; 4
+    # into the future
+    for _ in 1:200_000
+        nextgeneration&#40;ca&#41;
+    end
+    for _ in 1:195
+        draw&#40;ca, sidelength&#41;
+        nextgeneration&#40;ca&#41;
+        translate&#40;Point&#40;0, sidelength&#41;&#41;
+    end
+end 800 800 &quot;../images/automata/simple-ca-future.png&quot;</code></pre>
+<p><img src="/assets/images/automata/simple-ca-future.png" alt="image label" /></p>
+<p>I found that sometimes drawing them from left to right looked better &#40;like videos recorded on phones...?&#41;:</p>
+<pre><code class="language-julia">@png begin
+    ca &#61; CA&#40;30&#41;
+    translate&#40;boxmiddleleft&#40;BoundingBox&#40;&#41;&#41; &#43; sidelength&#41;
+    rotate&#40;-π/2&#41;
+    sidelength &#61; 3.5
+    for i in 1:320
+        draw&#40;ca, sidelength&#41;
+        nextgeneration&#40;ca&#41;
+        translate&#40;Point&#40;0, sidelength&#41;&#41;
+    end
+end 1000 400 &quot;../images/automata/simple-landscape-ca.png&quot;</code></pre>
+<p><img src="/assets/images/automata/simple-landscape-ca.png" alt="image label" /></p>
+<h3 id="and_now_in_color"><a href="#and_now_in_color" class="header-anchor">And now in color</a></h3>
+<p>So far I haven&#39;t used the color information that&#39;s stored.</p>
+<p>The <code>nextgeneration&#40;&#41;</code> function can be updated with instructions about how to modify the color of the next generation, based on the current set of three cells.</p>
+<pre><code class="language-julia">function nextgeneration&#40;ca::CA&#41;
+    l &#61; length&#40;ca.cells&#41;
+    nextgen &#61; falses&#40;l&#41;
+    for i in 1:l
+        left   &#61; ca.cells&#91;mod1&#40;i - 1, l&#41;&#93;
+        me     &#61; ca.cells&#91;mod1&#40;i, l&#41;&#93;
+        right  &#61; ca.cells&#91;mod1&#40;i &#43; 1, l&#41;&#93;
+        nextgen&#91;i&#93; &#61; rules&#40;ca, left, me, right&#41;
+        if me &#61;&#61; 1
+            ca.colorstops&#91;i&#93; &#61; mod&#40;ca.colorstops&#91;i&#93; &#43; 0.1, 1&#41;
+        elseif left &#61;&#61; 1 &amp;&amp; right &#61;&#61; 1
+            ca.colorstops&#91;i&#93; &#61; mod&#40;ca.colorstops&#91;i&#93; - 0.1, 1&#41;
+        else
+            ca.colorstops&#91;i&#93; &#61; 0
+        end
+    end
+    ca.cells &#61; nextgen
+    ca.generation &#43;&#61; 1
+    return ca
+end</code></pre>
+<p>and the <code>draw&#40;&#41;</code> function can be adapted to make use of the color information. I decided to avoid tackling RGB color value transformations for a first pass, so the single value between 0 and 1 is used to select a color from a color map.</p>
+<pre><code class="language-julia">using ColorSchemes
+
+function drawcolor&#40;ca::CA, cellwidth&#61;10;
+        scheme&#61;ColorSchemes.leonardo&#41;
+    lng &#61; length&#40;ca.cells&#41;
+    for i in 1:lng
+        if ca.cells&#91;i&#93; &#61;&#61; true
+            sethue&#40;get&#40;scheme, ca.colorstops&#91;i&#93;&#41;&#41;
+            pt &#61; Point&#40;-&#40;lng ÷ 2&#41; * cellwidth &#43; &#40;i * cellwidth&#41;, 0&#41;
+            box&#40;pt, cellwidth, cellwidth, :fill&#41;
+        end
+    end
+end
+
+@svg begin
+    background&#40;&quot;darkorchid4&quot;&#41;
+    ca &#61; CA&#40;135, 65&#41;
+    # randomize start state
+    ca.cells &#61; rand&#40;Bool, length&#40;ca.cells&#41;&#41;
+    sidelength &#61; 5
+    translate&#40;boxmiddleleft&#40;BoundingBox&#40;&#41;&#41; &#43; sidelength&#41;
+    rotate&#40;-π/2&#41;
+    for i in 1:195
+        drawcolor&#40;ca, sidelength, scheme&#61;ColorSchemes.cubehelix&#41;
+        nextgeneration&#40;ca&#41;
+        translate&#40;Point&#40;0, sidelength&#41;&#41;
+    end
+end 1000 400 &quot;../images/automata/simple-color-ca.svg&quot;</code></pre>
+<p><img src="/assets/images/automata/simple-color-ca.svg" alt="image label" /></p>
+<p>This could lead to hours of entertainment &#40;depending on your definition of fun, of course&#41;. I uploaded a few experiments that didn&#39;t turn out too badly <a href="https://www.flickr.com/photos/153311384@N03/">on Flickr</a>. The current rules show a kind of literal winning streak, as a cell that remains occupied for many generations ends up being brightly illuminated.</p>
+<p>I think these images look quite good when scaled up. It only takes about a second to draw these, but would take much longer to stick them on the wall:</p>
+<p><img src="/assets/images/automata/office-layout-1.png" alt="image label" /></p>
+<p><img src="/assets/images/automata/office-layout-2.png" alt="image label" /></p>
+<p>The rules for specifying a change in color could do with some kind of systematic definition, perhaps, such that, say, &quot;rule C81&quot; means &quot;increase colorstop by amount if previous parent is 1, decrease it if previous uncle-aunt is 1&quot;, and so on. Then you could pass a set of color rules to the drawing function. &#40;<em>uncle-aunt</em>? I couldn&#39;t find a word for something that is either an uncle or an aunt, but not a parent...&#41;</p>
+<p>Instead of drawing simple squares, it&#39;s possible to draw other shapes. I&#39;m quite fond of the squircle — you can change the <code>rt</code> parameter to get different shapes:</p>
+<pre><code class="language-julia">function drawcolorsquircle&#40;ca::CA, cellwidth&#61;10;
+        scheme&#61;ColorSchemes.leonardo&#41;
+    lng &#61; length&#40;ca.cells&#41;
+    for i in 1:lng
+        if ca.cells&#91;i&#93; &#61;&#61; true
+            sethue&#40;get&#40;scheme, ca.colorstops&#91;i&#93;&#41;&#41;
+            pt &#61; Point&#40;-&#40;lng ÷ 2&#41; * cellwidth &#43; &#40;i * cellwidth&#41;, 0&#41;
+            squircle&#40;pt, cellwidth, cellwidth, rt&#61;6.0, :fill&#41;
+        end
+    end
+end
+
+@svg begin
+    background&#40;&quot;navyblue&quot;&#41;
+    ca &#61; CA&#40;110, 30&#41;
+    # randomize start state
+    ca.cells &#61; rand&#40;Bool, length&#40;ca.cells&#41;&#41;
+    translate&#40;boxmiddleleft&#40;BoundingBox&#40;&#41;&#41; &#43; sidelength&#41;
+    rotate&#40;-π/2&#41;
+    sidelength &#61; 10
+    for i in 1:100
+        drawcolorsquircle&#40;ca, sidelength, scheme&#61;ColorSchemes.Dark2_8&#41;
+        nextgeneration&#40;ca&#41;
+        translate&#40;Point&#40;0, sidelength&#41;&#41;
+    end
+end 1000 400 &quot;../images/automata/simple-color-ca-squircle.svg&quot;</code></pre>
+<p><img src="/assets/images/automata/simple-color-ca-squircle.svg" alt="image label" /></p>
+<p>&#40;This SVG is quite big, and won&#39;t display in Juno. But it should load in a browser.&#41;</p>
+<h3 id="getting_around_to_it"><a href="#getting_around_to_it" class="header-anchor">Getting around to it</a></h3>
+<p>It occurred to me that you could take a rectangular array and wrap it into a circle.</p>
+<pre><code class="language-julia">function drawsector&#40;ca::CA, cellwidth&#61;10;
+        scheme&#61;ColorSchemes.leonardo,
+        centralradius &#61; 10&#41;
+    lng &#61; length&#40;ca.cells&#41;
+    width &#61; lng * cellwidth
+    angulargap &#61; 2π/lng
+    for i in 1:lng
+        sethue&#40;get&#40;scheme, ca.colorstops&#91;i&#93;&#41;&#41;
+        innerradius &#61; centralradius
+        outerradius &#61; centralradius &#43; cellwidth
+        startang    &#61; rescale&#40;i, 1, lng, 0, 2π&#41;
+        endang      &#61; startang &#43; angulargap
+        if ca.cells&#91;i&#93; &#61;&#61; true
+            sector&#40;O, innerradius, outerradius, startang, endang, :fillstroke&#41;
+        end
+    end
+end
+
+function drawrule&#40;rulenumber, pos&#41;
+    @layer begin
+        translate&#40;pos&#41;
+        sethue&#40;&quot;black&quot;&#41;
+        text&#40;string&#40;rulenumber&#41;, halign&#61;:center, valign&#61;:middle&#41;
+        rotate&#40;-π/2&#41;
+        ca &#61; CA&#40;rulenumber, 50&#41;
+        # randomize start state
+        # ca.cells &#61; rand&#40;Bool, length&#40;ca.cells&#41;&#41;
+        sidelength &#61; 2
+        setline&#40;0.0&#41;
+        for n in 5:sidelength:30
+            drawsector&#40;ca, sidelength,
+            scheme&#61;ColorSchemes.klimt,
+            centralradius &#61; n&#41;
+            nextgeneration&#40;ca&#41;
+        end
+    end
+end</code></pre>
+<p>This shows all the rules in this circular form.</p>
+<pre><code class="language-julia">let
+    # best in SVG or PDF, but PNG is faster
+    Drawing&#40;1200, 1200, &quot;../images/automata/color-sector-assembly.svg&quot;&#41;
+    origin&#40;&#41;
+    background&#40;&quot;azure&quot;&#41;
+    fontsize&#40;8&#41;
+    for &#40;pos, n&#41; in Tiler&#40;1200, 1200, 16, 16&#41;
+        drawrule&#40;n-1, pos&#41;
+    end
+    finish&#40;&#41;
+    preview&#40;&#41;
+end</code></pre>
+<p><img src="/assets/images/automata/color-sector-assembly.png" alt="image label" /></p>
+<p>&#40;PNG shown here. This image is quite demanding for SVG and can take a while to load, even though it doesn&#39;t take long to generate.&#41;</p>
+<p>After playing with this idea, I thought it would make some nice jewellery:</p>
+<p><img src="/assets/images/automata/ca-jewellery-like.png" alt="image label" /></p>
+<p>This is rule 150. I mapped the array to a semicircle and drew it twice.</p>
+<h3 id="and_it_moves"><a href="#and_it_moves" class="header-anchor">And it moves</a></h3>
+<p>Many of the rules have limited career paths. Some fizzle out very quickly, others settle down into a stable if repetitive life style. There are a few that continue to make patterns as the number of generations heads off into the thousands.</p>
+<p>The unpredictable high achiever of the 1D cellular automata world is Rule 110. The rule itself is so simple, it could have been described in a Shakespeare play:</p>
+
+<blockquote>
+[Enter HAMLET, stage left.] </br>
+For Zeros become Ones at all positions, </br>
+Where the value to the right is One. </br>
+Yet Ones are changed to Zeros where'er </br>
+The values to left and right are One.
+</blockquote>
+
+<p>And yet this simple rule has been the subject of an astonishing amount of analysis, such as <a href="http://uncomp.uwe.ac.uk/genaro/Papers/Papers_on_CA_files/MARTINEZ.pdf">this in-depth paper by Martinez et al</a> published in the wonderfully-named <em>International Journal of Unconventional Computing</em>. <a href="https://arxiv.org/pdf/0906.3248v1.pdf">Matthew Cook&#39;s famous paper</a> proved that Rule 110 is capable of emulating the activity of a Turing machine.</p>
+<p>I understood very little of those wonderful papers, but they did make me want to at least see Rule 110 in action, just in case I could spot all those <em>cyclic tags</em>, <em>meta-gliders</em>, and <em>pseudo-solitons</em>.</p>
+<pre><code class="language-julia">function frame&#40;scene, framenumber, ca, cahistory, sidelength;
+            smoothscrolling&#61;10&#41;
+    background&#40;colorant&quot;navy&quot;&#41;
+    fontsize&#40;12&#41;
+    sethue&#40;colorant&quot;azure&quot;&#41;
+    text&#40;string&#40;ca.generation&#41;, boxtopright&#40;BoundingBox&#40;&#41;&#41; &#43; &#40;-30, 20&#41;,
+        halign&#61;:right&#41;
+    setline&#40;0.1&#41;
+
+    # get in position for the first row
+    translate&#40;boxmiddleleft&#40;BoundingBox&#40;&#41;&#41;&#41;
+    rotate&#40;-π/2&#41;
+
+    # for smooth scrolling
+    translate&#40;0, -&#40;mod1&#40;framenumber, smoothscrolling&#41;&#41;
+        * sidelength/smoothscrolling&#41;
+
+    lng &#61; length&#40;ca.cells&#41;
+    for gen in cahistory
+        for &#40;n, cell&#41; in enumerate&#40;gen&#41;
+            if cell &#61;&#61; true
+                pt &#61; Point&#40;-&#40;lng / 2&#41; * sidelength &#43; &#40;n * sidelength&#41;, 0&#41;
+                box&#40;pt, sidelength - 2, sidelength - 2, :fill&#41;
+            end
+        end
+        translate&#40;Point&#40;0, sidelength&#41;&#41;
+    end
+    # &quot;beautiful buttery scrolling&quot;
+    if framenumber &#37; smoothscrolling &#61;&#61; 0
+        # drop oldest, add a new generation
+        popfirst&#33;&#40;cahistory&#41;
+        nextgeneration&#40;ca&#41;
+        push&#33;&#40;cahistory, ca.cells&#41;
+    end
+end
+
+function makeanimation&#40;rule, filename&#41;
+    width, height &#61; &#40;1920, 1080&#41;
+    sidelength &#61; 6
+    cellularmovie &#61; Movie&#40;width, height, &quot;cellularmovie&quot;&#41;
+    ca &#61; CA&#40;rule, convert&#40;Int, height÷sidelength&#41;&#41;
+    cahistory &#61; &#91;&#93;
+    # initial
+    for _ in 1:width÷sidelength
+        push&#33;&#40;cahistory, ca.cells&#41;
+        nextgeneration&#40;ca&#41;
+    end
+    animate&#40;cellularmovie,
+        &#91;Scene&#40;cellularmovie, &#40;s, f&#41; -&gt;
+            frame&#40;s, f, ca, cahistory, sidelength, smoothscrolling&#61;4&#41;,
+                1:500&#41;&#93;,
+    createmovie&#61;true,
+    pathname&#61;&quot;&#36;&#40;filename&#41;&quot;&#41;
+end</code></pre>
+<p>makeanimation&#40;110, &quot;../images/automata/animated-cellular-automaton&quot;&#41;</p>
+<p><img src="/assets/images/automata/animated-cellular-automaton.mkv" alt="image label" /></p>
+<p>If each frame moved the history &#39;window&#39; by one generation, you&#39;d get a jerky animation. The smooth-scrolling used here shifts the contents by a few pixels in each frame but changes the contents less often. This requires more frames than generations, so 300 frames with a <code>smoothscrolling</code> value of 10 shows only 30 new generations after the initial bunch.</p>
+<p>This GIF does have a few problems; the conflicting demands of file size, image size, image quality, and scroll speed work against each other. There&#39;s a slight flickering, due I think to the rounding or aliasing in the GIF. You could make the GIF as long as you want, subject of course to the maximum size of animated GIF that you&#39;re prepared to handle. &#40;And yes, this page does take a long time to load. Sorry.&#41;</p>
+<p>Videos also have their problems with this kind of content, because the downsampling commonly applied can affect the detail. To see what I mean, try watching <a href="https://www.youtube.com/watch?v&#61;iKpIuCmATYE&amp;feature&#61;youtu.be">Rule 110: The Movie <span class="inlinesvg"><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="14" viewBox="0 0 20 14">
+<path fill-rule="nonzero" fill="rgb(98.823529%, 0%, 1.960784%)" fill-opacity="1" d="M 20 7 L 19.988281 9.457031 L 19.949219 10.238281 L 19.886719 10.800781 L 19.800781 11.25 L 19.6875 11.628906 L 19.550781 11.957031 L 19.382812 12.246094 L 19.1875 12.496094 L 18.960938 12.722656 L 18.707031 12.917969 L 18.414062 13.09375 L 18.085938 13.246094 L 17.714844 13.378906 L 17.292969 13.492188 L 16.808594 13.589844 L 16.25 13.664062 L 15.589844 13.722656 L 14.761719 13.765625 L 13.613281 13.792969 L 10 13.800781 L 6.386719 13.792969 L 5.238281 13.765625 L 4.410156 13.722656 L 3.75 13.664062 L 3.191406 13.589844 L 2.707031 13.492188 L 2.285156 13.378906 L 1.914062 13.246094 L 1.585938 13.09375 L 1.292969 12.917969 L 1.039062 12.722656 L 0.8125 12.496094 L 0.617188 12.246094 L 0.449219 11.957031 L 0.3125 11.628906 L 0.199219 11.25 L 0.113281 10.800781 L 0.0507812 10.238281 L 0.0117188 9.457031 L 0 7 L 0.0117188 4.542969 L 0.0507812 3.761719 L 0.113281 3.199219 L 0.199219 2.75 L 0.3125 2.371094 L 0.449219 2.042969 L 0.617188 1.753906 L 0.8125 1.503906 L 1.039062 1.277344 L 1.292969 1.082031 L 1.585938 0.90625 L 1.914062 0.753906 L 2.285156 0.621094 L 2.707031 0.507812 L 3.191406 0.410156 L 3.75 0.335938 L 4.410156 0.277344 L 5.238281 0.234375 L 6.386719 0.207031 L 10 0.199219 L 13.613281 0.207031 L 14.761719 0.234375 L 15.589844 0.277344 L 16.25 0.335938 L 16.808594 0.410156 L 17.292969 0.507812 L 17.714844 0.621094 L 18.085938 0.753906 L 18.414062 0.90625 L 18.707031 1.082031 L 18.960938 1.277344 L 19.1875 1.503906 L 19.382812 1.753906 L 19.550781 2.042969 L 19.6875 2.371094 L 19.800781 2.75 L 19.886719 3.199219 L 19.949219 3.761719 L 19.988281 4.542969 Z M 20 7 "/>
+<path fill-rule="nonzero" fill="rgb(100%, 100%, 100%)" fill-opacity="1" d="M 8.5 9.597656 L 8.5 4.402344 L 13 7 Z M 8.5 9.597656 "/>
+</svg>
+</span></a> &#40;on YouTube&#41;. &#40;This is my submission for YouTube&#39;s <em>Most Boring Video 2018</em> competition.&#41;</p>
+<h3 id="solid_work"><a href="#solid_work" class="header-anchor">Solid work</a></h3>
+<p>If you want to do more than just look at pictures on the screen—perhaps you&#39;re building your own railway station?—here are some tips for exporting the graphics to your favourite 3D modeller.</p>
+<p>First, place a box or shape around the outside of the design, and use the <code>:path</code> action rather than <code>:fill</code> or <code>:stroke</code>. Then, to draw what are now the &#39;holes&#39;, use <code>newsubpath&#40;&#41;</code> before drawing each hole, and make sure to draw the holes with reversed paths &#40;using the <code>reversepath</code> keyword, for example&#41;.</p>
+<pre><code class="language-julia">function drawaspath&#40;ca::CA;
+        cellwidth&#61;10&#41;
+    lng &#61; length&#40;ca.cells&#41;
+    for i in 1:lng
+        if ca.cells&#91;i&#93; &#61;&#61; true
+            newsubpath&#40;&#41;
+            pt &#61; Point&#40;-&#40;lng ÷ 2&#41; * cellwidth &#43; &#40;i * cellwidth&#41;, 0&#41;
+            poly&#40;box&#40;pt, cellwidth - 2, cellwidth - 2, vertices&#61;true&#41;,
+                :path, reversepath&#61;true, close&#61;true&#41;
+        end
+    end
+end
+
+@svg begin
+    background&#40;&quot;black&quot;&#41;
+    ca &#61; CA&#40;110, 40&#41;
+    ca.cells &#61; rand&#40;Bool, length&#40;ca.cells&#41;&#41;
+    cellwidth &#61; 7
+    bxw &#61; boxwidth&#40;BoundingBox&#40;&#41; * 0.98&#41;/2
+    squircle&#40;O, bxw, bxw, rt&#61;0.1, :path&#41;
+    translate&#40;boxtopcenter&#40;BoundingBox&#40;&#41;&#41; &#43; &#40;-5, 7&#41;&#41;
+    for i in 1:40
+        translate&#40;0, cellwidth&#41;
+        drawaspath&#40;ca, cellwidth&#61;cellwidth&#41;
+        nextgeneration&#40;ca&#41;
+    end
+    sethue&#40;&quot;grey80&quot;&#41;
+    fillpath&#40;&#41;
+end 300 300 &quot;../images/automata/ca-as-path.svg&quot;</code></pre>
+<p><img src="/assets/images/automata/ca-as-path.svg" alt="image label" /></p>
+<p>So this is a single path, and the holes are reversed subpaths. When you import this single path into a 3D modelling program, you <em>should</em> be able to extrude it into a solid without problems. Here&#39;s one modelled as a thin gold reflective sheet.</p>
+<p><img src="/assets/images/automata/ca-3d-render-1.png" alt="image label" /></p>
+<p>It&#39;s hard to resist playing with 3D modellers... I added some fog and a rusty metal effect:</p>
+<p><img src="/assets/images/automata/ca-3d-render-2.png" alt="image label" /></p>
+<p>If you omit the surrounding path, it might still work visually. It would be a challenge to hang all these pieces on a gallery wall:</p>
+<p><img src="/assets/images/automata/ca-3d-render-3.png" alt="image label" /></p>
+<p>These little critters are quite interesting, and there are a <a href="https://arxiv.org/search/?query&#61;&#37;22cellular&#43;automata&#37;22&amp;searchtype&#61;title&amp;abstracts&#61;show&amp;order&#61;-announced_date_first&amp;size&#61;50">fair number of scientific papers</a> with &quot;cellular automata&quot; in the title . I think this must be because, although things don&#39;t get much simpler than a cellular automaton, perhaps they might—in some strange way—be similar to how the universe itself works when you zoom in close enough.</p>
+<p>&#91;2018-11-29&#93;</p>
+<table class="fndef" id="fndef:1">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:1">[1]</a></td>
+        <td class="fndef-content">At the time of writing this I couldn&#39;t find any working Julia packages that did one-dimensional cellular automata. But if I had found one, I probably wouldn&#39;t have written any of the above anyway.</td>
+    </tr>
+</table>
+
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?automata" alt="cormullion signing off" /></div>
+<p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: June 04, 2024. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+        <script src="/libs/katex/katex.min.js"></script>
+<script src="/libs/katex/auto-render.min.js"></script>
+<script>renderMathInElement(document.body)</script>
+
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>

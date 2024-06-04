@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>Rainbow</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><h1 id="rainbow"><a href="#rainbow" class="header-anchor">Rainbow</a></h1>
+<p><img src="/assets/images/rainbow/prism-rainbow.png" alt="a photograph of the sun shining through my window this morning" /></p>
+<p>This post is a simple, beginner level tutorial on how to draw a rainbow using Julia package Luxor.jl.</p>
+<p>A rainbow is an atmospheric phenomenon where light from the sun is refracted by rain drops into light rays of various colors. It&#39;s generally regarded as a Good Thing, although there have been a few exceptions where people are afraid of rainbows &#40;<a href="https://interestingliterature.com/2021/03/rainbow-symbolism-literature-art-religion-meaning/">such as the Incas</a> – there might be others&#41;.</p>
+<p>We&#39;ll use the Luxor.jl and Colors.jl packages.</p>
+<pre><code class="language-julia">using Luxor, Colors</code></pre>
+<p>The Colors.jl package has lots of colour names defined already, so an easy way to define the set of seven standard colours that make up a rainbow is to put the strings in an array.</p>
+<pre><code class="language-julia">rainbow &#61; &#91;&quot;red&quot;, &quot;orange&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;indigo&quot;, &quot;violet&quot;&#93;</code></pre>
+<p>This is the standard set of seven. Aristotle had said that there were only three colours in a rainbow. Isaac Newton is credited with establishing the canonical set of seven, although his first thought was five colours, before settling on the &#39;magical&#39; number seven. Here&#39;s a picture from Newton&#39;s publication called <em>Opticks: or, a Treatise of the Reflexions, Refractions, Inflexions and Colours of Light</em>, which was published in 1704:</p>
+<p><img src="/assets/images/rainbow/newton.png" alt="Newton illustration of colours from Opticks &#40;1704&#41;" /></p>
+<p>Newton labelled the diagram with the letters D-E-F-G-A-B-C around the edge to show how he thought the colours corresponded with the musical notes of a Dorian scale. It makes no sense to me &#40;and why not a C major scale?&#41;, but I think the idea was that the &quot;secondary&quot; colours orange and indigo correspond somehow to the smaller semitone intervals E-F and B-C.</p>
+<p>We&#39;ll draw seven arcs, one in each colour, with the radius decreasing as we work through the colors. The two angles that specify the start and end of the arcs are π &#40;pointing left, or west, from the center&#41; and 2π or 0&#41; &#40;pointing east, or right, from the center&#41;. </p>
+<p><code>band_width</code> determines the thickness of the arc as drawn with <code>arc&#40;&#41;</code>, and this value is supplied to <code>setline&#40;&#41;</code>. In the loop, the first value of <code>i</code> is 1, so the red arc&#39;s radius is <code>outer_radius - &#40;1 * band_width&#41;</code>.</p>
+<div class="marginnote">&#42; The filename construction with @OUTPUT here is a way to get Franklin.jl to generate and include the images automatically when this site is built.</div>
+<pre><code class="language-julia">outer_radius &#61; 200
+band_width &#61; 10
+rainbow &#61; &#91;&quot;red&quot;, &quot;orange&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;indigo&quot;, &quot;violet&quot;&#93;
+Drawing&#40;800, 600, joinpath&#40;@OUTPUT, &quot;rainbow1.svg&quot;&#41;&#41; # *
+origin&#40;&#41;
+background&#40;&quot;skyblue&quot;&#41;
+setline&#40;band_width&#41;
+
+for &#40;i, col&#41; in enumerate&#40;rainbow&#41;
+    sethue&#40;col&#41;
+    arc&#40;O, outer_radius - &#40;i * band_width&#41;, π, 0,  :stroke&#41;
+end
+finish&#40;&#41;</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/rainbow1.svg" alt="">
+<p>These standard definitions &#40;from the X11/CSS standard list&#41; of &quot;blue&quot;, &quot;indigo&quot;, and &quot;violet&quot; don&#39;t look quite right to my eyes. The blue is very dark for a rainbow, and the indigo isn&#39;t quite blue enough, to my eyes. Indigo dye was originally used to dye denim, giving the original &#39;blue jeans&#39; their distinctive colour, but I&#39;ve not seen too many pairs of denim jeans with this &#39;purplish&#39; colour.</p>
+<pre><code class="language-julia">Drawing&#40;800, 100, joinpath&#40;@OUTPUT, &quot;indigo.svg&quot;&#41;&#41; 
+origin&#40;&#41;
+sethue&#40;&quot;indigo&quot;&#41;
+box&#40;O, 800, 60, :fill&#41;
+finish&#40;&#41;</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/indigo.svg" alt="">
+<p>And this &quot;violet&quot; is a bit too pink, isn&#39;t it?</p>
+<pre><code class="language-julia">Drawing&#40;800, 100, joinpath&#40;@OUTPUT, &quot;violet.svg&quot;&#41;&#41; 
+origin&#40;&#41;
+sethue&#40;&quot;violet&quot;&#41;
+box&#40;O, 800, 60, :fill&#41;
+finish&#40;&#41;</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/violet.svg" alt="">
+<h1 id="back_to_geometry"><a href="#back_to_geometry" class="header-anchor">Back to geometry</a></h1>
+<p>Instead of drawing thick lines, we can use the <code>sector&#40;&#41;</code> function, which can draw a curved circular shape with both outer and inner arcs, suitable for filling and/or stroking. In graphics work it&#39;s generally better to use filled shapes rather than stroke widths, because scaling and other tasks are much easier.</p>
+<p>Because the red part is drawn first, we&#39;ll gradually decrease the inner and outer radius values of each sector by <code>band_width</code>.</p>
+<pre><code class="language-julia">background&#40;&quot;skyblue&quot;&#41;
+inner_radius &#61; 180
+band_width &#61; 10
+for &#40;i, col&#41; in enumerate&#40;rainbow&#41;
+    sethue&#40;col&#41;
+    sector&#40;O, 
+        inner_radius, 
+        inner_radius &#43; band_width * &#40;8 - i&#41;, 
+        π, 2π,  :fill&#41;
+end</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/rainbow2.svg" alt="">
+<p>With filled sectors rather than stroked lines, scaling is simpler:</p>
+<pre><code class="language-julia">background&#40;&quot;skyblue&quot;&#41;
+for pt in ngon&#40;O, 200, 8, 0, vertices&#61;true&#41;
+    @layer begin
+        translate&#40;pt&#41;
+        iradius  &#61; 50
+        bwidth &#61; 5
+        for &#40;i, col&#41; in enumerate&#40;rainbow&#41;
+            sethue&#40;col&#41;
+            sector&#40;O, iradius, iradius &#43; bwidth * &#40;8 - i&#41;, π, 2π, :fill&#41;
+        end
+    end
+end</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/rainbow3.svg" alt="">
+<p>Let&#39;s have a closer look at the colours. Instead of using a list of seven predefined colours, we could calculate the colours using a different colour space, such as HSB - Hue, Saturation, and Brightness, and step through hue values between 0 to 360. </p>
+<p>However, the obvious sequence 0-60-120-180-240-300-360 doesn&#39;t work for rainbows. Hue doesn&#39;t correspond with wavelength. You don&#39;t want to both start and finish on red, and the &#39;distance&#39; from red-&gt;orange-&gt;yellow-&gt;green is 0°-&gt; 90°, whereas from green-&gt;blue it&#39;s 90° -&gt; 210°. And the hue value for magenta is 300°, but magenta famously does not exist as a colour in the rainbow &#40;it&#39;s the brain&#39;s response to blue and red combined&#41;.</p>
+<pre><code class="language-julia">collect&#40;range&#40;0, step &#61; 360/7, length&#61;7&#41;&#41;
+
+Drawing&#40;900, 500, joinpath&#40;@OUTPUT, &quot;rainbow4a.svg&quot;&#41;&#41; 
+origin&#40;&#41;
+background&#40;&quot;skyblue&quot;&#41;  
+outer_radius &#61; 200
+band_width &#61; 10
+hue_steps &#61; &#40;0, 60, 120, 180, 240, 300, 360&#41;
+for &#40;i, h&#41; in enumerate&#40;hue_steps&#41;
+    sethue&#40;HSB&#40;h, 1, 1&#41;&#41;
+    sector&#40;O,
+        outer_radius - band_width * i,
+        outer_radius - band_width * &#40;i - 1&#41;,
+        π, 2π, :fill&#41;
+end</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/rainbow4a.svg" alt="">
+<p>So I&#39;d guess at 0-35-60-125-200-255-275 for some more suitable colours:</p>
+<pre><code class="language-julia">collect&#40;range&#40;0, step &#61; 360/7, length&#61;7&#41;&#41;
+
+Drawing&#40;900, 500, joinpath&#40;@OUTPUT, &quot;rainbow4.svg&quot;&#41;&#41; 
+origin&#40;&#41;
+background&#40;&quot;skyblue&quot;&#41;  
+outer_radius &#61; 200
+band_width &#61; 10
+hue_steps &#61; &#40;0, 35, 60, 125, 200, 255, 275&#41;
+for &#40;i, h&#41; in enumerate&#40;hue_steps&#41;
+    sethue&#40;HSB&#40;h, 1, 1&#41;&#41;
+    sector&#40;O,
+        outer_radius - band_width * i,
+        outer_radius - band_width * &#40;i - 1&#41;,
+        π, 2π, :fill&#41;
+end</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/rainbow4.svg" alt="">
+<p>I think these blue, indigo, and violet bands are better than the named colours, to my eyes, but they&#39;re not perfect. And the greens are somewhat off, now. And the orange is getting close to brown, which is a <a href="https://www.youtube.com/watch?v&#61;wh4aWZRtTwU">weird colour <span class="inlinesvg"><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="14" viewBox="0 0 20 14">
+<path fill-rule="nonzero" fill="rgb(98.823529%, 0%, 1.960784%)" fill-opacity="1" d="M 20 7 L 19.988281 9.457031 L 19.949219 10.238281 L 19.886719 10.800781 L 19.800781 11.25 L 19.6875 11.628906 L 19.550781 11.957031 L 19.382812 12.246094 L 19.1875 12.496094 L 18.960938 12.722656 L 18.707031 12.917969 L 18.414062 13.09375 L 18.085938 13.246094 L 17.714844 13.378906 L 17.292969 13.492188 L 16.808594 13.589844 L 16.25 13.664062 L 15.589844 13.722656 L 14.761719 13.765625 L 13.613281 13.792969 L 10 13.800781 L 6.386719 13.792969 L 5.238281 13.765625 L 4.410156 13.722656 L 3.75 13.664062 L 3.191406 13.589844 L 2.707031 13.492188 L 2.285156 13.378906 L 1.914062 13.246094 L 1.585938 13.09375 L 1.292969 12.917969 L 1.039062 12.722656 L 0.8125 12.496094 L 0.617188 12.246094 L 0.449219 11.957031 L 0.3125 11.628906 L 0.199219 11.25 L 0.113281 10.800781 L 0.0507812 10.238281 L 0.0117188 9.457031 L 0 7 L 0.0117188 4.542969 L 0.0507812 3.761719 L 0.113281 3.199219 L 0.199219 2.75 L 0.3125 2.371094 L 0.449219 2.042969 L 0.617188 1.753906 L 0.8125 1.503906 L 1.039062 1.277344 L 1.292969 1.082031 L 1.585938 0.90625 L 1.914062 0.753906 L 2.285156 0.621094 L 2.707031 0.507812 L 3.191406 0.410156 L 3.75 0.335938 L 4.410156 0.277344 L 5.238281 0.234375 L 6.386719 0.207031 L 10 0.199219 L 13.613281 0.207031 L 14.761719 0.234375 L 15.589844 0.277344 L 16.25 0.335938 L 16.808594 0.410156 L 17.292969 0.507812 L 17.714844 0.621094 L 18.085938 0.753906 L 18.414062 0.90625 L 18.707031 1.082031 L 18.960938 1.277344 L 19.1875 1.503906 L 19.382812 1.753906 L 19.550781 2.042969 L 19.6875 2.371094 L 19.800781 2.75 L 19.886719 3.199219 L 19.949219 3.761719 L 19.988281 4.542969 Z M 20 7 "/>
+<path fill-rule="nonzero" fill="rgb(100%, 100%, 100%)" fill-opacity="1" d="M 8.5 9.597656 L 8.5 4.402344 L 13 7 Z M 8.5 9.597656 "/>
+</svg>
+</span></a> anyway.</p>
+<h2 id="on_the_right_wavelength"><a href="#on_the_right_wavelength" class="header-anchor">On the right wavelength</a></h2>
+<p>So let&#39;s look at wavelengths instead. </p>
+<p>Colors.jl has a <code>colormatch&#40;&#41;</code> function, which accepts a wavelength value &#40;in nanometers&#41;. So <code>colormatch&#40;640&#41;</code> returns the colour of light with a wavelength of 640 nm:</p>
+<pre><code class="language-julia">Drawing&#40;900, 200, joinpath&#40;@OUTPUT, &quot;colormatch.svg&quot;&#41;&#41; 
+origin&#40;&#41;
+sethue&#40;colormatch&#40;640&#41;&#41;
+paint&#40;&#41;
+finish&#40;&#41;</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/colormatch.svg" alt="">
+<p>The following example is taken from the Luxor.jl documentation &#40;illustrating <code>tickline&#40;&#41;</code>&#41;:</p>
+<pre><code class="language-julia">function color_temp&#40;n, pos;
+          startnumber  &#61; 0,
+          finishnumber &#61; 1,
+          nticks &#61; 1&#41;
+    k &#61; rescale&#40;n, 0, nticks - 1, startnumber, finishnumber&#41;
+    sethue&#40;RGB&#40;colormatch&#40;k&#41;&#41;&#41;
+    circle&#40;pos, 20, action &#61; :fillpreserve&#41;
+    sethue&#40;&quot;white&quot;&#41;
+    strokepath&#40;&#41;
+    text&#40;&quot;&#36;&#40;convert&#40;Int, floor&#40;k&#41;&#41;&#41; nm&quot;, pos - &#40;0, 30&#41;, halign&#61;:left, angle&#61;-π/4&#41;
+end
+
+Drawing&#40;900, 200, joinpath&#40;@OUTPUT, &quot;colormatch2.svg&quot;&#41;&#41; 
+origin&#40;&#41;
+background&#40;&quot;black&quot;&#41; 
+fontsize&#40;16&#41;
+tickline&#40;Point&#40;-350, 0&#41;, Point&#40;350, 0&#41;,
+    startnumber&#61;350,
+    finishnumber&#61;750,
+    major&#61;15,
+    major_tick_function&#61;color_temp&#41;
+finish&#40;&#41;</code></pre>
+<p>This walks through the wavelengths, from shorter, more energetic violet up to longer, less energetic red. The <code>colormatch&#40;&#41;</code> function returns a suitable RGB colour, and &quot;black&quot; when outside the range of visible light wavelengths.</p>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/colormatch2.svg" alt="">
+<p>So we can draw a rainbow where the outer band corresponds to light with the wavelength of red – let&#39;s guess at an approximate value of 640 nm – and with an inner band of 420 nm for the violet.</p>
+<pre><code class="language-julia">Drawing&#40;900, 500, joinpath&#40;@OUTPUT, &quot;rainbow5.svg&quot;&#41;&#41;
+origin&#40;&#41;
+background&#40;&quot;skyblue&quot;&#41;
+outer_radius &#61; 200
+band_width &#61; 10
+for i in 1:7
+    colortemp &#61; rescale&#40;i, 1, 7, 640, 420&#41; # nanometers
+    sethue&#40;colormatch&#40;colortemp&#41;&#41;
+    sector&#40;O,
+        outer_radius - band_width * i,
+        outer_radius - band_width * &#40;i - 1&#41;,
+        π, 2π, :fill&#41;
+end</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/rainbow5.svg" alt="">
+<p>Perhaps, apart from the blue/violet, this is the best attempt so far. </p>
+<p>Colour vision and perception, and the intriguing geometry of rainbows, are fascinating topics, well worth investigating.</p>
+<h2 id="raindrops"><a href="#raindrops" class="header-anchor">Raindrops</a></h2>
+<p>Weather forecasters often talk about bands of rain, but these drawings using bands of colour are obviously simplifications – the colours in a rainbow change slowly and gradually rather than in jumps, and mix together too &#40;&quot;spectral smearing&quot;&#41;.</p>
+<p>Perhaps we can emulate this using colour blends or gradients. A simple radial blend can be built from two points, two radii, and two colours. In this simple example, the two points are the origin, the two radii are 50 and 150, and the two colours are &quot;red&quot; and &quot;blue&quot;.</p>
+<pre><code class="language-julia">Drawing&#40;800, 400, joinpath&#40;@OUTPUT, &quot;blend.svg&quot;&#41;&#41;
+background&#40;&quot;black&quot;&#41;
+origin&#40;&#41;
+setblend&#40;blend&#40;Point&#40;0, 0&#41;, 50, Point&#40;0, 0&#41;, 150, &quot;red&quot;, &quot;blue&quot;&#41;&#41;
+sector&#40;O, 50, 150, 0, 2π, :fill&#41;
+finish&#40;&#41;</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/blend.svg" alt="">
+<p>So we can calculate the outer and inner wavelengths for each of the seven bands and draw continuous colour blends rather than coloured bands.</p>
+<pre><code class="language-julia">Drawing&#40;800, 500, joinpath&#40;@OUTPUT, &quot;blend2.svg&quot;&#41;&#41;
+origin&#40;&#41;
+background&#40;&quot;skyblue&quot;&#41;
+outer_radius &#61; 200
+band_width &#61; 10
+max_wavelength &#61; 640 # reddish in nanometers
+min_wavelength &#61; 420 # violetish in nanometers
+for i in 1:7
+    outercolorwavelength &#61; rescale&#40;i, 1, 8, max_wavelength, min_wavelength&#41; 
+    outercol &#61; colormatch&#40;outercolorwavelength&#41;
+    innercolorwavelength &#61; rescale&#40;i &#43; 1, 1, 8, max_wavelength, min_wavelength&#41;
+    innercol &#61; colormatch&#40;innercolorwavelength&#41;
+
+    o_radius &#61; outer_radius - &#40;band_width * i&#41;
+    i_radius &#61; outer_radius - &#40;band_width * &#40;i &#43; 1&#41;&#41;        
+
+    setblend&#40;blend&#40;O, i_radius, O, o_radius, innercol, outercol&#41;&#41;
+
+    sector&#40;O,
+        i_radius,
+        o_radius, 
+        π, 2π, :fillstroke&#41;
+end
+finish&#40;&#41;</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/blend2.svg" alt="">
+<h2 id="raindrops__2"><a href="#raindrops__2" class="header-anchor">Raindrops</a></h2>
+<p>That blend is a bit garish. It would be nice if we could just kind of draw drops of water and make them show colours. </p>
+<p>Here&#39;s an idea. Draw lots of small dots. The colour of each dot is controlled by the distance from the drop to the center. Outside the minimum and maximum wavelengths of visible light, <code>colormatch&#40;&#41;</code> returns black so don&#39;t draw them.</p>
+<pre><code class="language-julia">max_wavelength &#61; 640 # reddish in nanometers
+min_wavelength &#61; 420 # violetish in nanometers
+Drawing&#40;900, 500, joinpath&#40;@OUTPUT, &quot;rain.svg&quot;&#41;&#41;
+origin&#40;&#41;
+background&#40;&quot;skyblue&quot;&#41;
+drops &#61; randompointarray&#40;BoundingBox&#40;&#41;, 1.25&#41;
+for pt in drops
+    pt.y &gt; 0 &amp;&amp; continue
+    d &#61; distance&#40;O, pt&#41; &#43; rand&#40;-10:10&#41;
+    wavelength &#61; rescale&#40;d, 180, 250, min_wavelength, max_wavelength&#41;
+    if &#33;&#40;max_wavelength &gt; wavelength &gt; min_wavelength&#41;
+        continue
+    end
+    sethue&#40;colormatch&#40;wavelength&#41;&#41;
+    rect&#40;pt, 1, 1, :fill&#41;
+end
+finish&#40;&#41;</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/rain.svg" alt="">
+<p>A bit of randomness doesn&#39;t hurt.</p>
+<p>With a few tweaks we can make the inside of the rainbow look lighter than the outside:</p>
+<pre><code class="language-julia">img &#61; readpng&#40;&quot;./_assets/images/rainbow/hp.png&quot;&#41;
+# Houses of Parliament image by Andrea Abbott
+
+max_wavelength &#61; 640 # reddish in nanometers
+min_wavelength &#61; 420 # violetish in nanometers
+
+Drawing&#40;1024, 669, joinpath&#40;@OUTPUT, &quot;parliament.png&quot;&#41;&#41;
+origin&#40;&#41;
+background&#40;&quot;skyblue&quot;&#41;
+placeimage&#40;img, centered&#61;true&#41;
+pts &#61; randompointarray&#40;BoundingBox&#40;&#41;, 1&#41;
+
+for pt in pts
+    pt.y &gt; -50 &amp;&amp; continue
+    setopacity&#40;rescale&#40;pt.y, -350, -50, 0.9, 0&#41;&#41;
+    d &#61; distance&#40;O &#43; &#40;100, 0&#41;, pt&#41; &#43; rand&#40;-10:10&#41;
+    wavelength &#61; rescale&#40;d, 300, 330, min_wavelength, max_wavelength&#41;
+    if wavelength &lt; min_wavelength
+        setopacity&#40;0.1&#41;
+        sethue&#40;&quot;white&quot;&#41;
+    elseif wavelength &gt; max_wavelength
+        setopacity&#40;0.1&#41;
+        sethue&#40;&quot;black&quot;&#41;
+    else
+        sethue&#40;colormatch&#40;wavelength&#41;&#41;
+    end
+    rect&#40;pt, 1, 1, :fill&#41;
+end
+finish&#40;&#41;</code></pre>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/parliament.png" alt="">
+<p>It would be fun to do more precise modelling of this using some ray-tracing software, such as Makie.jl or Blender.</p>
+<h2 id="flagged"><a href="#flagged" class="header-anchor">Flagged</a></h2>
+<p>In 2016, the rainbow pride flag was flown above the UK Houses of Parliament for London Pride Weekend &#40;24-26 June&#41;, the first time the rainbow flag had been flown from Parliament.</p>
+<p>The &quot;rainbow&quot; pride flag has only 6 colours, and the three &quot;blue&quot;, &quot;indigo&quot;, and &quot;violet&quot; bands have been replaced with just two colours. The original rainbow pride flag, designed by Gilbert Baker in 1978, had eight colours, with &quot;pink&quot; at the top, but pink cloth was hard to find, and the six coloured flags were easier to make.</p>
+<p>By the way, drawing a six colour flag is even easier than drawing a rainbow. Here I&#39;ve gone for the named colors &quot;blue&quot; and &quot;purple&quot; for the last two.</p>
+<pre><code class="language-julia">w &#61; 1000
+h &#61; 600
+Drawing&#40;w, h, joinpath&#40;@OUTPUT, &quot;pride.svg&quot;&#41;&#41;
+origin&#40;&#41;
+boxes &#61; Tiler&#40;w, h, 6, 1, margin&#61;0&#41;
+pride_colors &#61; &#91;&quot;red&quot;, &quot;orange&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;purple&quot;&#93;
+for &#40;i, bx&#41; in enumerate&#40;boxes&#41;
+    sethue&#40;pride_colors&#91;i&#93;&#41;
+    box&#40;boxes, i, :fillstroke&#41;
+end
+finish&#40;&#41;</code></pre>
+<p>with this result:</p>
+<img src="/assets/pages/2023-05-17-rainbow/code/output/pride.svg" alt="">
+<p>May 17th is the <a href="https://en.wikipedia.org/wiki/International_Day_Against_Homophobia,_Biphobia_and_Transphobia">International Day Against Homophobia, Biphobia and Transphobia</a>, a day to celebrate diversity and to raise awareness of the human rights of lesbian, gay, bisexual, transgender, and intersex &#40;LGBTIQ&#43;&#41; people. </p>
+<p>So, draw a rainbow - or a rainbow flag - today&#33;</p>
+<p>&#91;2023-05-17&#93;</p>
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?rainbow" alt="cormullion signing off" /></div>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: September 13, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>

@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>Fediverse</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><h1 id="fediverse"><a href="#fediverse" class="header-anchor">Fediverse</a></h1>
+<p>Recently I&#39;ve been seeing the fediverse logo a lot.</p>
+<p><img src="/assets/images/fediverse/fediverse.svg" alt="image label" /></p>
+<p>This is the official - yet unofficial - fediverse logo. I liked it, and decided to try to recreate it using procedural code, with Julia. One reason I like to do this is to find out what&#39;s easy and what should be easier in the software I write. Another reason is that I often learn something new when working on different designs.</p>
+<p>And what is the fediverse?</p>
+<blockquote>
+<p>The fediverse &#40;a portmanteau of &quot;federation&quot; and &quot;universe&quot;&#41; is an ensemble of federated &#40;i.e. interconnected&#41; servers that are used for web publishing &#40;i.e. social networking, microblogging, blogging, or websites&#41; and file hosting, but which, while independently hosted, can communicate with each other. On different servers &#40;technically instances&#41;, users can create so-called identities. These identities are able to communicate over the boundaries of the instances because the software running on the servers supports one or more communication protocols that follow an open standard. &#40;Wikipedia&#41;</p>
+</blockquote>
+<p>I usually cheat when drawing things like this - straight line caps, white-on-white overlaps, etc. - but this time I thought I&#39;d do it properly, without cheating.</p>
+<h2 id="simple_stuff"><a href="#simple_stuff" class="header-anchor">Simple stuff</a></h2>
+<p>The first task &#40;doing the easiest first&#41; is to draw the five disks around the edge:</p>
+<pre><code class="language-julia">using Luxor, Colors
+...
+n &#61; 5
+R &#61; 210
+r &#61; 0.22R
+diskcolors &#61; &#91;&quot;#00a3ff&quot;, &quot;#9500ff&quot;, &quot;#ff0000&quot;, &quot;#ffca00&quot;, &quot;#64ff00&quot;&#93;
+vts &#61; ngon&#40;O, R, n, -deg2rad&#40;9&#41;, vertices &#61; true&#41;
+for i in eachindex&#40;vts&#41;      
+    sethue&#40;diskcolors&#91;mod1&#40;i, end&#41;&#93;&#41;
+    circle&#40;vts&#91;i&#93;, r, :fill&#41;
+...</code></pre>
+<p><img src="/assets/images/fediverse/circles.svg" alt="outer circles of fediverse logo" /></p>
+<p>I&#39;m using the colors as specified by the original designer. I wondered if they could be algorithmically calculated:</p>
+<p><img src="/assets/images/fediverse/outer-circles-colors.svg" alt="colors of fediverse logo" /></p>
+<p>but the differences between a simple calculated set and the original colors suggested to me that the designer tweaked the hues, eg to make a better yellow. A good choice.</p>
+<p>The outside connecting edges are built with curves &#40;I&#39;m trying to not cheat&#41;, which can be constructed by finding points on surrounding circles.  </p>
+<pre><code class="language-julia">...
+gap &#61; 0.023R
+δ &#61; deg2rad&#40;18&#41;
+δ1 &#61; deg2rad&#40;22&#41;
+
+disk1 &#61; vts&#91;mod1&#40;i, end&#41;&#93; # the current disk
+disk2 &#61; vts&#91;mod1&#40;i &#43; 1, end&#41;&#93; # the next disk
+
+sl &#61; slope&#40;disk1, disk2&#41;
+f1 &#61; disk1 &#43; polar&#40;r &#43; gap, sl &#43; δ&#41;
+f2 &#61; disk1 &#43; polar&#40;r &#43; gap, sl - δ&#41;
+f3 &#61; disk2 &#43; polar&#40;r &#43; gap, π &#43; sl &#43; δ&#41;
+f4 &#61; disk2 &#43; polar&#40;r &#43; gap, π &#43; sl - δ&#41;
+
+sidecols &#61; &#91;&quot;#5b36e9&quot;, &quot;#d0188f&quot;, &quot;#f47601&quot;, &quot;#ebe305&quot;, &quot;#30b873&quot;&#93;
+sethue&#40;sidecols&#91;mod1&#40;i, end&#41;&#93;&#41;
+
+newpath&#40;&#41;
+line&#40;f1&#41;
+carc2r&#40;disk1, f1, f2&#41;
+line&#40;f3&#41;
+carc2r&#40;disk2, f3, f4&#41;
+closepath&#40;&#41;
+fillpath&#40;&#41;
+...</code></pre>
+<p><img src="/assets/images/fediverse/construction1.svg" alt="construction lines for outer edges" /></p>
+<p>The colors of the outer edges are midway between the colors of the disks they connect. I used <code>Colors.weighted_color_mean&#40;&#41;</code> to find the exact middle point between two connected colors, and the differences between my calculated values and the designer&#39;s original selections are very small.</p>
+<p><img src="/assets/images/fediverse/outer-edges-colors.svg" alt="" /></p>
+<p>I&#39;ll use the originals again.</p>
+<p><img src="/assets/images/fediverse/construction2.svg" alt="colors of outer edges" /></p>
+<h2 id="going_deeper"><a href="#going_deeper" class="header-anchor">Going deeper</a></h2>
+<p>Each of the &quot;interior edges&quot; can be built in two parts, a longer part and a shorter one. I found I had to define quite a few temporary points and construction lines to make these two; I don&#39;t know if there&#39;s an easier way, but I found myself wishing for some polygon clipping routines...</p>
+<p><img src="/assets/images/fediverse/construction3.svg" alt="construction lines for inner edges" /></p>
+<pre><code class="language-julia">...
+
+disk3 &#61; vts&#91;mod1&#40;i &#43; 3, end&#41;&#93; 
+disk4 &#61; vts&#91;mod1&#40;i - 1, end&#41;&#93; 
+disk5 &#61; vts&#91;mod1&#40;i &#43; 2, end&#41;&#93; 
+_, crossing &#61; intersectionlines&#40;disk1, disk3, disk4, disk5&#41;
+sl1 &#61; slope&#40;disk1, disk3&#41;
+sl3 &#61; slope&#40;disk4, disk5&#41;
+
+# the longer edge
+g1 &#61; disk1 &#43; polar&#40;r &#43; gap, sl1 &#43; δ&#41;
+g2 &#61; disk1 &#43; polar&#40;r &#43; gap, sl1 - δ&#41;
+temp1 &#61; disk4 &#43; polar&#40;r &#43; gap, sl3 - δ1&#41;
+temp2 &#61; temp1 &#43; polar&#40;5r &#43; gap, sl3&#41;
+temp3 &#61; disk4 &#43; polar&#40;r &#43; gap, sl3 &#43; δ1&#41;
+temp4 &#61; temp3 &#43; polar&#40;5r &#43; gap, sl3&#41;
+temp5 &#61; g1 &#43; polar&#40;distance&#40;g1, crossing&#41;, sl1&#41;
+temp6 &#61; g2 &#43; polar&#40;distance&#40;g2, crossing&#41;, sl1&#41;
+_, g3 &#61; intersectionlines&#40;temp1, temp2, g1, temp5&#41;
+_, g4 &#61; intersectionlines&#40;temp1, temp2, g2, temp6&#41;
+
+sethue&#40;crosscols&#91;mod1&#40;i, end&#41;&#93;&#41;
+
+move&#40;g1&#41;
+carc2r&#40;disk1, g1, g2&#41;
+line&#40;g4&#41;
+line&#40;g3&#41;
+line&#40;g1&#41;
+fillpath&#40;&#41;
+
+# the shorter edge 
+h1 &#61; disk3 - polar&#40;r &#43; gap, sl1 - δ&#41;
+h2 &#61; disk3 - polar&#40;r &#43; gap, sl1 &#43; δ&#41;
+
+_, h3 &#61; intersectionlines&#40;temp3, temp4, g2, h2&#41;
+_, h4 &#61; intersectionlines&#40;temp3, temp4, g1, h1&#41;
+
+move&#40;h3&#41;
+line&#40;h4&#41;
+line&#40;h1&#41;
+arc2r&#40;disk3, h1, h2&#41;
+line&#40;h3&#41;
+fillpath&#40;&#41;
+...</code></pre>
+<p>Colors are as specified in the original. And that&#39;s it. </p>
+<h2 id="finally"><a href="#finally" class="header-anchor">Finally</a></h2>
+<p>One benefit of having the logo generated procedurally is that it&#39;s easier to do silly things with it.</p>
+<p>Here&#39;s a recursive version, where each disk contains a smaller copy of complete logo.</p>
+<p><img src="/assets/images/fediverse/fediverse-recursive.svg" alt="recursive fediverse logo" /></p>
+<p>And it&#39;s possible to make various animations:</p>
+<p><img src="/assets/images/fediverse/animation.gif" alt="animated fediverse logo" /></p>
+
+<details closed><summary>The full code for the logo is here.</summary>
+
+<pre>
+<code class="language-julia">
+using Luxor, Colors
+
+const diskcolors = [
+    "#00a3ff", 
+    "#9500ff", 
+    "#ff0000", 
+    "#ffca00", 
+    "#64ff00", 
+]
+
+const sidecols = [
+    "#5b36e9",
+    "#d0188f",
+    "#f47601",
+    "#ebe305",
+    "#30b873",
+]
+
+const crosscols = [
+    "#57c115", 
+    "#5496be", 
+    "#a730b8", 
+    "#ce3d1a", 
+    "#dbb210", 
+]
+
+function fediverse(R, pos = O)
+    @layer begin
+        translate(pos)
+        n = 5
+        r = 0.22R 
+        gap = 0.023R
+        δ = deg2rad(18)
+        δ1 = deg2rad(22)
+        vts = ngon(O, R, n, -deg2rad(9), vertices = true)
+        for i in 1:length(vts)
+            # disks
+            sethue(diskcolors[mod1(i, end)])
+            circle(vts[i], r, :fill)
+
+            # edges
+            disk1 = vts[mod1(i, end)] # this disk
+            disk2 = vts[mod1(i + 1, end)] # the next disk
+
+            # outer edges
+            sl = slope(disk1, disk2)
+            f1 = disk1 + polar(r + gap, sl + δ)
+            f2 = disk1 + polar(r + gap, sl - δ)
+            f3 = disk2 + polar(r + gap, π + sl + δ)
+            f4 = disk2 + polar(r + gap, π + sl - δ)
+
+            sethue(sidecols[mod1(i, end)])
+            newpath()
+            line(f1)
+            carc2r(disk1, f1, f2)
+            line(f3)
+            carc2r(disk2, f3, f4)
+            closepath()
+            fillpath()
+
+            disk3 = vts[mod1(i + 3, end)] 
+            disk4 = vts[mod1(i - 1, end)] 
+            disk5 = vts[mod1(i + 2, end)] 
+            _, crossing = intersectionlines(disk1, disk3, disk4, disk5)
+            # the longer of the interior edges
+            sl1 = slope(disk1, disk3)
+            sl3 = slope(disk4, disk5)
+            g1 = disk1 + polar(r + gap, sl1 + δ)
+            g2 = disk1 + polar(r + gap, sl1 - δ)
+            temp1 = disk4 + polar(r + gap, sl3 - δ1)
+            temp2 = temp1 + polar(5r + gap, sl3)
+            temp3 = disk4 + polar(r + gap, sl3 + δ1)
+            temp4 = temp3 + polar(5r + gap, sl3)
+            temp5 = g1 + polar(distance(g1, crossing), sl1)
+            temp6 = g2 + polar(distance(g2, crossing), sl1)
+            _, g3 = intersectionlines(temp1, temp2, g1, temp5)
+            _, g4 = intersectionlines(temp1, temp2, g2, temp6)
+
+            sethue(crosscols[mod1(i, end)])
+            move(g1)
+            carc2r(disk1, g1, g2)
+            line(g4)
+            line(g3)
+            line(g1)
+            fillpath()
+
+            # the shorter of the interior edges 
+            h1 = disk3 - polar(r + gap, sl1 - δ)
+            h2 = disk3 - polar(r + gap, sl1 + δ)
+
+            _, h3 = intersectionlines(temp3, temp4, g2, h2)
+            _, h4 = intersectionlines(temp3, temp4, g1, h1)
+
+            move(h3)
+            line(h4)
+            line(h1)
+            arc2r(disk3, h1, h2)
+            line(h3)
+            fillpath()
+        end
+    end
+end
+
+function draw()
+    Drawing(600, 600, "/tmp/fediverse.svg")
+    origin()
+    background("black")
+    fediverse(212)
+    finish()
+    preview()
+end
+
+draw()
+</code>
+</pre>
+</details>
+
+<p>&#91;2022-11-14&#93;</p>
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?fediverse" alt="cormullion signing off" /></div>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: November 14, 2022. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>

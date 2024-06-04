@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+   <link rel="stylesheet" href="/libs/highlight/github.min.css">
+   
+  <link rel="stylesheet" href="/css/franklin.css">
+  <link rel="stylesheet" href="/css/basic.css">
+  <link rel="stylesheet" href="/css/cormullion.css">
+  <link rel="stylesheet" href="/css/juliamono.css">
+  <link rel="icon" href="/assets/favicon.png">
+   <title>Mauve</title>  
+</head>
+<body>
+  <header>
+<div class="blog-name"><a href="/">cormullion’s blog</a></div>
+<nav>
+  <ul>
+    <li><a href="/">Home</a></li>
+  </ul>
+  <img src="/assets/hamburger.svg" id="menu-icon">
+</nav>
+</header>
+
+
+<!-- Content appended here -->
+<div class="franklin-content"><h1 id="in_search_of_a_color"><a href="#in_search_of_a_color" class="header-anchor">In search of a color</a></h1>
+<p><img src="/assets/images/mauve/brushstroke.svg" alt="brush splash" /> <sup id="fnref:splash"><a href="#fndef:splash" class="fnref">[1]</a></sup></p>
+<p>Last week I found an intriguing book in the local charity shop &#40;these are called ‘thrift shops’ in the US I think&#41; for £1.00: <em>Mauve</em>, by Simon Garfield <sup id="fnref:garfield"><a href="#fndef:garfield" class="fnref">[2]</a></sup>. It’s a book all about the colour mauve, its discovery by William Perkin in the mid 19th century, and the story of the later scientific developments in industrial chemistry.</p>
+<p>&#40;By the way, the pronunciation of “mauve” may vary depending on where and when you live. Here in England we’d start by saying “mo” to rhyme with “go” and then finish by saying “-ve” as if we’d finished saying “love”. The Victorians pronounced it as if it was spelt “morv”.&#41;</p>
+<p>White, black, or one of the primary colours might be able to fill a book, but it’s unusual to find a whole book about a single shade of a colour. Although, there’s a bit of biography and plentiful helpings of the history of chemistry too.</p>
+<p>It’s a great story &#40;you might know it already&#41;. In London, in the 1850s, 18 year old chemistry student William Perkin has been assigned the task of synthesizing quinine from coal tar residues, as part of the effort to combat the ongoing worldwide malaria epidemic. Each attempt failed, but just before throwing out one particularly bad mess, he spotted a purple glint deep in the slurry. Seeing the potential, and against the advice of his supervisors, he left academia, set up a factory, obtained a patent &#40;you could patent colors then&#41;, and by the end of the 1850s he was making a lot of money providing the new color to the clothing and dyeing industries.</p>
+<p>As with many modern entrepreneurs, such as Steve Jobs or Bill Gates, there was a bit of luck too. It helped that he was in exactly the right place at exactly the right time. Because, shortly after he’d got his new start-up into production, there was a sudden European-wide craze for the color mauve. Queen Victoria wore it to a royal wedding, the Empress Eugenie, Napoleon III’s wife, made it fashionable in Paris. And these celebrity endorsements, then as now, drove sales to new heights. “Mauve mania” swept through Europe.</p>
+<p>Let’s see what this amazing mauve color looks like on our modern machines. I loaded up the Julia colors package, <a href="https://github.com/JuliaGraphics/Colors.jl">Colors.jl</a>, and set up a quick test:</p>
+<pre><code class="language-julia">using Colors, Luxor
+@draw begin
+    setcolor&#40;&quot;mauve&quot;&#41;
+    paint&#40;&#41;
+end 600 300
+
+ERROR: LoadError: Unknown color: mauve
+Stacktrace:
+ &#91;1&#93; error&#40;::String, ::String&#41; at ./error.jl:42
+ &#91;2&#93; _parse_colorant&#40;::String&#41; at /Users/me/.julia/packages/Colors/r1p4Q/src/parse.jl:103
+ &#91;3&#93; _parse_colorant&#40;::Type&#123;RGBA&#125;, ::Type&#123;ColorAlpha&#123;RGB&#123;T&#125;,T,4&#125; where T&lt;:Union&#123;AbstractFloat, FixedPointNumbers.FixedPoint&#125;&#125;, ::String&#41; at /Users/me/.julia/packages/Colors/r1p4Q/src/parse.jl:112
+ &#91;4&#93; parse at /Users/me/.julia/packages/Colors/r1p4Q/src/parse.jl:145 &#91;inlined&#93;
+ &#91;5&#93; setcolor&#40;::String&#41; at /Users/me/.julia/dev/Luxor/src/colors_styles.jl:29
+ &#91;6&#93; top-level scope at untitled-ba17b354ac0d06ec10bd7374a7ef9522:4
+ &#91;7&#93; top-level scope at /Users/me/.julia/dev/Luxor/src/drawings.jl:555
+in expression starting at untitled-ba17b354ac0d06ec10bd7374a7ef9522:3</code></pre>
+<p>Oh, that didn’t go well. No sign of mauve? Mauve, one of the most famous colors of the 19th Century, has been put in the shade by colors with names like Burleywood and Papaya Whip.</p>
+<h1 id="standards_what_standards"><a href="#standards_what_standards" class="header-anchor">Standards, what standards?</a></h1>
+<p>In Colors.jl, the list of named colors is essentially the X11/CSS standard list. Typing color names is definitely not the best way of specifying colors - obviously, values in the RGB, Luv, and HSV color spaces are more precise, as are those three or six figure hexadecimal codes. But it’s sometimes easier to quickly grab a color name - “gold”, say - than to start filling your head with hex or computer-y numbers. There’s a slight speed penalty for using the names, too &#40;unless you use the macros&#41;, because they have to be parsed, but that won’t be a problem for many applications.</p>
+<p>So what exactly qualifies a color for inclusion in the ‘official’ X11/CSS list? I was expecting to read about rigorous committee-driven meetings where each color was carefully scrutinized before being accepted as a standard, but in fact the X11 color list is famously imperfect and inconsistent, assembled in a haphazard way by assorted MIT hackers over the last few decades, with all kinds of quirks, oddities, and even errors. You can read an entertaining story of these color names <a href="https://arstechnica.com/information-technology/2015/10/tomato-versus-ff6347-the-tragicomic-history-of-css-color-names/">here</a>. Quoted there is one Steven Pemberton: <sup id="fnref:stevepemberton"><a href="#fndef:stevepemberton" class="fnref">[3]</a></sup></p>
+<blockquote>
+<p>“The X11 colour names are an abomination that should have been stifled at birth, and adding them to CSS is a blemish on the otherwise excellent design of CSS. To say that the X11 colour set and their names have been ‘designed’ is an insult to the word ‘design.’ It is just a mess.”</p>
+</blockquote>
+<p>And later on:</p>
+<blockquote>
+<p>Another point of contention was cultural exclusion. Some programmers took umbrage at the region-centric nature of names like “dodger blue” and the potential racial undertones of “navajo white” &#40;from Sinclair Paints&#41; and “indian red” &#40;from Crayola, though the crayon has since been renamed in response to the same concerns&#41;. Others considered the English-only names alienating.</p>
+</blockquote>
+<p>So it was just bad luck that mauve wasn’t part of a set of crayons and so didn&#39;t make it on to the list of standard colors.</p>
+<h1 id="where_is_mauve"><a href="#where_is_mauve" class="header-anchor">Where is mauve?</a></h1>
+<p>I wanted to plot the X11 named colors all at once, to see where mauve might fit in. Using HSB color values, I tried making a polar plot: the hue angle places a marker somewhere on a disk, and the saturation can be the distance from the centre &#40;0&#41; to the circumference &#40;1&#41;. The third value, brightness, can be drawn on an axis pointing straight out of the screen by using circles with decreasing radius as it approaches 1.</p>
+<pre><code class="language-julia">using Luxor, Colors
+function circularlegend&#40;pos, radius&#41;
+    @layer begin
+        fontsize&#40;10&#41;
+        sethue&#40;&quot;gray50&quot;&#41;
+        circle&#40;pos, radius, :stroke&#41;
+        for θ in range&#40;0, 2π - π/12, step&#61;π/12&#41;
+            label&#40;string&#40;convert&#40;Int, round&#40;rad2deg&#40;θ&#41;, digits&#61;1&#41;&#41;, &quot;°&quot;&#41;, θ, polar&#40;radius &#43; 5, θ&#41;&#41;
+        end
+        sethue&#40;&quot;gray20&quot;&#41;
+        setline&#40;.5&#41;
+        for &#40;n, theta&#41; in enumerate&#40;range&#40;0, 2π, step&#61;π/12&#41;&#41;
+            line&#40;polar&#40;20, theta&#41;, polar&#40;radius, theta&#41;, :stroke&#41;
+        end
+    end
+end
+
+@svg begin
+    background&#40;&quot;black&quot;&#41;
+    rad &#61; boxwidth&#40;BoundingBox&#40;&#41; * 0.9&#41;/2
+    circularlegend&#40;O, rad&#41;
+    fontsize&#40;2&#41;
+    dotstack &#61; Tuple&#123;Point, Colorant, Float64&#125;&#91;&#93;
+    for &#40;k, v&#41; in Colors.color_names
+        r, g, b &#61; 1/256 .* v
+        col &#61; convert&#40;HSB, RGB&#40;r, g, b&#41;&#41;
+        h, s, br &#61; col.h, col.s, col.v
+        radius &#61; rescale&#40;s, 0, 1, 0, rad&#41;
+        pt &#61; polar&#40;radius, 2π * h/360&#41;
+        push&#33;&#40;dotstack, &#40;pt, col, br&#41;&#41;
+    end
+    sort&#33;&#40;dotstack, by &#61; x -&gt; last&#40;x&#41;&#41;
+    for dot in dotstack
+        sethue&#40;dot&#91;2&#93;&#41;
+        circle&#40;dot&#91;1&#93;, rescale&#40;dot&#91;3&#93;, 0, 1, 10, 1&#41;, :fillstroke&#41;
+    end
+end 800 800  &quot;_assets/images/mauve/colornames.svg&quot;</code></pre>
+<p><img src="/assets/images/mauve/colornames.svg" alt="named colors" /></p>
+<p>All the grey shades are stacked up at the center. The ‘spheres’ are created because a number of colors are basically the same hue and saturation but just differ in brightness, the out-of-the-screen dimension.</p>
+<p>I think there’s a definite bias towards reds and oranges.</p>
+<h1 id="rainbow_warrior"><a href="#rainbow_warrior" class="header-anchor">Rainbow warrior</a></h1>
+<p>We don&#39;t have to restrict ourselves merely to the X11/CSS list though. The Julia wizard known as <code>oxinabox</code> has compiled a much bigger collection of named colors, over at <a href="https://github.com/JuliaGraphics/NamedColors.jl">NamedColors.jl</a>.</p>
+<pre><code class="language-julia">using NamedColors
+
+@svg begin
+   background&#40;&quot;black&quot;&#41;
+   rad &#61; boxwidth&#40;BoundingBox&#40;&#41; * 0.9&#41;/2
+   circularlegend&#40;O, rad&#41;
+   dotstack &#61; Tuple&#123;Point, Colorant, Float64, String&#125;&#91;&#93;
+   for &#40;k, v&#41; in NamedColors.ALL_COLORS
+       col &#61; convert&#40;HSB, v&#41;
+       h, s, br &#61; col.h, col.s, col.v
+       radius &#61; rescale&#40;s, 0, 1, 0, rad&#41;
+       pt &#61; polar&#40;radius, 2π * h/360&#41;
+       push&#33;&#40;dotstack, &#40;pt, col, br, k&#41;&#41;
+   end
+   fontsize&#40;8&#41;
+   sort&#33;&#40;dotstack, by &#61; x -&gt; x&#91;3&#93;&#41;
+   setline&#40;2&#41;
+   for dot in dotstack
+        pt, col, br, k &#61; dot
+        d &#61; rescale&#40;br, 0, 1, 8, 1&#41;
+        sethue&#40;col&#41;
+        circle&#40;pt, d/2, :fillstroke&#41;
+   end
+end 800 800  &quot;_assets/images/mauve/namedcolornames.svg&quot;</code></pre>
+<p><img src="/assets/images/mauve/namedcolornames.svg" alt="more named colors" /></p>
+<p>Some of these do have <em>mauve</em> in the names, so we can isolate them by replacing two lines with:</p>
+<pre><code class="language-julia">if occursin&#40;&quot;mauv&quot;, k&#41;
+    sethue&#40;&quot;cyan&quot;&#41;
+    box&#40;pt, 2d, 2d, :stroke&#41;
+    text&#40;k, pt &#43; &#40;0, 8&#41;, halign&#61;:center&#41;
+    sethue&#40;col&#41;
+    circle&#40;pt, d/2, :fillstroke&#41;
+end</code></pre>
+<p><img src="/assets/images/mauve/namedcolorhuesonlymauve.svg" alt="just the mauves" /></p>
+<p>If you ask me, I don’t think many of these are really mauve. There’s a sparse-looking area in the purples where I think a real mauve might belong. So, what color is mauve? To find out, I think we’ll have to go back in time.</p>
+<h1 id="the_royal_purple"><a href="#the_royal_purple" class="header-anchor">The royal purple</a></h1>
+<p>When Perkin first thought of naming his new discovery, he settled for <em>Tyrian Purple</em>. This is the famous rich purple color much prized by the Romans, which could only be worn by nobles and emperors. It was fabulously expensive to make &#40;only tiny amounts could be extracted from the glands of hundreds of thousands of a particular species of mollusc&#41;, was sometimes more expensive than gold, and was occasionally compared to the color of dried blood. Presumably Perkin’s new colour was similar enough to a rich purple to justify his choice of name? Or was he just trying to boost the commercial prospects of his pale pseudo-royal purple dye?</p>
+<p>Let’s get some visual help, and see about getting some values. I’m unable to do any real scientific analysis with expensive machines and things <sup id="fnref:analysis"><a href="#fndef:analysis" class="fnref">[4]</a></sup>, so I just found a few relevant images featuring mauve, and played around with the pixel values, looking for clues. The pictures at top left, center, and middle right show original samples of fabric dyed with mauveine, the mauve dye. At bottom left is a scarf or shawl. For good measure I found pictures of a couple of dresses, one real and one in a painting, and a book. At the bottom is the Mallow flower; the word <em>mauve</em> is the French name of this flower.</p>
+<p><img src="/assets/images/mauve/images-collected.png" alt="source images for mauve" /> <sup id="fnref:images"><a href="#fndef:images" class="fnref">[5]</a></sup></p>
+<p>Then I hacked up a bit of code to process the images and look for the colors. It’s a bit prototype-y at the moment.</p>
+<pre><code class="language-julia">using Images
+
+function project&#40;x, y, z;
+        sf &#61; 3, hm &#61; -1&#41;
+    # negative because y is positive downwards
+    u &#61; &#40;x - y&#41;/sqrt&#40;2&#41;
+    v &#61; &#40;x &#43; 2&#40;hm * z&#41; &#43; y&#41;/sqrt&#40;6&#41;
+    return Point&#40;sf * u, sf * v&#41;
+end
+project&#40;t; kwargs...&#41; &#61; project&#40;t&#91;1&#93;, t&#91;2&#93;, t&#91;3&#93;; kwargs...&#41;
+
+function drawisoaxes&#40;;
+        sf &#61; sf,
+        hm &#61; hm, r &#61; 300&#41;
+    @layer begin
+        fontsize&#40;14&#41;
+        setline&#40;0.5&#41;
+        p &#61; project&#40;0, r, 0, sf &#61; sf, hm &#61; hm&#41;
+        line&#40;project&#40;0, -r, 0, sf &#61; sf, hm &#61; hm&#41;, p, :stroke&#41;
+        text&#40;&quot;y&quot;, p&#41;
+        p &#61; project&#40;r, 0, 0, sf &#61; sf, hm &#61; hm&#41;
+        line&#40;project&#40;-r, 0, 0, sf &#61; sf, hm &#61; hm&#41;, p, :stroke&#41;
+        text&#40;&quot;x&quot;, p&#41;
+        p &#61; project&#40;0, 0, r, sf &#61; sf, hm &#61; hm&#41;
+        line&#40;project&#40;0, 0, -r, sf &#61; sf, hm &#61; hm&#41;, p, :stroke&#41;
+        text&#40;&quot;z&quot;, p&#41;
+    end
+end
+
+function drawimagefile&#40;imfile;
+        caption&#61;&quot;caption&quot;&#41;
+    background&#40;&quot;grey10&quot;&#41;
+    img &#61; load&#40;imfile&#41;
+    panels &#61; Table&#40;&#91;700&#93;, &#91;550, 400&#93;&#41;
+    subpanels &#61; Table&#40;&#91;450, 250&#93;, &#91;390&#93;, panels&#91;2&#93;&#41;
+    sf &#61; 0.8
+    hm &#61; -1
+    S &#61; panels.colwidths&#91;1&#93;/2 - 50
+    S1 &#61; subpanels.colwidths&#91;1&#93; - 10
+    # at left, a top down view
+    @layer begin
+        translate&#40;panels&#91;1&#93;&#41;
+        circularlegend&#40;O, S&#41;
+    end
+    # store not draw
+    dotstack &#61; Tuple&#123;Point, Colorant, Float64&#125;&#91;&#93;
+    isostack &#61; Tuple&#123;Point, Colorant, Float64&#125;&#91;&#93;
+    for i in img
+        r, g, b &#61; i.r, i.g, i.b
+        col &#61; convert&#40;HSB, RGB&#40;r, g, b&#41;&#41;
+        h, s, v &#61; col.h, col.s, col.v
+        radius &#61; rescale&#40;s, 0, 1, 0, S&#41;
+        height &#61; rescale&#40;v, 0, 1, 0, S&#41;
+        pt &#61; polar&#40;radius, 2π * h/360&#41;
+        ptiso &#61; project&#40;pt.x, pt.y, height, sf &#61; sf, hm &#61; hm&#41;
+        depth &#61; pt.x &#43; pt.y &#43; height
+        push&#33;&#40;isostack, &#40;ptiso, col, depth&#41;&#41;
+        push&#33;&#40;dotstack, &#40;pt, col, height&#41;&#41;
+    end
+    @layer begin
+        translate&#40;subpanels&#91;1&#93;&#41;
+        sethue&#40;&quot;gray90&quot;&#41;
+        drawisoaxes&#40;sf &#61; sf, hm &#61; hm, r &#61; S1/2&#41;
+    end
+    # sort and draw
+    @layer begin
+        sort&#33;&#40;dotstack, by &#61; x -&gt; last&#40;x&#41;&#41;
+        translate&#40;panels&#91;1&#93;&#41;
+        for d in dotstack
+            setcolor&#40;d&#91;2&#93;&#41;
+            circle&#40;d&#91;1&#93;, 1, :fill&#41;
+        end
+    end
+    @layer begin
+        sort&#33;&#40;isostack, by &#61; x -&gt; last&#40;x&#41;&#41;
+        translate&#40;subpanels&#91;1&#93;&#41;
+        for d in isostack
+            setcolor&#40;d&#91;2&#93;&#41;
+            circle&#40;d&#91;1&#93;, .5, :fill&#41;
+        end
+    end
+    # thumbnail
+    @layer begin
+        translate&#40;subpanels&#91;2&#93;&#41;
+        # need PNGs for Luxor, cos Cairo don&#39;t do JPG :&#40;
+        save&#40;&quot;/tmp/img.png&quot;, img&#41;
+        img &#61; readpng&#40;&quot;/tmp/img.png&quot;&#41;
+        panelsize &#61; min&#40;subpanels.rowheights&#91;2&#93;, subpanels.colwidths&#91;1&#93;&#41;
+        @layer begin
+            scale&#40;1 / &#40;1.1 * max&#40;img.width, img.height&#41; / panelsize&#41;&#41;
+            placeimage&#40;img, O, centered&#61;true&#41;
+        end
+    end
+    # title
+    @layer begin
+        sethue&#40;&quot;white&quot;&#41;
+        fontsize&#40;24&#41;
+        fontface&#40;&quot;AvenirNext-Bold&quot;&#41;
+        text&#40;caption, boxtopcenter&#40;BoundingBox&#40;box&#40;panels, 1&#41;&#41;&#41; &#43; &#40;0, 25&#41;,
+            halign&#61;:center&#41;
+    end
+end</code></pre>
+<p>And it runs like this:</p>
+<pre><code class="language-julia">@png begin
+        background&#40;&quot;grey10&quot;&#41;
+        drawimagefile&#40;&quot;_assets/images/mauve/science-museum-f6.jpg&quot;, caption&#61;&quot;fabric&quot;&#41;
+end 1200 900 &quot;_assets/images/mauve/fabricsample.png&quot;</code></pre>
+<p><img src="/assets/images/mauve/fabricsample.png" alt="fabric sample" /></p>
+<p>In this image, each pixel of the original is drawn three times - in the thumbnail, on an isometric projection of the Hue/Saturation/Brightness space, and again on the Hue wheel as before.</p>
+<p>Here are the other images:</p>
+<p><img src="/assets/images/mauve/imageview-1947-0117_0002.png" alt="fabric and rope" /></p>
+<p><img src="/assets/images/mauve/imageview-1984-1630_0001-801x1024.jpeg.png" alt="skirt" /></p>
+<p><img src="/assets/images/mauve/imageview-book.png" alt="book" /></p>
+<p><img src="/assets/images/mauve/imageview-Wilde_Malve.JPG.png" alt="flower" /></p>
+<p><img src="/assets/images/mauve/imageview-perkin_mauve_silk_rws2015-06374s.jpg.png" alt="sample" /></p>
+<p><img src="/assets/images/mauve/imageview-Mauv2.jpg.png" alt="letter" /></p>
+<p><img src="/assets/images/mauve/imageview-godeys-lady-book.png" alt="fashion" /></p>
+<p>So my initial guess from eye-balling these is that mauve should be about <code>HSB&#40;277.5, 0.75, 0.85&#41;</code> - give or take a bit. &#40;I’d like to do some statistics to confirm or challenge this but perhaps that’s for a follow-up post...&#41;</p>
+<pre><code class="language-julia">@svg begin
+    background&#40;&quot;black&quot;&#41;
+    rad &#61; boxwidth&#40;BoundingBox&#40;&#41; * 0.9&#41;/2
+    circularlegend&#40;O, rad&#41;
+    for sat in 0.9:-0.025:0.5
+        for r in 270:2:285 ## degrees
+            brightness &#61; .85
+            sethue&#40;HSB&#40;r, sat, brightness&#41;&#41;
+            mauvepos &#61; polar&#40;rescale&#40;sat, 0, 1, 0, rad&#41;, deg2rad&#40;r&#41;&#41;
+            circle&#40;mauvepos, 3, :fill&#41;
+        end
+    end
+end 800 800 &quot;_assets/images/mauve/mauvepoints&quot;</code></pre>
+<p>Somewhere around here perhaps?</p>
+<p><img src="/assets/images/mauve/mauvepoints.svg" alt="image label" /></p>
+<h1 id="50_shades_of_mauve"><a href="#50_shades_of_mauve" class="header-anchor">50 shades of ... mauve</a></h1>
+<p>To find the nearest named color to what I think the original mauve would have been, I used the <code>colordiff&#40;&#41;</code> function from Colors.jl. It’s probably a reasonable approximation to the truth.</p>
+<pre><code class="language-julia">function findnearestcolors&#40;sourcecol::Colorant, matches&#61;3, colordict&#61;Colors.color_names&#41;
+    results &#61; Float64&#91;&#93;
+    names &#61; String&#91;&#93;
+    for &#40;k, v&#41; in colordict
+        if typeof&#40;v&#41; &#61;&#61; Tuple&#123;Int64,Int64,Int64&#125;
+            r, g, b &#61; v ./ 256
+            tempcol &#61; convert&#40;HSB, RGB&#40;r, g, b&#41;&#41;
+        elseif typeof&#40;v&#41; &#61;&#61; RGB24
+            tempcol &#61; convert&#40;HSB, v&#41;
+        end
+        push&#33;&#40;results, colordiff&#40;sourcecol, tempcol&#41;&#41;
+        push&#33;&#40;names, k&#41;
+    end
+    return results&#91;sortperm&#40;results&#41;&#91;1:matches&#93;&#93;, names&#91;sortperm&#40;results&#41;&#91;1:matches&#93;&#93;
+end</code></pre>
+<p>Here’s the code to make a table of them:</p>
+<pre><code class="language-julia">function drawclosestcolors&#40;targetcolor, numberofcolors &#61; 30, colordict &#61; Colors.color_names;
+        title &#61; &quot;color&quot;&#41;
+    distances, colornames &#61; findnearestcolors&#40;targetcol, numberofcolors, colordict&#41;
+    t &#61; Tiler&#40;600, 600, numberofcolors, 1, margin&#61;60&#41;
+    for &#40;pos, n&#41; in t
+        # draw target color in left column
+        sethue&#40;targetcol&#41;
+        box&#40;pos - &#40;t.tilewidth/4, 0&#41;, t.tilewidth/4, t.tileheight - 2, :fill&#41;
+        # draw near color in right column
+        dist &#61; rescale&#40;distances&#91;n&#93;, extrema&#40;distances&#41;..., 1, 30&#41;
+        if typeof&#40;colordict&#91;colornames&#91;n&#93;&#93;&#41; &#61;&#61; Tuple&#123;Int64, Int64, Int64&#125;
+            matched &#61; colornames&#91;n&#93;
+        else
+            matched &#61; colordict&#91;colornames&#91;n&#93;&#93;
+        end
+        sethue&#40;matched&#41;
+        box&#40;pos &#43; &#40;dist &#43; t.tilewidth/4, 0&#41;, t.tilewidth/2, t.tileheight - 2, :fill&#41;
+        # add some text too
+        sethue&#40;&quot;white&quot;&#41;
+        mh, ms, mv &#61; round.&#40;getfield.&#40;convert&#40;HSV, parse&#40;Colorant, matched&#41;&#41;, 1:3&#41;, digits&#61;2&#41;
+        text&#40;string&#40;
+                colornames&#91;n&#93;,
+                &quot; &#40;&#36;mh &#36;ms &#36;mv&#41; &quot;,
+                round&#40;distances&#91;n&#93;, digits&#61;2&#41;&#41;,
+            pos &#43; &#40;t.tilewidth/2, 0&#41;, halign&#61;:right, valign&#61;:middle&#41;
+    end
+    sethue&#40;&quot;white&quot;&#41;
+    text&#40;string&#40;&quot;Closest colors to &quot;, title&#41;,
+        boxtopcenter&#40;BoundingBox&#40;&#41; * 0.95&#41;,
+        halign&#61;:center&#41;
+end</code></pre>
+<p>We can use the Colors.jl list:</p>
+<pre><code class="language-julia">@svg begin
+    background&#40;&quot;black&quot;&#41;
+    targetcol &#61; HSB&#40;277.5, 0.75, 0.85&#41;
+    numberofcolors &#61; 20
+    fontface&#40;&quot;AvenirNext-Bold&quot;&#41;
+    drawclosestcolors&#40;targetcol, numberofcolors, Colors.color_names, title &#61; &quot;&#36;&#40;targetcol&#41;&quot;&#41;
+end 600 600 &quot;_assets/images/mauve/nearestcolors1&quot;</code></pre>
+<p><img src="/assets/images/mauve/nearestcolors1.svg" alt="image label" /></p>
+<p>Or go for baroque with the NamedColors.jl list:</p>
+<pre><code class="language-julia">@svg begin
+    background&#40;&quot;black&quot;&#41;
+    targetcol &#61; HSB&#40;277.5, 0.75, 0.85&#41;
+    numberofcolors &#61; 20
+    fontface&#40;&quot;AvenirNext-Bold&quot;&#41;
+    drawclosestcolors&#40;targetcol, numberofcolors, NamedColors.ALL_COLORS, title &#61; &quot;&#36;&#40;targetcol&#41;&quot;&#41;
+end 600 600 &quot;_assets/images/mauve/nearestcolors2&quot;</code></pre>
+<p>The results are fairly similar. Not sure what the reported nearness units are, though - perhaps “millishades”?</p>
+<p><img src="/assets/images/mauve/nearestcolors2.svg" alt="image label" /></p>
+<h1 id="fade_out"><a href="#fade_out" class="header-anchor">Fade out</a></h1>
+<p>The mauve mania of 1857 and 1858 quickly became unfashionable nostalgia, and the color soon faded, both figuratively and literally. In 1859, while Napoleon III’s wife was still wearing her mauve dresses, their armies were fighting a decisive battle against Austrian forces at a little Italian town called Magenta - which gave its name to a newly invented color that was the next latest thing, at least for a while.</p>
+<p>If you liked any of the colors in this post, please consider going to <a href="https://github.com/JuliaGraphics/Colors.jl">Colors.jl</a> and <a href="https://github.com/JuliaGraphics/NamedColors.jl">NamedColors.jl</a> and giving them your Github star. It’s free, and makes people happy&#33;</p>
+<p>&#91;2020-02-13&#93;</p>
+<div class="smallimage"><img src="http://steampiano.net/cormullionknot.gif?mauve" alt="cormullion signing off" /></div>
+<h3 id="footnotes"><a href="#footnotes" class="header-anchor">Footnotes</a></h3>
+<h4 id="table_classfndef_idfndefsplash_td_classfndef-backrefa_hreffnrefsplash1_td_classfndef-contentcode_for_splash_image"><a href="#table_classfndef_idfndefsplash_td_classfndef-backrefa_hreffnrefsplash1_td_classfndef-contentcode_for_splash_image" class="header-anchor"><table class="fndef" id="fndef:splash">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:splash">[1]</a></td>
+        <td class="fndef-content">Code for splash image</td>
+    </tr>
+</table>
+</a></h4>
+<pre><code class="language-julia">@svg begin
+    brush&#40;
+        boxmiddleleft&#40;BoundingBox&#40;&#41; * 0.8&#41;,
+        boxmiddleright&#40;BoundingBox&#40;&#41; * 0.8&#41;,
+        50,
+        lowhandle &#61; -1, highhandle&#61;2, twist&#61;15,
+        action &#61; :none,
+        strokefunction &#61; &#40;npbp&#41; -&gt; begin
+            for i in 1:20
+                setopacity&#40;rand&#40;0.0:0.01:0.2&#41;&#41;
+                sethue&#40;HSB&#40;rand&#40;270:290&#41;, rand&#40;0.7:0.01:0.9&#41;, 1&#41;&#41;
+                drawbezierpath&#40;npbp, :fill&#41;
+            end
+            return npbp
+        end&#41;
+end 800 250 &quot;_assets/images/mauve/brushstroke.svg&quot;</code></pre>
+<h4 id="table_classfndef_idfndefgarfield_td_classfndef-backrefa_hreffnrefgarfield2_td_classfndef-contentsimon_garfield"><a href="#table_classfndef_idfndefgarfield_td_classfndef-backrefa_hreffnrefgarfield2_td_classfndef-contentsimon_garfield" class="header-anchor"><table class="fndef" id="fndef:garfield">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:garfield">[2]</a></td>
+        <td class="fndef-content">&quot;Simon Garfield&quot;</td>
+    </tr>
+</table>
+</a></h4>
+<p><a href="https://www.simongarfield.com/books/mauve/">Link to author’s web site</a>.</p>
+<h4 id="table_classfndef_idfndefstevepemberton_td_classfndef-backrefa_hreffnrefstevepemberton3_td_classfndef-contentsteve_pemberton"><a href="#table_classfndef_idfndefstevepemberton_td_classfndef-backrefa_hreffnrefstevepemberton3_td_classfndef-contentsteve_pemberton" class="header-anchor"><table class="fndef" id="fndef:stevepemberton">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:stevepemberton">[3]</a></td>
+        <td class="fndef-content">&quot;Steve Pemberton&quot;</td>
+    </tr>
+</table>
+</a></h4>
+<p>More criticisms from Steve Pemberton <a href="https://homepages.cwi.nl/~steven/2015/colours.html">here</a>. Also fun is <a href="https://www.youtube.com/watch?v&#61;HmStJQzclHc">Alex Sexton&#39;s linked video <span class="inlinesvg"><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="14" viewBox="0 0 20 14">
+<path fill-rule="nonzero" fill="rgb(98.823529%, 0%, 1.960784%)" fill-opacity="1" d="M 20 7 L 19.988281 9.457031 L 19.949219 10.238281 L 19.886719 10.800781 L 19.800781 11.25 L 19.6875 11.628906 L 19.550781 11.957031 L 19.382812 12.246094 L 19.1875 12.496094 L 18.960938 12.722656 L 18.707031 12.917969 L 18.414062 13.09375 L 18.085938 13.246094 L 17.714844 13.378906 L 17.292969 13.492188 L 16.808594 13.589844 L 16.25 13.664062 L 15.589844 13.722656 L 14.761719 13.765625 L 13.613281 13.792969 L 10 13.800781 L 6.386719 13.792969 L 5.238281 13.765625 L 4.410156 13.722656 L 3.75 13.664062 L 3.191406 13.589844 L 2.707031 13.492188 L 2.285156 13.378906 L 1.914062 13.246094 L 1.585938 13.09375 L 1.292969 12.917969 L 1.039062 12.722656 L 0.8125 12.496094 L 0.617188 12.246094 L 0.449219 11.957031 L 0.3125 11.628906 L 0.199219 11.25 L 0.113281 10.800781 L 0.0507812 10.238281 L 0.0117188 9.457031 L 0 7 L 0.0117188 4.542969 L 0.0507812 3.761719 L 0.113281 3.199219 L 0.199219 2.75 L 0.3125 2.371094 L 0.449219 2.042969 L 0.617188 1.753906 L 0.8125 1.503906 L 1.039062 1.277344 L 1.292969 1.082031 L 1.585938 0.90625 L 1.914062 0.753906 L 2.285156 0.621094 L 2.707031 0.507812 L 3.191406 0.410156 L 3.75 0.335938 L 4.410156 0.277344 L 5.238281 0.234375 L 6.386719 0.207031 L 10 0.199219 L 13.613281 0.207031 L 14.761719 0.234375 L 15.589844 0.277344 L 16.25 0.335938 L 16.808594 0.410156 L 17.292969 0.507812 L 17.714844 0.621094 L 18.085938 0.753906 L 18.414062 0.90625 L 18.707031 1.082031 L 18.960938 1.277344 L 19.1875 1.503906 L 19.382812 1.753906 L 19.550781 2.042969 L 19.6875 2.371094 L 19.800781 2.75 L 19.886719 3.199219 L 19.949219 3.761719 L 19.988281 4.542969 Z M 20 7 "/>
+<path fill-rule="nonzero" fill="rgb(100%, 100%, 100%)" fill-opacity="1" d="M 8.5 9.597656 L 8.5 4.402344 L 13 7 Z M 8.5 9.597656 "/>
+</svg>
+</span></a>.</p>
+<h4 id="table_classfndef_idfndefanalysis_td_classfndef-backrefa_hreffnrefanalysis4_td_classfndef-contentscientific_analysis"><a href="#table_classfndef_idfndefanalysis_td_classfndef-backrefa_hreffnrefanalysis4_td_classfndef-contentscientific_analysis" class="header-anchor"><table class="fndef" id="fndef:analysis">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:analysis">[4]</a></td>
+        <td class="fndef-content">“scientific analysis”</td>
+    </tr>
+</table>
+</a></h4>
+<p>If you want proper scientific analysis, and you like chemistry, try  “A Study in Mauve: Unveiling Perkin’s Dye in Historic Samples” by Micaela M. Sousa, Maria J. Melo, A. Jorge Parola, Peter J. T. Morris, Henry S. Rzepa, and J. Sørgio Seixas de Melo <a href="https://onlinelibrary.wiley.com/doi/pdf/10.1002/chem.200800718">DOI: 10.1002/chem.200800718</a>.</p>
+<h4 id="table_classfndef_idfndefimages_td_classfndef-backrefa_hreffnrefimages5_td_classfndef-contentimages"><a href="#table_classfndef_idfndefimages_td_classfndef-backrefa_hreffnrefimages5_td_classfndef-contentimages" class="header-anchor"><table class="fndef" id="fndef:images">
+    <tr>
+        <td class="fndef-backref"><a href="#fnref:images">[5]</a></td>
+        <td class="fndef-content">“Images”</td>
+    </tr>
+</table>
+</a></h4>
+<p>Images from the <a href="https://blog.sciencemuseum.org.uk/mauve-mania/">London Science Museum</a>, the <a href="http://americanhistory.si.edu/blog">National Museum of American History</a>, the internet archive, and wikimedia. Fair use - comment and transformative re-use.</p>
+<hr />
+<p><em>This page was generated using <a href="https://github.com/fredrikekre/Literate.jl">Literate.jl</a>.</em></p>
+<div class="page-foot">
+  <div class="copyright">
+    &copy; cormullion. Last modified: September 13, 2023. Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a>.
+  </div>
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    
+    
+        <script src="/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
+
+    
+  </body>
+</html>
